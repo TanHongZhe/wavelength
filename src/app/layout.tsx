@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://wavelength.game",
+    url: "https://wavelength.lol",
     siteName: "Wavelength Online",
     title: "Wavelength Online - Free Social Guessing Game",
     description:
@@ -74,7 +74,7 @@ const jsonLd = {
   name: "Wavelength Online",
   description:
     "A telepathic party game where players try to read each other's minds by guessing where a hidden target falls on a spectrum between two opposing concepts.",
-  url: "https://wavelength.game",
+  url: "https://wavelength.lol",
   operatingSystem: "Web Browser",
   applicationCategory: "Game",
   gamePlatform: ["Web Browser", "Desktop", "Mobile"],
