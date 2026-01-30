@@ -70,7 +70,7 @@ export function PartyGameScreen({
     });
 
     // Calculate generic points for display (just based on current player's view or avg?)
-    const myPoints = currentPlayer?.guess_angle !== null && room.phase === "revealed"
+    const myPoints = currentPlayer && currentPlayer.guess_angle !== null && room.phase === "revealed"
         ? calculatePoints(room.target_angle, currentPlayer.guess_angle)
         : 0;
 
