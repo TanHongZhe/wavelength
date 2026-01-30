@@ -139,47 +139,27 @@ export function Dial({
                                             const y4 = 100 - innerRadius * Math.sin(startRad);
 
                                             return (
-                                                <path
-                                                    key={index}
-                                                    d={`M ${x1} ${y1} A ${outerRadius} ${outerRadius} 0 0 1 ${x2} ${y2} L ${x3} ${y3} A ${innerRadius} ${innerRadius} 0 0 0 ${x4} ${y4} Z`}
-                                                    fill={segmentColors[index]}
-                                                    stroke="hsl(220, 50%, 18%)"
-                                                    strokeWidth="0.5"
-                                                />
+                                                <g key={index}>
+                                                    <path
+                                                        d={`M ${x1} ${y1} A ${outerRadius} ${outerRadius} 0 0 1 ${x2} ${y2} L ${x3} ${y3} A ${innerRadius} ${innerRadius} 0 0 0 ${x4} ${y4} Z`}
+                                                        fill={segmentColors[index]}
+                                                        stroke="hsl(220, 50%, 18%)"
+                                                        strokeWidth="0.5"
+                                                    />
+                                                    {/* Numbers */}
+                                                    <text
+                                                        x={100 - 60 * Math.cos((startAngle + width / 2) * (Math.PI / 180))}
+                                                        y={100 - 60 * Math.sin((startAngle + width / 2) * (Math.PI / 180))}
+                                                        textAnchor="middle"
+                                                        dominantBaseline="middle"
+                                                        className="font-display font-bold text-[8px]"
+                                                        fill="hsl(220, 50%, 18%)"
+                                                    >
+                                                        {segmentPoints[index]}
+                                                    </text>
+                                                </g>
                                             );
                                         })}
-
-                                        {isPsychic && !showTarget && (
-                                            <>
-                                                {segmentPoints.map((points, index) => {
-                                                    let angleOffset = -wedgeWidth / 2;
-                                                    for (let i = 0; i < index; i++) {
-                                                        angleOffset += segmentWidths[i];
-                                                    }
-                                                    angleOffset += segmentWidths[index] / 2;
-
-                                                    const angle = targetAngle + angleOffset;
-                                                    const rad = (angle) * (Math.PI / 180);
-                                                    const r = 60;
-                                                    const x = 100 - r * Math.cos(rad);
-                                                    const y = 100 - r * Math.sin(rad);
-
-                                                    return (
-                                                        <text
-                                                            key={index}
-                                                            x={x}
-                                                            y={y}
-                                                            textAnchor="middle"
-                                                            dominantBaseline="middle"
-                                                            className="font-display font-bold text-[8px]"
-                                                            fill="hsl(220, 50%, 18%)"
-                                                        >
-                                                            {points}
-                                                        </text>
-                                                    );
-                                                })}
-                                            </>
-                                        )}
                                     </svg>
                                 </motion.div>
                             )}

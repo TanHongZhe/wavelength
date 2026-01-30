@@ -106,36 +106,38 @@ export function GameScreen({
     };
 
     return (
-        <div className={`min-h-screen p-6 ${shake ? "screen-shake" : ""}`}>
-            {/* Header */}
+        <div className={`min-h-screen p-6 pt-28 ${shake ? "screen-shake" : ""}`}>
+            {/* Header - Fixed Top Center */}
             <motion.div
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="flex items-center justify-between mb-6"
+                className="fixed top-4 left-0 right-0 z-40 flex justify-center pointer-events-none"
             >
-                <div className="flex items-center gap-4">
-                    <div className="font-display text-sm text-muted-foreground">
-                        Room: <span className="font-bold text-primary">{room.room_code}</span>
+                <div className="pointer-events-auto flex items-center gap-4 md:gap-6 bg-background/80 backdrop-blur-md px-6 py-2 rounded-full border border-border/50 shadow-sm">
+                    <div className="flex items-center gap-3 md:border-r md:border-border md:pr-4">
+                        <div className="font-display text-sm text-muted-foreground mr-1">
+                            Room: <span className="font-bold text-primary">{room.room_code}</span>
+                        </div>
+                        <div className="font-display text-sm text-muted-foreground">
+                            Round: <span className="font-bold text-primary">{room.round_number}</span>
+                        </div>
                     </div>
-                    <div className="font-display text-sm text-muted-foreground">
-                        Round: <span className="font-bold text-primary">{room.round_number}</span>
-                    </div>
-                </div>
 
-                {/* Player Scores */}
-                <div className="flex items-center gap-3">
-                    <div className="text-right">
-                        <p className="text-xs text-muted-foreground truncate max-w-[80px]">
-                            {room.player1_name} <span className="text-base">{room.player1_avatar || "🐼"}</span>
-                        </p>
-                        <p className="font-display font-bold text-primary">{room.psychic_score}</p>
-                    </div>
-                    <div className="w-px h-8 bg-border" />
-                    <div className="text-left">
-                        <p className="text-xs text-muted-foreground truncate max-w-[80px]">
-                            <span className="text-base">{room.player2_avatar || "🐯"}</span> {room.player2_name}
-                        </p>
-                        <p className="font-display font-bold text-primary">{room.guesser_score}</p>
+                    {/* Player Scores */}
+                    <div className="flex items-center gap-3">
+                        <div className="text-right">
+                            <p className="text-xs text-muted-foreground truncate max-w-[80px]">
+                                {room.player1_name} <span className="text-base">{room.player1_avatar || "🐼"}</span>
+                            </p>
+                            <p className="font-display font-bold text-primary">{room.psychic_score}</p>
+                        </div>
+                        <div className="w-px h-8 bg-border" />
+                        <div className="text-left">
+                            <p className="text-xs text-muted-foreground truncate max-w-[80px]">
+                                <span className="text-base">{room.player2_avatar || "🐯"}</span> {room.player2_name}
+                            </p>
+                            <p className="font-display font-bold text-primary">{room.guesser_score}</p>
+                        </div>
                     </div>
                 </div>
             </motion.div>

@@ -2,22 +2,22 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { AudioWaveform, Users, Sparkles, ChevronDown } from "lucide-react";
+import { AudioWaveform, Users, Sparkles, ChevronDown, Gamepad2, PartyPopper } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 interface LandingScreenProps {
-    onCreateRoom: (name: string, avatar: string) => void;
-    onJoinRoom: (code: string, name: string, avatar: string) => void;
+    onCreateGame: (mode: "classic" | "party", name: string, avatar: string) => void;
+    onJoinGame: (code: string, name: string, avatar: string) => void;
     isLoading: boolean;
     error: string | null;
 }
 
-// 17 animal avatars - first 5 shown by default, rest in expandable section (6 per row)
+// 17 animal avatars
 const AVATARS = ["🐼", "🐯", "🐶", "🐱", "🐷", "🐰", "🦊", "🐻", "🐨", "🦁", "🐮", "🐵", "🐸", "🦄", "🐧", "🐳", "🦉"];
 const INITIAL_AVATAR_COUNT = 5;
 
-export function LandingScreen({ onCreateRoom, onJoinRoom, isLoading, error }: LandingScreenProps) {
+export function LandingScreen({ onCreateGame, onJoinGame, isLoading, error }: LandingScreenProps) {
     const [roomCode, setRoomCode] = useState("");
     const [playerName, setPlayerName] = useState("");
     const [selectedAvatar, setSelectedAvatar] = useState(AVATARS[0]);
@@ -30,27 +30,13 @@ export function LandingScreen({ onCreateRoom, onJoinRoom, isLoading, error }: La
             <div className="fixed inset-0 overflow-hidden pointer-events-none">
                 <motion.div
                     className="absolute -top-40 -right-40 w-80 h-80 rounded-full bg-wedge-teal/20 blur-3xl"
-                    animate={{
-                        scale: [1, 1.2, 1],
-                        opacity: [0.3, 0.5, 0.3],
-                    }}
-                    transition={{
-                        duration: 4,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                    }}
+                    animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
+                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
                 />
                 <motion.div
                     className="absolute -bottom-40 -left-40 w-80 h-80 rounded-full bg-wedge-orange/20 blur-3xl"
-                    animate={{
-                        scale: [1.2, 1, 1.2],
-                        opacity: [0.3, 0.5, 0.3],
-                    }}
-                    transition={{
-                        duration: 4,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                    }}
+                    animate={{ scale: [1.2, 1, 1.2], opacity: [0.3, 0.5, 0.3] }}
+                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
                 />
             </div>
 
@@ -104,7 +90,7 @@ export function LandingScreen({ onCreateRoom, onJoinRoom, isLoading, error }: La
                                         Create Room
                                     </h3>
                                     <p className="text-muted-foreground">
-                                        Start a new game and invite friends
+                                        Start a new game (Classic or Party)
                                     </p>
                                 </div>
                             </div>
@@ -154,8 +140,8 @@ export function LandingScreen({ onCreateRoom, onJoinRoom, isLoading, error }: La
                             </div>
                         </div>
 
+                        {/* Avatar Picker */}
                         <div className="flex flex-col items-center gap-2 mb-6">
-                            {/* Initial 5 avatars + expand button */}
                             <div className="flex gap-2 justify-center items-center">
                                 {AVATARS.slice(0, INITIAL_AVATAR_COUNT).map((avatar) => (
                                     <button
@@ -169,7 +155,6 @@ export function LandingScreen({ onCreateRoom, onJoinRoom, isLoading, error }: La
                                         {avatar}
                                     </button>
                                 ))}
-                                {/* Expand button in 6th position */}
                                 <button
                                     onClick={() => setIsAvatarExpanded(!isAvatarExpanded)}
                                     className="flex items-center justify-center w-10 h-10 rounded-full bg-secondary hover:bg-secondary/80 transition-all"
@@ -183,18 +168,15 @@ export function LandingScreen({ onCreateRoom, onJoinRoom, isLoading, error }: La
                                 </button>
                             </div>
 
-                            {/* Expanded avatars - 2 rows of 6 */}
                             <AnimatePresence>
                                 {isAvatarExpanded && (
                                     <motion.div
                                         initial={{ opacity: 0, height: 0 }}
                                         animate={{ opacity: 1, height: "auto" }}
                                         exit={{ opacity: 0, height: 0 }}
-                                        transition={{ duration: 0.2 }}
                                         className="overflow-hidden"
                                     >
                                         <div className="flex flex-col gap-2 pt-2">
-                                            {/* Row 1: avatars 6-11 (6 avatars) */}
                                             <div className="flex gap-2 justify-center">
                                                 {AVATARS.slice(5, 11).map((avatar) => (
                                                     <button
@@ -209,7 +191,6 @@ export function LandingScreen({ onCreateRoom, onJoinRoom, isLoading, error }: La
                                                     </button>
                                                 ))}
                                             </div>
-                                            {/* Row 2: avatars 12-17 (6 avatars) */}
                                             <div className="flex gap-2 justify-center">
                                                 {AVATARS.slice(11, 17).map((avatar) => (
                                                     <button
@@ -236,22 +217,34 @@ export function LandingScreen({ onCreateRoom, onJoinRoom, isLoading, error }: La
                             </p>
                         )}
 
-                        <div className="flex gap-3">
+                        <div className="grid grid-cols-2 gap-3 mb-3">
                             <Button
-                                variant="outline"
-                                className="flex-1 h-12"
-                                onClick={() => { setMode("initial"); setPlayerName(""); }}
-                            >
-                                Back
-                            </Button>
-                            <Button
-                                className="flex-1 h-12 btn-game"
-                                onClick={() => onCreateRoom(playerName, selectedAvatar)}
+                                className="h-14 flex flex-col items-center justify-center gap-1 bg-gradient-to-br from-[#0EA5E9] to-[#2563EB] hover:from-[#0284C7] hover:to-[#1D4ED8] text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300"
+                                onClick={() => onCreateGame("classic", playerName, selectedAvatar)}
                                 disabled={!playerName.trim() || isLoading}
                             >
-                                {isLoading ? "Creating..." : "Create Room"}
+                                <Gamepad2 className="w-5 h-5" />
+                                <span className="font-bold">Classic (2P)</span>
+                            </Button>
+
+                            <Button
+                                className="h-14 flex flex-col items-center justify-center gap-1 bg-gradient-to-br from-[#F43F5E] to-[#E11D48] hover:from-[#E11D48] hover:to-[#BE123C] text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300"
+                                onClick={() => onCreateGame("party", playerName, selectedAvatar)}
+                                disabled={!playerName.trim() || isLoading}
+                            >
+                                <PartyPopper className="w-5 h-5" />
+                                <span className="font-bold">Party (2-6P)</span>
                             </Button>
                         </div>
+
+                        <Button
+                            variant="ghost"
+                            className="w-full text-muted-foreground"
+                            onClick={() => { setMode("initial"); setPlayerName(""); }}
+                        >
+                            Cancel
+                        </Button>
+
                     </motion.div>
                 ) : (
                     <motion.div
@@ -259,6 +252,7 @@ export function LandingScreen({ onCreateRoom, onJoinRoom, isLoading, error }: La
                         animate={{ opacity: 1, scale: 1 }}
                         className="game-card"
                     >
+                        {/* Join Room UI - Almost same as before */}
                         <h3 className="font-display text-xl font-semibold text-primary mb-4">
                             Join Room
                         </h3>
@@ -277,8 +271,8 @@ export function LandingScreen({ onCreateRoom, onJoinRoom, isLoading, error }: La
                             </div>
                         </div>
 
+                        {/* Avatar Picker (Copied logic) */}
                         <div className="flex flex-col items-center gap-2 mb-6">
-                            {/* Initial 5 avatars + expand button */}
                             <div className="flex gap-2 justify-center items-center">
                                 {AVATARS.slice(0, INITIAL_AVATAR_COUNT).map((avatar) => (
                                     <button
@@ -292,64 +286,35 @@ export function LandingScreen({ onCreateRoom, onJoinRoom, isLoading, error }: La
                                         {avatar}
                                     </button>
                                 ))}
-                                {/* Expand button in 6th position */}
                                 <button
                                     onClick={() => setIsAvatarExpanded(!isAvatarExpanded)}
                                     className="flex items-center justify-center w-10 h-10 rounded-full bg-secondary hover:bg-secondary/80 transition-all"
                                 >
-                                    <motion.div
-                                        animate={{ rotate: isAvatarExpanded ? 180 : 0 }}
-                                        transition={{ duration: 0.2 }}
-                                    >
+                                    <motion.div animate={{ rotate: isAvatarExpanded ? 180 : 0 }} transition={{ duration: 0.2 }}>
                                         <ChevronDown className="w-5 h-5 text-muted-foreground" />
                                     </motion.div>
                                 </button>
                             </div>
-
-                            {/* Expanded avatars - 2 rows of 5 */}
                             <AnimatePresence>
                                 {isAvatarExpanded && (
                                     <motion.div
                                         initial={{ opacity: 0, height: 0 }}
                                         animate={{ opacity: 1, height: "auto" }}
                                         exit={{ opacity: 0, height: 0 }}
-                                        transition={{ duration: 0.2 }}
                                         className="overflow-hidden"
                                     >
                                         <div className="flex flex-col gap-2 pt-2">
-                                            {/* Row 1: avatars 6-10 + empty space for alignment */}
+                                            {/* Row 1 */}
                                             <div className="flex gap-2 justify-center">
-                                                {AVATARS.slice(5, 10).map((avatar) => (
-                                                    <button
-                                                        key={avatar}
-                                                        onClick={() => setSelectedAvatar(avatar)}
-                                                        className={`w-10 h-10 text-2xl rounded-full transition-transform hover:scale-110 ${selectedAvatar === avatar
-                                                            ? "bg-primary/20 ring-2 ring-primary scale-110"
-                                                            : "bg-secondary hover:bg-secondary/80"
-                                                            }`}
-                                                    >
-                                                        {avatar}
-                                                    </button>
+                                                {AVATARS.slice(5, 11).map((avatar) => (
+                                                    <button key={avatar} onClick={() => setSelectedAvatar(avatar)} className={`w-10 h-10 text-2xl rounded-full transition-transform hover:scale-110 ${selectedAvatar === avatar ? "bg-primary/20 ring-2 ring-primary scale-110" : "bg-secondary hover:bg-secondary/80"}`}>{avatar}</button>
                                                 ))}
-                                                {/* Empty 6th space for alignment */}
-                                                <div className="w-10 h-10" />
                                             </div>
-                                            {/* Row 2: avatars 11-15 + empty space for alignment */}
+                                            {/* Row 2 */}
                                             <div className="flex gap-2 justify-center">
-                                                {AVATARS.slice(10, 15).map((avatar) => (
-                                                    <button
-                                                        key={avatar}
-                                                        onClick={() => setSelectedAvatar(avatar)}
-                                                        className={`w-10 h-10 text-2xl rounded-full transition-transform hover:scale-110 ${selectedAvatar === avatar
-                                                            ? "bg-primary/20 ring-2 ring-primary scale-110"
-                                                            : "bg-secondary hover:bg-secondary/80"
-                                                            }`}
-                                                    >
-                                                        {avatar}
-                                                    </button>
+                                                {AVATARS.slice(11, 17).map((avatar) => (
+                                                    <button key={avatar} onClick={() => setSelectedAvatar(avatar)} className={`w-10 h-10 text-2xl rounded-full transition-transform hover:scale-110 ${selectedAvatar === avatar ? "bg-primary/20 ring-2 ring-primary scale-110" : "bg-secondary hover:bg-secondary/80"}`}>{avatar}</button>
                                                 ))}
-                                                {/* Empty 6th space for alignment */}
-                                                <div className="w-10 h-10" />
                                             </div>
                                         </div>
                                     </motion.div>
@@ -357,12 +322,13 @@ export function LandingScreen({ onCreateRoom, onJoinRoom, isLoading, error }: La
                             </AnimatePresence>
                         </div>
 
+
                         <Input
                             value={roomCode}
                             onChange={(e) => setRoomCode(e.target.value.toUpperCase())}
-                            placeholder="Enter code"
+                            placeholder="Enter 4-letter code"
                             maxLength={4}
-                            className="text-lg h-12 bg-secondary border-2 border-primary/20 focus:border-primary uppercase"
+                            className="text-lg h-12 bg-secondary border-2 border-primary/20 focus:border-primary uppercase text-center tracking-widest font-mono font-bold"
                         />
 
                         {error && (
@@ -381,10 +347,10 @@ export function LandingScreen({ onCreateRoom, onJoinRoom, isLoading, error }: La
                             </Button>
                             <Button
                                 className="flex-1 h-12 btn-game"
-                                onClick={() => onJoinRoom(roomCode, playerName, selectedAvatar)}
+                                onClick={() => onJoinGame(roomCode, playerName, selectedAvatar)}
                                 disabled={roomCode.length !== 4 || !playerName.trim() || isLoading}
                             >
-                                {isLoading ? "Joining..." : "Join"}
+                                {isLoading ? "Joining..." : "Join Game"}
                             </Button>
                         </div>
                     </motion.div>

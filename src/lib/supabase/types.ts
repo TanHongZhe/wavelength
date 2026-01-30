@@ -34,6 +34,7 @@ export type Database = {
                     player2_name: string | null
                     player1_avatar: string | null
                     player2_avatar: string | null
+                    game_mode: string | null
                 }
                 Insert: {
                     clue?: string | null
@@ -54,6 +55,7 @@ export type Database = {
                     player2_name?: string | null
                     player1_avatar?: string | null
                     player2_avatar?: string | null
+                    game_mode?: string | null
                 }
                 Update: {
                     clue?: string | null
@@ -74,8 +76,55 @@ export type Database = {
                     player2_name?: string | null
                     player1_avatar?: string | null
                     player2_avatar?: string | null
+                    game_mode?: string | null
                 }
                 Relationships: []
+            }
+            party_players: {
+                Row: {
+                    id: string
+                    room_id: string
+                    player_id: string
+                    name: string
+                    avatar: string
+                    role: "psychic" | "guesser"
+                    score: number
+                    guess_angle: number | null
+                    locked_in: boolean
+                    joined_at: string
+                }
+                Insert: {
+                    id?: string
+                    room_id: string
+                    player_id: string
+                    name: string
+                    avatar: string
+                    role: "psychic" | "guesser"
+                    score?: number
+                    guess_angle?: number | null
+                    locked_in?: boolean
+                    joined_at?: string
+                }
+                Update: {
+                    id?: string
+                    room_id?: string
+                    player_id?: string
+                    name?: string
+                    avatar?: string
+                    role?: "psychic" | "guesser"
+                    score?: number
+                    guess_angle?: number | null
+                    locked_in?: boolean
+                    joined_at?: string
+                }
+                Relationships: [
+                    {
+                        foreignKeyName: "party_players_room_id_fkey"
+                        columns: ["room_id"]
+                        referencedRelation: "rooms"
+                        referencedColumns: ["id"]
+                    }
+                ]
             }
         }
         Views: {

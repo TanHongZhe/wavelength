@@ -12,7 +12,7 @@ export interface Room {
     guesser_id: string | null;
     target_angle: number;
     guess_angle: number;
-    phase: "waiting" | "clue" | "guessing" | "revealed";
+    phase: "waiting" | "clue" | "guessing" | "revealed" | "ended";
     current_card: Card | null;
     psychic_score: number;
     guesser_score: number;
@@ -90,9 +90,16 @@ export function useGameRoom() {
         init();
     }, []);
 
+    // Sync game finished state from room phase
+    useEffect(() => {
+        if (room?.phase === "ended" && !isGameFinished) {
+            setIsGameFinished(true);
+        }
+    }, [room?.phase, isGameFinished]);
+
     // Polling
     useEffect(() => {
-        if (!roomId || isGameFinished) return;
+        if (!roomId) return;
 
         const poll = async () => {
             const { data } = await supabase.from("rooms").select("*").eq("id", roomId).single();
@@ -104,7 +111,7 @@ export function useGameRoom() {
         poll();
         const interval = setInterval(poll, 1000);
         return () => clearInterval(interval);
-    }, [roomId, isGameFinished]);
+    }, [roomId]);
 
     // CREATE ROOM
     const createRoom = useCallback(async (name: string, avatar: string) => {
@@ -348,9 +355,11 @@ export function useGameRoom() {
         }
     }, [room, roomId, player1Id]);
 
-    const endGame = useCallback(() => {
+    const endGame = useCallback(async () => {
+        if (!roomId) return;
         setIsGameFinished(true);
-    }, []);
+        await supabase.from("rooms").update({ phase: "ended" }).eq("id", roomId);
+    }, [roomId]);
 
     const setCustomCard = useCallback(async (left: string, right: string) => {
         if (!roomId) return;
@@ -365,14 +374,17 @@ export function useGameRoom() {
         setRoom(prev => prev ? { ...prev, phase: "clue" } : null);
     }, [roomId]);
 
-    const leaveRoom = useCallback(() => {
+    const leaveRoom = useCallback(async () => {
+        if (roomId) {
+            await supabase.from("rooms").update({ phase: "ended" }).eq("id", roomId);
+        }
         setRoomId(null);
         setRoom(null);
         setPlayer1Id(null);
 
         setPlayerName("");
         setIsGameFinished(false);
-    }, []);
+    }, [roomId]);
 
     return {
         room,

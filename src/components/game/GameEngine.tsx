@@ -1,99 +1,91 @@
 "use client";
 
-import { useGameRoom } from "@/hooks/useGameRoom";
+import { useState } from "react";
 import { LandingScreen } from "./LandingScreen";
-import { WaitingRoom } from "./WaitingRoom";
-import { GameScreen } from "./GameScreen";
-import { GameOverScreen } from "./GameOverScreen";
+import { ClassicGameEngine } from "./ClassicGameEngine";
+import { PartyGameEngine } from "./party/PartyGameEngine";
+import { supabase } from "@/lib/supabase/client";
 
-/**
- * GameEngine - Client Component
- * 
- * This component encapsulates all the interactive game logic including:
- * - Real-time Supabase connection
- * - Room creation and joining
- * - Game state management
- * - Player synchronization
- * 
- * It is lazy-loaded into the SSG page to enable a hybrid architecture
- * where the landing page content is statically generated for SEO,
- * but the game itself runs client-side.
- */
 export function GameEngine() {
-    const {
-        room,
-        playerId,
-        isPsychic,
-        isGuesser,
-        isGameFinished,
-        isLoading,
-        error,
-        authInitialized,
-        createRoom,
-        joinRoom,
-        updateGuessAngle,
-        submitClue,
-        skipClue,
-        finalizeGuess,
-        nextRound,
-        updateScore,
-        endGame,
-        setCustomCard,
-        startGame,
-        leaveRoom,
-    } = useGameRoom();
+    const [gameState, setGameState] = useState<{
+        mode: "classic" | "party";
+        isCreating: boolean;
+        name: string;
+        avatar: string;
+        roomCode?: string;
+    } | null>(null);
 
-    // No room - show landing
-    if (!room) {
-        return (
-            <LandingScreen
-                onCreateRoom={createRoom}
-                onJoinRoom={joinRoom}
-                isLoading={isLoading || !authInitialized}
-                error={error}
-            />
-        );
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+
+    const handleCreateGame = (mode: "classic" | "party", name: string, avatar: string) => {
+        setGameState({
+            mode,
+            isCreating: true,
+            name,
+            avatar
+        });
+    };
+
+    const handleJoinGame = async (code: string, name: string, avatar: string) => {
+        setIsLoading(true);
+        setError(null);
+
+        // 1. Check Room Mode
+        const { data, error } = await supabase
+            .from("rooms")
+            .select("game_mode")
+            .eq("room_code", code.toUpperCase())
+            .single();
+
+        if (error || !data) {
+            setError("Room not found");
+            setIsLoading(false);
+            return;
+        }
+
+        const mode = (data.game_mode as "classic" | "party") || "classic";
+
+        setGameState({
+            mode,
+            isCreating: false,
+            name,
+            avatar,
+            roomCode: code
+        });
+        setIsLoading(false);
+    };
+
+    if (gameState) {
+        if (gameState.mode === "party") {
+            return (
+                <PartyGameEngine
+                    initialPlayerName={gameState.name}
+                    initialAvatar={gameState.avatar}
+                    initialRoomCode={gameState.roomCode}
+                    isCreating={gameState.isCreating}
+                    onLeave={() => setGameState(null)}
+                />
+            );
+        } else {
+            return (
+                <ClassicGameEngine
+                    initialPlayerName={gameState.name}
+                    initialAvatar={gameState.avatar}
+                    initialRoomCode={gameState.roomCode}
+                    isCreating={gameState.isCreating}
+                    onLeave={() => setGameState(null)}
+                />
+            );
+        }
     }
 
-    // Game finished - show leaderboard
-    if (isGameFinished) {
-        return (
-            <GameOverScreen
-                room={room}
-                playerId={playerId}
-                onLeave={leaveRoom}
-            />
-        );
-    }
-
-    // Waiting for opponent
-    if (room.phase === "waiting") {
-        return (
-            <WaitingRoom
-                roomCode={room.room_code}
-                isPsychic={isPsychic}
-                hasOpponent={!!room.guesser_id}
-                onLeave={leaveRoom}
-                onStartGame={startGame}
-            />
-        );
-    }
-
-    // Game in progress
     return (
-        <GameScreen
-            room={room}
-            isPsychic={isPsychic}
-            isGuesser={isGuesser}
-            onAngleChange={updateGuessAngle}
-            onSubmitClue={submitClue}
-            onSkipClue={skipClue}
-            onFinalizeGuess={finalizeGuess}
-            onNextRound={nextRound}
-            onUpdateScore={updateScore}
-            onSetCustomCard={setCustomCard}
-            onEndGame={endGame}
-            onLeave={leaveRoom}
+        <LandingScreen
+            onCreateGame={handleCreateGame}
+            onJoinGame={handleJoinGame}
+            isLoading={isLoading}
+            error={error}
         />
     );
 }
