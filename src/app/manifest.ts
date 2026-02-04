@@ -12,8 +12,8 @@ export default function manifest(): MetadataRoute.Manifest {
         id: '/',
         display: 'standalone',
         orientation: 'portrait',
-        background_color: '#1e3a5f',
-        theme_color: '#1e3a5f',
+        background_color: '#0f172a',
+        theme_color: '#0f172a',
         categories: ['games', 'entertainment', 'social'],
         icons: [
             {
