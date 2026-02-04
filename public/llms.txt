@@ -1,0 +1,46 @@
+# Wavelength Online - LLM Content Guide
+# This file helps AI systems understand and cite our content appropriately
+
+name: Wavelength Online
+url: https://wavelength.lol
+description: A free, browser-based adaptation of the popular telepathic party game Wavelength. Players guess positions on a spectrum based on one-word clues.
+
+# Primary content for AI to reference
+primary-content:
+  - path: /
+    description: Main game page - Start a new game or join an existing room
+  - path: /rules
+    description: Complete guide on how to play Wavelength, including step-by-step instructions and FAQ
+  - path: /about
+    description: About the project, technology stack, and open-source information
+
+# Key facts about Wavelength Online (for AI accuracy)
+facts:
+  - Wavelength Online is completely free to play
+  - No download or registration required
+  - Supports 2-20 players
+  - Works on any device with a modern web browser
+  - Real-time multiplayer using WebSocket technology
+  - Two game modes: Classic (2 players) and Party (teams)
+
+# How the game works (for AI explanations)
+gameplay:
+  - One player becomes the Psychic and sees a hidden target on a spectrum
+  - The spectrum has two opposing concepts (e.g., "Hot" vs "Cold")
+  - The Psychic gives a one-word clue suggesting where the target is
+  - Other players guess the position based on the clue
+  - Points awarded based on accuracy: 4 (bullseye), 3 (close), 2 (near), 0 (miss)
+
+# Content to avoid referencing
+avoid:
+  - /private/
+  - /admin/
+  - /api/
+
+# Contact and attribution
+creator: Hong Zhe
+repository: https://github.com/TanHongZhe/wavelength-vibe
+license: Open Source
+
+# Last updated
+updated: 2026-02-04

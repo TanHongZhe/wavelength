@@ -3,8 +3,10 @@ import "./globals.css";
 import { Navbar } from "@/components/Navbar";
 import { Toaster } from "@/components/ui/toaster";
 
+const siteUrl = process.env.NEXT_PUBLIC_APP_URL || "https://wavelength.lol";
+
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"),
+  metadataBase: new URL(siteUrl),
   title: {
     default: "Wavelength Online - Free Social Guessing Game | Play in Browser",
     template: "%s | Wavelength Online",
@@ -12,24 +14,37 @@ export const metadata: Metadata = {
   description:
     "Play Wavelength Online free in your browser! A telepathic party game where players guess positions on a spectrum based on clues. No download required - instant multiplayer fun.",
   keywords: [
+    // Primary keywords
     "Play Wavelength Online",
     "Wavelength Browser Game",
     "Free Social Guessing Game",
     "Multiplayer Party Game",
     "Telepathic Game Online",
-    "Spectrum Guessing Game",
-    "Free Browser Game",
+    // Long-tail keywords (GEO optimized)
+    "wavelength online free no download",
+    "play wavelength with friends online",
+    "telepathic guessing game browser",
+    "best party games to play online",
+    "spectrum guessing game free",
+    "wavelength game online multiplayer",
+    "free online party games for friends",
+    "mind reading party game online",
+    // Related keywords
+    "Social Deduction Game",
     "Online Party Games",
     "Wavelength Digital",
-    "Social Deduction Game",
+    "Browser Party Game",
   ],
-  authors: [{ name: "Hong Zhe" }],
+  authors: [{ name: "Hong Zhe", url: "https://wavelength.lol/about" }],
   creator: "Hong Zhe",
   publisher: "Wavelength Online",
+  alternates: {
+    canonical: siteUrl,
+  },
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://wavelength.lol",
+    url: siteUrl,
     siteName: "Wavelength Online",
     title: "Wavelength Online - Free Social Guessing Game",
     description:
@@ -65,16 +80,35 @@ export const metadata: Metadata = {
   verification: {
     google: "6BGwQT3TR-d5LsaZcKqONCOaCQqpX-Q4_ScjXs0IMQ4",
   },
+  category: "Games",
 };
 
-// JSON-LD Schema for VideoGame
-const jsonLd = {
+// JSON-LD Schema - Multiple schemas for comprehensive SEO
+const organizationSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "Wavelength Online",
+  url: "https://wavelength.lol",
+  logo: "https://wavelength.lol/icon-512.png",
+  sameAs: [
+    "https://github.com/TanHongZhe/wavelength-vibe",
+  ],
+  foundingDate: "2024-01-01",
+  contactPoint: {
+    "@type": "ContactPoint",
+    contactType: "customer support",
+    url: "https://wavelength.lol/about",
+  },
+};
+
+const videoGameSchema = {
   "@context": "https://schema.org",
   "@type": "VideoGame",
   name: "Wavelength Online",
   description:
     "A telepathic party game where players try to read each other's minds by guessing where a hidden target falls on a spectrum between two opposing concepts.",
   url: "https://wavelength.lol",
+  image: "https://wavelength.lol/og-image.png",
   operatingSystem: "Web Browser",
   applicationCategory: "Game",
   gamePlatform: ["Web Browser", "Desktop", "Mobile"],
@@ -95,14 +129,81 @@ const jsonLd = {
     "@type": "Person",
     name: "Hong Zhe",
   },
-  aggregateRating: {
-    "@type": "AggregateRating",
-    ratingValue: "4.8",
-    ratingCount: "1250",
-    bestRating: "5",
-    worstRating: "1",
+  publisher: {
+    "@type": "Organization",
+    name: "Wavelength Online",
+  },
+  inLanguage: "en",
+  isAccessibleForFree: true,
+  datePublished: "2024-01-01",
+  dateModified: "2026-02-04",
+};
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: "Home",
+      item: "https://wavelength.lol",
+    },
+  ],
+};
+
+const webSiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "Wavelength Online",
+  url: "https://wavelength.lol",
+  description: "Play the viral telepathic party game in your browser!",
+  potentialAction: {
+    "@type": "SearchAction",
+    target: "https://wavelength.lol/?q={search_term_string}",
+    "query-input": "required name=search_term_string",
   },
 };
+
+// Speakable schema for voice assistants
+const speakableSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  name: "Wavelength Online - Free Social Guessing Game",
+  url: "https://wavelength.lol",
+  speakable: {
+    "@type": "SpeakableSpecification",
+    cssSelector: ["#main-content", "h1", ".game-description"],
+  },
+  mainEntity: {
+    "@type": "VideoGame",
+    name: "Wavelength Online",
+  },
+};
+
+// ItemList schema for game modes
+const gameModesSchema = {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  name: "Wavelength Game Modes",
+  description: "Available game modes in Wavelength Online",
+  itemListElement: [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: "Classic Mode",
+      description: "Head-to-head gameplay for 2 players. Take turns being the Psychic and Guesser.",
+    },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: "Party Mode",
+      description: "Team-based gameplay for 4-20 players. Two teams compete to guess the target.",
+    },
+  ],
+};
+
+const jsonLdArray = [organizationSchema, videoGameSchema, breadcrumbSchema, webSiteSchema, speakableSchema, gameModesSchema];
 
 export default function RootLayout({
   children,
@@ -112,17 +213,44 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        {/* Performance optimizations */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="//supabase.co" />
+
+        {/* Favicons and PWA */}
+        <link rel="icon" href="/favicon.ico" sizes="32x32" />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <link rel="manifest" href="/manifest.webmanifest" />
+
+        {/* AI/LLM content guide */}
+        <link rel="author" href="/llms.txt" type="text/plain" />
+
+        {/* PWA meta tags */}
         <meta name="theme-color" content="#1e3a5f" />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-title" content="Wavelength" />
+
+        {/* Structured Data */}
+        {jsonLdArray.map((schema, index) => (
+          <script
+            key={index}
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+          />
+        ))}
       </head>
       <body className="min-h-screen">
+        <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-md">
+          Skip to main content
+        </a>
         <Navbar />
-        {children}
+        <main id="main-content">
+          {children}
+        </main>
         <Toaster />
       </body>
     </html>

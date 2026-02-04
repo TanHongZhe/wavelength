@@ -18,56 +18,31 @@ export const metadata: Metadata = {
 export default function HomePage() {
   return (
     <main>
-      {/* SEO Content - Rendered on Server, visible to crawlers */}
+      {/* SEO Content - Streamlined to avoid duplicate content with /rules and /faq */}
+      <h1 className="sr-only">Play Wavelength Online - Free Social Guessing Game</h1>
+
       <div className="sr-only">
-        <h1>Play Wavelength Online - Free Social Guessing Game</h1>
         <p>
-          Wavelength Online is a free telepathic party game you can play right in your browser.
-          No downloads, no installations - just instant multiplayer fun with friends and family.
+          Wavelength Online is the best free telepathic party game to play in your browser.
+          Challenge friends to guess where a hidden target lies on a spectrum.
+          Instant multiplayer with no downloads or registration required.
         </p>
 
-        <h2>How to Play Wavelength</h2>
-        <p>
-          Wavelength is a social guessing game where players try to read each other&apos;s minds.
-          One player is the Psychic who sees a hidden target on a spectrum between two opposing concepts.
-          The Psychic gives a one-word clue to help their teammates guess where the target is located.
-        </p>
+        <nav aria-label="Quick Navigation">
+          <h2>Game Resources</h2>
+          <ul>
+            <li><Link href="/rules">Read the Official Rules & Scoring</Link></li>
+            <li><Link href="/faq">Frequently Asked Questions</Link></li>
+            <li><Link href="/about">About this Open Source Project</Link></li>
+          </ul>
+        </nav>
 
-        <h3>Game Rules</h3>
-        <ol>
-          <li>The Psychic sees a hidden target position on the dial</li>
-          <li>A spectrum card shows two opposing concepts (e.g., &quot;Hot&quot; to &quot;Cold&quot;)</li>
-          <li>The Psychic gives a one-word clue to hint at the target location</li>
-          <li>The Guesser moves the dial needle to their best guess</li>
-          <li>Points are awarded based on how close the guess is to the target</li>
-        </ol>
-
-        <h3>Scoring System</h3>
+        <h2>Why Play Here?</h2>
         <ul>
-          <li>4 Points - Dead center! Perfect guess!</li>
-          <li>3 Points - Very close to the target</li>
-          <li>2 Points - Close but not quite</li>
-          <li>0 Points - Missed the target zone</li>
+          <li>100% Free & Open Source</li>
+          <li>Works on Mobile & Desktop</li>
+          <li>Real-time Multiplayer Sync</li>
         </ul>
-
-        <h2>Why Play Wavelength Online?</h2>
-        <ul>
-          <li>100% Free to play - no payment required</li>
-          <li>No download or installation needed</li>
-          <li>Works on any device with a web browser</li>
-          <li>Perfect for remote game nights</li>
-          <li>Fun for all ages - family-friendly content</li>
-          <li>Both casual and competitive play modes</li>
-        </ul>
-
-        <h2>About Wavelength</h2>
-        <p>
-          Wavelength is the digital version of the popular party game that tests how well
-          you know your friends and family. Originally a physical board game, our online
-          version brings the same excitement to your browser. Whether you&apos;re playing with
-          friends across the world or having a virtual game night, Wavelength Online
-          delivers hours of telepathic fun.
-        </p>
       </div>
 
       {/* Interactive Game Component - Client-side rendered */}
