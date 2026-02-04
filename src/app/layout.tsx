@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import "./globals.css";
 import { Navbar } from "@/components/Navbar";
 import { Toaster } from "@/components/ui/toaster";
@@ -8,11 +9,11 @@ const siteUrl = process.env.NEXT_PUBLIC_APP_URL || "https://wavelength.lol";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Wavelength Online - Free Social Guessing Game | Play in Browser",
+    default: "Wavelength Online - Free Social Guessing Game",
     template: "%s | Wavelength Online",
   },
   description:
-    "Play Wavelength Online free in your browser! A telepathic party game where players guess positions on a spectrum based on clues. No download required - instant multiplayer fun.",
+    "Play Wavelength Online free! The viral telepathic party game. Guess where concepts fall on a spectrum. No downloads - instant multiplayer fun.",
   keywords: [
     // Primary keywords
     "Play Wavelength Online",
@@ -244,6 +245,19 @@ export default function RootLayout({
         ))}
       </head>
       <body className="min-h-screen">
+        <Script
+          strategy="afterInteractive"
+          src="https://www.googletagmanager.com/gtag/js?id=G-VH26VEY5X0"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-VH26VEY5X0');
+          `}
+        </Script>
         <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-md">
           Skip to main content
         </a>
