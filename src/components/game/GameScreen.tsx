@@ -146,7 +146,7 @@ export function GameScreen({
             <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="text-center mt-20 md:mt-4 mb-6"
+                className="text-center mt-24 md:mt-4 mb-6"
             >
                 <span className={`inline-flex items-center gap-2 px-4 py-2 rounded-full font-display font-semibold text-sm ${isPsychic
                     ? "bg-wedge-teal/20 text-wedge-teal"

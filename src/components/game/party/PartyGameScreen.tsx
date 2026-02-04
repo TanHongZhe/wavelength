@@ -100,13 +100,13 @@ export function PartyGameScreen({
     };
 
     return (
-        <div className="min-h-screen p-6 pt-28 flex flex-col items-center">
+        <div className="min-h-screen p-6 pt-36 md:pt-28 flex flex-col items-center">
 
             {/* Header - Fixed Top Center */}
             <motion.div
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="fixed top-4 left-0 right-0 z-40 flex justify-center pointer-events-none"
+                className="fixed top-20 md:top-4 left-0 right-0 z-40 flex justify-center pointer-events-none"
             >
                 <div className="pointer-events-auto flex items-center gap-4 md:gap-6 bg-background/80 backdrop-blur-md px-6 py-2 rounded-full border border-border/50 shadow-sm">
                     <div className="flex items-center gap-3">
@@ -127,7 +127,7 @@ export function PartyGameScreen({
                 <div className="lg:col-span-2 flex flex-col items-center">
 
                     {/* Role Badge */}
-                    <div className="text-center mb-6">
+                    <div className="text-center mt-12 md:mt-0 mb-6">
                         <span className={`inline-flex items-center gap-2 px-4 py-2 rounded-full font-display font-semibold text-sm ${isPsychic
                             ? "bg-wedge-teal/20 text-wedge-teal"
                             : "bg-wedge-orange/20 text-wedge-orange"
