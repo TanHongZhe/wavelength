@@ -132,7 +132,7 @@ export function GameOverScreen({ room, playerId, onLeave }: GameOverScreenProps)
                     initial={{ y: 30, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ delay: 0.5 }}
-                    className="game-card max-w-sm mx-auto mb-8"
+                    className="game-card w-full max-w-md mx-auto mb-8"
                 >
                     <h2 className="font-display text-xl font-semibold text-primary mb-4 flex items-center justify-center gap-2">
                         <Sparkles className="w-5 h-5 text-wedge-yellow" />
@@ -145,17 +145,17 @@ export function GameOverScreen({ room, playerId, onLeave }: GameOverScreenProps)
                         initial={{ x: -20, opacity: 0 }}
                         animate={{ x: 0, opacity: 1 }}
                         transition={{ delay: 0.6 }}
-                        className={`flex items-center justify-between p-4 rounded-xl mb-3 ${player1Wins ? "bg-wedge-teal/20 border-2 border-wedge-teal" : "bg-secondary"
+                        className={`flex items-center justify-between p-4 gap-4 rounded-xl mb-3 ${player1Wins ? "bg-wedge-teal/20 border-2 border-wedge-teal" : "bg-secondary"
                             }`}
                     >
-                        <div className="flex items-center gap-3">
-                            {player1Wins && <Medal className="w-6 h-6 text-wedge-teal" />}
-                            <span className="text-2xl">{player1Avatar}</span>
-                            <span className="font-display font-semibold text-primary">
+                        <div className="flex items-center gap-3 min-w-0">
+                            {player1Wins && <Medal className="w-6 h-6 text-wedge-teal flex-shrink-0" />}
+                            <span className="text-2xl flex-shrink-0">{player1Avatar}</span>
+                            <span className="font-display font-semibold text-primary truncate">
                                 {player1Name}
                             </span>
                         </div>
-                        <span className="font-display text-2xl font-bold text-primary">
+                        <span className="font-display text-2xl font-bold text-primary flex-shrink-0">
                             {player1Score}
                         </span>
                     </motion.div>
@@ -165,17 +165,17 @@ export function GameOverScreen({ room, playerId, onLeave }: GameOverScreenProps)
                         initial={{ x: 20, opacity: 0 }}
                         animate={{ x: 0, opacity: 1 }}
                         transition={{ delay: 0.7 }}
-                        className={`flex items-center justify-between p-4 rounded-xl ${player2Wins ? "bg-wedge-teal/20 border-2 border-wedge-teal" : "bg-secondary"
+                        className={`flex items-center justify-between p-4 gap-4 rounded-xl ${player2Wins ? "bg-wedge-teal/20 border-2 border-wedge-teal" : "bg-secondary"
                             }`}
                     >
-                        <div className="flex items-center gap-3">
-                            {player2Wins && <Medal className="w-6 h-6 text-wedge-teal" />}
-                            <span className="text-2xl">{player2Avatar}</span>
-                            <span className="font-display font-semibold text-primary">
+                        <div className="flex items-center gap-3 min-w-0">
+                            {player2Wins && <Medal className="w-6 h-6 text-wedge-teal flex-shrink-0" />}
+                            <span className="text-2xl flex-shrink-0">{player2Avatar}</span>
+                            <span className="font-display font-semibold text-primary truncate">
                                 {player2Name}
                             </span>
                         </div>
-                        <span className="font-display text-2xl font-bold text-primary">
+                        <span className="font-display text-2xl font-bold text-primary flex-shrink-0">
                             {player2Score}
                         </span>
                     </motion.div>

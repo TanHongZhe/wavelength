@@ -106,12 +106,12 @@ export function GameScreen({
     };
 
     return (
-        <div className={`min-h-screen p-6 pt-28 ${shake ? "screen-shake" : ""}`}>
+        <div className={`min-h-screen p-6 pt-40 md:pt-28 ${shake ? "screen-shake" : ""}`}>
             {/* Header - Fixed Top Center */}
             <motion.div
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="fixed top-4 left-0 right-0 z-40 flex justify-center pointer-events-none"
+                className="fixed top-24 md:top-4 left-0 right-0 z-40 flex justify-center pointer-events-none"
             >
                 <div className="pointer-events-auto flex items-center gap-4 md:gap-6 bg-background/80 backdrop-blur-md px-6 py-2 rounded-full border border-border/50 shadow-sm">
                     <div className="flex items-center gap-3 md:border-r md:border-border md:pr-4">
