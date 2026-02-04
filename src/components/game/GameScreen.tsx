@@ -106,12 +106,12 @@ export function GameScreen({
     };
 
     return (
-        <div className={`min-h-screen p-6 pt-40 md:pt-28 ${shake ? "screen-shake" : ""}`}>
+        <div className={`min-h-screen p-6 pt-36 md:pt-28 ${shake ? "screen-shake" : ""}`}>
             {/* Header - Fixed Top Center */}
             <motion.div
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="fixed top-24 md:top-4 left-0 right-0 z-40 flex justify-center pointer-events-none"
+                className="fixed top-20 md:top-4 left-0 right-0 z-40 flex justify-center pointer-events-none"
             >
                 <div className="pointer-events-auto flex items-center gap-4 md:gap-6 bg-background/80 backdrop-blur-md px-6 py-2 rounded-full border border-border/50 shadow-sm">
                     <div className="flex items-center gap-3 md:border-r md:border-border md:pr-4">
@@ -146,7 +146,7 @@ export function GameScreen({
             <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="text-center mb-6"
+                className="text-center mt-20 md:mt-4 mb-6"
             >
                 <span className={`inline-flex items-center gap-2 px-4 py-2 rounded-full font-display font-semibold text-sm ${isPsychic
                     ? "bg-wedge-teal/20 text-wedge-teal"
@@ -228,7 +228,7 @@ export function GameScreen({
                                 size="sm"
                                 variant="outline"
                                 onClick={() => onNextRound("fun")}
-                                className="gap-2"
+                                className="gap-2 transition-transform hover:scale-105 active:scale-95"
                             >
                                 <Shuffle className="w-4 h-4" /> New Fun Card
                             </Button>
@@ -236,7 +236,7 @@ export function GameScreen({
                                 size="sm"
                                 variant="outline"
                                 onClick={() => onNextRound("spicy")}
-                                className="gap-2"
+                                className="gap-2 transition-transform hover:scale-105 active:scale-95"
                             >
                                 <Flame className="w-4 h-4" /> New Spicy Card
                             </Button>
@@ -244,7 +244,7 @@ export function GameScreen({
                                 size="sm"
                                 variant="outline"
                                 onClick={() => setShowCustom(!showCustom)}
-                                className="gap-2"
+                                className="gap-2 transition-transform hover:scale-105 active:scale-95"
                             >
                                 <Edit3 className="w-4 h-4" /> Custom
                             </Button>

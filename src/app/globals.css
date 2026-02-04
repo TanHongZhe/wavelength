@@ -205,7 +205,9 @@ body {
   padding: 1rem 2rem;
   font-family: var(--font-display);
   font-weight: 600;
+  font-weight: 600;
   font-size: 1.125rem;
+  cursor: pointer;
   transition: all 0.3s ease;
   background-color: hsl(var(--primary));
   color: hsl(var(--primary-foreground));
