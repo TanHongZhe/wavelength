@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/lib/supabase/client";
-import { generateRoomCode, generateRandomTarget, getRandomCard, calculatePoints, Card } from "@/lib/gameData";
+import { generateRoomCode, generateRandomTarget, getRandomCard, calculatePoints, Card, DeckType } from "@/lib/gameData";
 import { Json } from "@/lib/supabase/types";
 
 // Re-using Room interface but we mainly care about common fields
@@ -69,6 +69,9 @@ export function usePartyRoom() {
     const [error, setError] = useState<string | null>(null);
     const [authInitialized, setAuthInitialized] = useState(false);
     const [isGameFinished, setIsGameFinished] = useState(false);
+
+    // Current deck selection
+    const [currentDeck, setCurrentDeck] = useState<DeckType>("fun");
 
     // Internal state to track round changes for self-reset
     const [lastProcessedRound, setLastProcessedRound] = useState<number>(0);
@@ -384,7 +387,7 @@ export function usePartyRoom() {
         }
     }, [roomId, currentPlayer, playerId]);
 
-    const nextRound = useCallback(async (deck: "fun" | "spicy" | "random") => {
+    const nextRound = useCallback(async () => {
         if (!roomId || !players.length) return;
 
         // Determine next psychic
@@ -396,7 +399,7 @@ export function usePartyRoom() {
         const nextPsychicId = sortedPlayers[nextPsychicIndex].player_id;
 
         const targetAngle = generateRandomTarget();
-        const card = getRandomCard(deck);
+        const card = getRandomCard(currentDeck);
 
         // Only update ROOM. Each player will see 'round_number' increase and reset THEMSELVES.
         await supabase.from("rooms").update({
@@ -408,7 +411,7 @@ export function usePartyRoom() {
             psychic_id: nextPsychicId // Set the source of truth for psychic
         }).eq("id", roomId);
 
-    }, [roomId, players, room?.round_number]);
+    }, [roomId, players, room?.round_number, currentDeck]);
 
     const setCustomCard = useCallback(async (left: string, right: string) => {
         if (!roomId) return;
@@ -417,7 +420,17 @@ export function usePartyRoom() {
         }).eq("id", roomId);
     }, [roomId]);
 
-    const changeCard = useCallback(async (deck: "fun" | "spicy" | "random" = "random") => {
+    const changeCard = useCallback(async () => {
+        if (!roomId) return;
+        const newCard = getRandomCard(currentDeck);
+        await supabase.from("rooms").update({
+            current_card: cardToJson(newCard)
+        }).eq("id", roomId);
+    }, [roomId, currentDeck]);
+
+    const switchDeck = useCallback(async (deck: DeckType) => {
+        setCurrentDeck(deck);
+        // Optionally change the current card immediately when switching decks
         if (!roomId) return;
         const newCard = getRandomCard(deck);
         await supabase.from("rooms").update({
@@ -455,6 +468,7 @@ export function usePartyRoom() {
         isLoading,
         error,
         authInitialized,
+        currentDeck,
         createPartyRoom,
         joinPartyRoom,
         startPartyGame,
@@ -464,6 +478,7 @@ export function usePartyRoom() {
         nextRound,
         setCustomCard,
         changeCard,
+        switchDeck,
         endGame,
         leavePartyRoom
     };

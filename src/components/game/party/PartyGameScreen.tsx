@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import confetti from "canvas-confetti";
 import { Dial } from "../Dial";
 import { Room, PartyPlayer } from "@/hooks/usePartyRoom";
-import { calculatePoints } from "@/lib/gameData";
+import { calculatePoints, DECK_INFO, DeckType } from "@/lib/gameData";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -23,7 +23,9 @@ import {
     MessageCircle,
     Flag,
     Users,
-    RefreshCw
+    RefreshCw,
+    Layers,
+    X
 } from "lucide-react";
 
 interface PartyGameScreenProps {
@@ -32,12 +34,14 @@ interface PartyGameScreenProps {
     currentPlayer: PartyPlayer | undefined;
     isPsychic: boolean;
     isGuesser: boolean;
+    currentDeck: DeckType;
     onUpdateMyGuess: (angle: number) => void;
     onLockInGuess: (angle: number) => void;
     onSubmitClue: (clue: string) => void;
-    onNextRound: (deck: "fun" | "spicy" | "random") => void;
+    onNextRound: () => void;
     onSetCustomCard: (left: string, right: string) => void;
-    onChangeCard: (deck: "fun" | "spicy" | "random") => void;
+    onChangeCard: () => void;
+    onSwitchDeck: (deck: DeckType) => void;
     onEndGame: () => void;
     onLeave: () => void;
 }
@@ -48,16 +52,20 @@ export function PartyGameScreen({
     currentPlayer,
     isPsychic,
     isGuesser,
+    currentDeck,
     onUpdateMyGuess,
     onLockInGuess,
     onSubmitClue,
     onNextRound,
     onSetCustomCard,
     onChangeCard,
+    onSwitchDeck,
     onEndGame,
     onLeave,
 }: PartyGameScreenProps) {
     const [clue, setClue] = useState("");
+    const [showDeckPicker, setShowDeckPicker] = useState(false);
+
     const [pointsAwarded, setPointsAwarded] = useState(false);
 
     // Sort players: Psychic first, then by score
@@ -120,6 +128,84 @@ export function PartyGameScreen({
                 </div>
             </motion.div>
 
+            {/* Deck Picker Button - Fixed Bottom Right */}
+            <motion.button
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                onClick={() => setShowDeckPicker(true)}
+                className="fixed right-6 bottom-6 z-40 bg-card/95 backdrop-blur-md border border-border rounded-2xl p-4 shadow-xl hover:bg-card hover:scale-105 hover:shadow-2xl transition-all cursor-pointer group"
+                title="Switch Deck"
+            >
+                <div className="flex items-center gap-3">
+                    <div className="text-3xl">{DECK_INFO[currentDeck].emoji}</div>
+                    <div className="text-left">
+                        <div className="font-display font-bold text-sm">{DECK_INFO[currentDeck].name}</div>
+                        <div className="text-xs text-muted-foreground flex items-center gap-1">
+                            <Layers className="w-3 h-3" /> Change Deck
+                        </div>
+                    </div>
+                </div>
+            </motion.button>
+
+            {/* Deck Picker Modal */}
+            <AnimatePresence>
+                {showDeckPicker && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4"
+                        onClick={() => setShowDeckPicker(false)}
+                    >
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                            onClick={(e) => e.stopPropagation()}
+                            className="bg-card border border-border rounded-2xl p-6 w-full max-w-md shadow-2xl"
+                        >
+                            <div className="flex items-center justify-between mb-6">
+                                <h3 className="font-display text-xl font-bold">Switch Card Deck</h3>
+                                <button
+                                    onClick={() => setShowDeckPicker(false)}
+                                    className="p-1 hover:bg-secondary rounded-lg transition-colors"
+                                >
+                                    <X className="w-5 h-5" />
+                                </button>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-3">
+                                {(Object.keys(DECK_INFO) as DeckType[]).map((deckKey) => {
+                                    const deck = DECK_INFO[deckKey];
+                                    const isSelected = currentDeck === deckKey;
+                                    return (
+                                        <button
+                                            key={deckKey}
+                                            onClick={() => {
+                                                onSwitchDeck(deckKey);
+                                                setShowDeckPicker(false);
+                                            }}
+                                            className={`p-4 rounded-xl border-2 transition-all hover:scale-105 cursor-pointer ${isSelected
+                                                ? "border-primary bg-primary/10"
+                                                : "border-border hover:border-primary/50 bg-card"
+                                                }`}
+                                        >
+                                            <div className="text-2xl mb-2">{deck.emoji}</div>
+                                            <div className="font-display font-bold text-sm">{deck.name}</div>
+                                            <div className="text-xs text-muted-foreground">{deck.count} cards</div>
+                                        </button>
+                                    );
+                                })}
+                            </div>
+
+                            <p className="text-xs text-muted-foreground text-center mt-4">
+                                Switching decks will change the current card
+                            </p>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
 
             <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-3 gap-8">
 
@@ -174,7 +260,7 @@ export function PartyGameScreen({
                                         <Button
                                             variant="ghost"
                                             size="sm"
-                                            onClick={() => onChangeCard("random")}
+                                            onClick={() => onChangeCard()}
                                             className="text-xs text-muted-foreground hover:text-primary gap-1"
                                         >
                                             <RefreshCw className="w-3 h-3" /> Change Words
@@ -361,15 +447,10 @@ export function PartyGameScreen({
                                         if (isNextPsychic) {
                                             return (
                                                 <div className="flex flex-col gap-4 items-center animate-in fade-in slide-in-from-bottom-4">
-                                                    <p className="text-sm font-bold text-accent animate-pulse">You are the next Psychic! Pick a deck:</p>
-                                                    <div className="flex gap-3 justify-center flex-wrap">
-                                                        <Button onClick={() => onNextRound("fun")} className="btn-game gap-2">
-                                                            <Shuffle className="w-4 h-4" /> Fun Deck
-                                                        </Button>
-                                                        <Button onClick={() => onNextRound("spicy")} className="btn-game-accent gap-2">
-                                                            <Flame className="w-4 h-4" /> Spicy Deck
-                                                        </Button>
-                                                    </div>
+                                                    <p className="text-sm font-bold text-accent animate-pulse">You are the next Psychic!</p>
+                                                    <Button onClick={() => onNextRound()} className="btn-game gap-2">
+                                                        <ArrowRight className="w-4 h-4" /> Next Round
+                                                    </Button>
                                                 </div>
                                             );
                                         } else {

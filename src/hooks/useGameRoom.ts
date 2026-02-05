@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/lib/supabase/client";
-import { generateRoomCode, generateRandomTarget, getRandomCard, Card } from "@/lib/gameData";
+import { generateRoomCode, generateRandomTarget, getRandomCard, Card, DeckType } from "@/lib/gameData";
 import { Json } from "@/lib/supabase/types";
 
 export interface Room {
@@ -69,6 +69,9 @@ export function useGameRoom() {
     const [error, setError] = useState<string | null>(null);
     const [authInitialized, setAuthInitialized] = useState(false);
     const [isGameFinished, setIsGameFinished] = useState(false);
+
+    // Current deck selection
+    const [currentDeck, setCurrentDeck] = useState<DeckType>("fun");
 
     // Initialize authentication
     useEffect(() => {
@@ -308,11 +311,11 @@ export function useGameRoom() {
         } : null);
     }, [roomId]);
 
-    const nextRound = useCallback(async (deck: "fun" | "spicy" | "random") => {
+    const nextRound = useCallback(async () => {
         if (!roomId || !room) return;
 
         const targetAngle = generateRandomTarget();
-        const card = getRandomCard(deck);
+        const card = getRandomCard(currentDeck);
 
         await supabase.from("rooms").update({
             psychic_id: room.guesser_id,
@@ -336,7 +339,7 @@ export function useGameRoom() {
             clue: null,
             round_number: room.round_number + 1,
         } : null);
-    }, [room, roomId]);
+    }, [room, roomId, currentDeck]);
 
     const updateScore = useCallback(async (points: number) => {
         if (!roomId || !room) return;
@@ -368,6 +371,24 @@ export function useGameRoom() {
         }).eq("id", roomId);
     }, [roomId]);
 
+    const changeCard = useCallback(async () => {
+        if (!roomId) return;
+        const newCard = getRandomCard(currentDeck);
+        await supabase.from("rooms").update({
+            current_card: cardToJson(newCard)
+        }).eq("id", roomId);
+    }, [roomId, currentDeck]);
+
+    const switchDeck = useCallback(async (deck: DeckType) => {
+        setCurrentDeck(deck);
+        // Optionally change the current card immediately when switching decks
+        if (!roomId) return;
+        const newCard = getRandomCard(deck);
+        await supabase.from("rooms").update({
+            current_card: cardToJson(newCard)
+        }).eq("id", roomId);
+    }, [roomId]);
+
     const startGame = useCallback(async () => {
         if (!roomId) return;
         await supabase.from("rooms").update({ phase: "clue" }).eq("id", roomId);
@@ -396,6 +417,7 @@ export function useGameRoom() {
         isLoading,
         error,
         authInitialized,
+        currentDeck,
         createRoom,
         joinRoom,
         updateGuessAngle,
@@ -406,6 +428,8 @@ export function useGameRoom() {
         updateScore,
         endGame,
         setCustomCard,
+        changeCard,
+        switchDeck,
         startGame,
         leaveRoom,
     };

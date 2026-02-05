@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import confetti from "canvas-confetti";
 import { Dial } from "./Dial";
 import { Room } from "@/hooks/useGameRoom";
-import { calculatePoints } from "@/lib/gameData";
+import { calculatePoints, DECK_INFO, DeckType } from "@/lib/gameData";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -18,20 +18,26 @@ import {
     Send,
     Check,
     MessageCircle,
-    Flag
+    Flag,
+    Layers,
+    X,
+    RefreshCw
 } from "lucide-react";
 
 interface GameScreenProps {
     room: Room;
     isPsychic: boolean;
     isGuesser: boolean;
+    currentDeck: DeckType;
     onAngleChange: (angle: number) => void;
     onSubmitClue: (clue: string) => void;
     onSkipClue: () => void;
     onFinalizeGuess: (angle: number) => void;
-    onNextRound: (deck: "fun" | "spicy" | "random") => void;
+    onNextRound: () => void;
     onUpdateScore: (points: number) => void;
     onSetCustomCard: (left: string, right: string) => void;
+    onChangeCard: () => void;
+    onSwitchDeck: (deck: DeckType) => void;
     onEndGame: () => void;
     onLeave: () => void;
 }
@@ -40,6 +46,7 @@ export function GameScreen({
     room,
     isPsychic,
     isGuesser,
+    currentDeck,
     onAngleChange,
     onSubmitClue,
     onSkipClue,
@@ -47,6 +54,8 @@ export function GameScreen({
     onNextRound,
     onUpdateScore,
     onSetCustomCard,
+    onChangeCard,
+    onSwitchDeck,
     onEndGame,
     onLeave,
 }: GameScreenProps) {
@@ -56,6 +65,7 @@ export function GameScreen({
     const [showCustom, setShowCustom] = useState(false);
     const [pointsAwarded, setPointsAwarded] = useState(false);
     const [shake, setShake] = useState(false);
+    const [showDeckPicker, setShowDeckPicker] = useState(false);
 
     useEffect(() => {
         if (room.phase === "revealed" && !pointsAwarded) {
@@ -142,6 +152,84 @@ export function GameScreen({
                 </div>
             </motion.div>
 
+            {/* Deck Picker Button - Fixed Bottom Right */}
+            <motion.button
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                onClick={() => setShowDeckPicker(true)}
+                className="fixed right-6 bottom-6 z-40 bg-card/95 backdrop-blur-md border border-border rounded-2xl p-4 shadow-xl hover:bg-card hover:scale-105 hover:shadow-2xl transition-all cursor-pointer group"
+                title="Switch Deck"
+            >
+                <div className="flex items-center gap-3">
+                    <div className="text-3xl">{DECK_INFO[currentDeck].emoji}</div>
+                    <div className="text-left">
+                        <div className="font-display font-bold text-sm">{DECK_INFO[currentDeck].name}</div>
+                        <div className="text-xs text-muted-foreground flex items-center gap-1">
+                            <Layers className="w-3 h-3" /> Change Deck
+                        </div>
+                    </div>
+                </div>
+            </motion.button>
+
+            {/* Deck Picker Modal */}
+            <AnimatePresence>
+                {showDeckPicker && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4"
+                        onClick={() => setShowDeckPicker(false)}
+                    >
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                            onClick={(e) => e.stopPropagation()}
+                            className="bg-card border border-border rounded-2xl p-6 w-full max-w-md shadow-2xl"
+                        >
+                            <div className="flex items-center justify-between mb-6">
+                                <h3 className="font-display text-xl font-bold">Switch Card Deck</h3>
+                                <button
+                                    onClick={() => setShowDeckPicker(false)}
+                                    className="p-1 hover:bg-secondary rounded-lg transition-colors"
+                                >
+                                    <X className="w-5 h-5" />
+                                </button>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-3">
+                                {(Object.keys(DECK_INFO) as DeckType[]).map((deckKey) => {
+                                    const deck = DECK_INFO[deckKey];
+                                    const isSelected = currentDeck === deckKey;
+                                    return (
+                                        <button
+                                            key={deckKey}
+                                            onClick={() => {
+                                                onSwitchDeck(deckKey);
+                                                setShowDeckPicker(false);
+                                            }}
+                                            className={`p-4 rounded-xl border-2 transition-all hover:scale-105 cursor-pointer ${isSelected
+                                                    ? "border-primary bg-primary/10"
+                                                    : "border-border hover:border-primary/50 bg-card"
+                                                }`}
+                                        >
+                                            <div className="text-2xl mb-2">{deck.emoji}</div>
+                                            <div className="font-display font-bold text-sm">{deck.name}</div>
+                                            <div className="text-xs text-muted-foreground">{deck.count} cards</div>
+                                        </button>
+                                    );
+                                })}
+                            </div>
+
+                            <p className="text-xs text-muted-foreground text-center mt-4">
+                                Switching decks will change the current card
+                            </p>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
             {/* Role Badge */}
             <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
@@ -227,18 +315,10 @@ export function GameScreen({
                             <Button
                                 size="sm"
                                 variant="outline"
-                                onClick={() => onNextRound("fun")}
+                                onClick={() => onChangeCard()}
                                 className="gap-2 transition-transform hover:scale-105 active:scale-95"
                             >
-                                <Shuffle className="w-4 h-4" /> New Fun Card
-                            </Button>
-                            <Button
-                                size="sm"
-                                variant="outline"
-                                onClick={() => onNextRound("spicy")}
-                                className="gap-2 transition-transform hover:scale-105 active:scale-95"
-                            >
-                                <Flame className="w-4 h-4" /> New Spicy Card
+                                <RefreshCw className="w-4 h-4" /> New Card
                             </Button>
                             <Button
                                 size="sm"
@@ -392,16 +472,10 @@ export function GameScreen({
 
                         <div className="flex gap-3 justify-center flex-wrap mb-4">
                             <Button
-                                onClick={() => onNextRound("fun")}
+                                onClick={() => onNextRound()}
                                 className="btn-game gap-2"
                             >
-                                <Shuffle className="w-4 h-4" /> Fun Card
-                            </Button>
-                            <Button
-                                onClick={() => onNextRound("spicy")}
-                                className="btn-game-accent gap-2"
-                            >
-                                <Flame className="w-4 h-4" /> Spicy Card
+                                <ArrowRight className="w-4 h-4" /> Next Round
                             </Button>
                         </div>
 
@@ -417,11 +491,11 @@ export function GameScreen({
                 )}
             </AnimatePresence>
 
-            {/* Leave button */}
+            {/* Leave button - moved to left side since deck picker is on right */}
             <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="fixed bottom-6 right-6"
+                className="fixed bottom-6 left-6"
             >
                 <Button variant="outline" size="sm" onClick={onLeave}>
                     Leave Game

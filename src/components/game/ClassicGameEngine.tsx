@@ -29,6 +29,7 @@ export function ClassicGameEngine({
         isLoading,
         error,
         authInitialized,
+        currentDeck,
         createRoom,
         joinRoom,
         updateGuessAngle,
@@ -39,6 +40,8 @@ export function ClassicGameEngine({
         updateScore,
         endGame,
         setCustomCard,
+        changeCard,
+        switchDeck,
         startGame,
         leaveRoom,
     } = useGameRoom();
@@ -111,6 +114,7 @@ export function ClassicGameEngine({
             room={room}
             isPsychic={isPsychic}
             isGuesser={isGuesser}
+            currentDeck={currentDeck}
             onAngleChange={updateGuessAngle}
             onSubmitClue={submitClue}
             onSkipClue={skipClue}
@@ -118,6 +122,8 @@ export function ClassicGameEngine({
             onNextRound={nextRound}
             onUpdateScore={updateScore}
             onSetCustomCard={setCustomCard}
+            onChangeCard={changeCard}
+            onSwitchDeck={switchDeck}
             onEndGame={endGame}
             onLeave={handleLeave}
         />

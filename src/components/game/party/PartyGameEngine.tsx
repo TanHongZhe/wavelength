@@ -28,6 +28,7 @@ export function PartyGameEngine({
         isLoading,
         error,
         authInitialized,
+        currentDeck,
         createPartyRoom,
         joinPartyRoom,
         startPartyGame,
@@ -37,6 +38,7 @@ export function PartyGameEngine({
         nextRound,
         setCustomCard,
         changeCard,
+        switchDeck,
         endGame,
         leavePartyRoom
     } = usePartyRoom();
@@ -101,12 +103,14 @@ export function PartyGameEngine({
             currentPlayer={currentPlayer}
             isPsychic={isPsychic}
             isGuesser={isGuesser}
+            currentDeck={currentDeck}
             onUpdateMyGuess={updateMyGuess}
             onLockInGuess={lockInGuess}
             onSubmitClue={submitClue}
             onNextRound={nextRound}
             onSetCustomCard={setCustomCard}
             onChangeCard={changeCard}
+            onSwitchDeck={switchDeck}
             onEndGame={endGame}
             onLeave={handleLeave}
         />
