@@ -126,6 +126,39 @@ export type Database = {
                     }
                 ]
             }
+            feedback: {
+                Row: {
+                    id: string
+                    name: string | null
+                    email: string | null
+                    category: string
+                    message: string
+                    rating: number | null
+                    created_at: string
+                    ip_hash: string | null
+                }
+                Insert: {
+                    id?: string
+                    name?: string | null
+                    email?: string | null
+                    category: string
+                    message: string
+                    rating?: number | null
+                    created_at?: string
+                    ip_hash?: string | null
+                }
+                Update: {
+                    id?: string
+                    name?: string | null
+                    email?: string | null
+                    category?: string
+                    message?: string
+                    rating?: number | null
+                    created_at?: string
+                    ip_hash?: string | null
+                }
+                Relationships: []
+            }
         }
         Views: {
             [_ in never]: never
