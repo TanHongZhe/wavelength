@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     template: "%s | Wavelength Online",
   },
   description:
-    "Play Wavelength Online free! The viral telepathic party game. Guess where concepts fall on a spectrum. No downloads - instant multiplayer fun.",
+    "Play Wavelength Online free! The viral telepathic party game perfect for long distance relationships and bonding. Guess where concepts fall on a spectrum. No downloads - instant multiplayer fun.",
   keywords: [
     // Primary keywords
     "Play Wavelength Online",
@@ -21,6 +21,22 @@ export const metadata: Metadata = {
     "Free Social Guessing Game",
     "Multiplayer Party Game",
     "Telepathic Game Online",
+    // LDR & Bonding keywords (niche targeting)
+    "Long distance relationship games",
+    "LDR games online",
+    "Couples bonding games",
+    "Online relationship games",
+    "Games to play with boyfriend long distance",
+    "Games to play with girlfriend long distance",
+    "Deep conversation starter game",
+    "Connection games for couples",
+    "Virtual date night games",
+    "Games for long distance friends",
+    // Valentine's Day keywords (seasonal)
+    "Valentine's Day games",
+    "Valentines games for couples",
+    "Romantic games for couples",
+    "Valentine's Day date ideas",
     // Long-tail keywords (GEO optimized)
     "wavelength online free no download",
     "play wavelength with friends online",
@@ -113,7 +129,7 @@ const videoGameSchema = {
   operatingSystem: "Web Browser",
   applicationCategory: "Game",
   gamePlatform: ["Web Browser", "Desktop", "Mobile"],
-  genre: ["Social Guessing Game", "Party Game", "Multiplayer"],
+  genre: ["Social Guessing Game", "Party Game", "Multiplayer", "Couples Game", "Relationship Game", "LDR Game"],
   numberOfPlayers: {
     "@type": "QuantitativeValue",
     minValue: 2,
