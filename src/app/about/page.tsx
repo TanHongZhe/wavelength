@@ -13,12 +13,12 @@ export const metadata: Metadata = {
         "wavelength web app",
     ],
     alternates: {
-        canonical: "https://wavelength.lol/about",
+        canonical: "https://wavelength.lol/about/",
     },
     openGraph: {
         title: "About Wavelength Online - The Project",
         description: "Learn about the Wavelength Online project - a free, open-source web adaptation of the popular social guessing game.",
-        url: "https://wavelength.lol/about",
+        url: "https://wavelength.lol/about/",
     },
 };
 
@@ -28,7 +28,7 @@ const webPageSchema = {
     "@type": "WebPage",
     name: "About Wavelength Online",
     description: "About the Wavelength Online project. A free, open-source web adaptation of the popular social guessing game.",
-    url: "https://wavelength.lol/about",
+    url: "https://wavelength.lol/about/",
     isPartOf: {
         "@type": "WebSite",
         name: "Wavelength Online",
@@ -63,7 +63,7 @@ const breadcrumbSchema = {
             "@type": "ListItem",
             position: 2,
             name: "About",
-            item: "https://wavelength.lol/about",
+            item: "https://wavelength.lol/about/",
         },
     ],
 };

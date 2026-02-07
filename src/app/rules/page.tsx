@@ -14,12 +14,12 @@ export const metadata: Metadata = {
         "wavelength gameplay",
     ],
     alternates: {
-        canonical: "https://wavelength.lol/rules",
+        canonical: "https://wavelength.lol/rules/",
     },
     openGraph: {
         title: "How to Play Wavelength - Rules & Instructions",
         description: "Learn how to play Wavelength Online. Complete guide to rules, scoring, and gameplay mechanics.",
-        url: "https://wavelength.lol/rules",
+        url: "https://wavelength.lol/rules/",
     },
 };
 
@@ -113,7 +113,7 @@ const breadcrumbSchema = {
             "@type": "ListItem",
             position: 2,
             name: "Rules",
-            item: "https://wavelength.lol/rules",
+            item: "https://wavelength.lol/rules/",
         },
     ],
 };

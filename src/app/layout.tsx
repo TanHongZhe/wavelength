@@ -9,64 +9,36 @@ const siteUrl = process.env.NEXT_PUBLIC_APP_URL || "https://wavelength.lol";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Wavelength Online - Free Social Guessing Game",
+    default: "Wavelength Online - Free Multiplayer Social Guessing Game",
     template: "%s | Wavelength Online",
   },
   description:
-    "Play Wavelength Online free! The viral telepathic party game perfect for long distance relationships and bonding. Guess where concepts fall on a spectrum. No downloads - instant multiplayer fun.",
+    "Play Wavelength Online free! The viral telepathic party game. Guess where concepts fall on a spectrum. No downloads required - instant browser play for friends & couples.",
   keywords: [
-    // Primary keywords
-    "Play Wavelength Online",
-    "Wavelength Browser Game",
-    "Free Social Guessing Game",
-    "Multiplayer Party Game",
-    "Telepathic Game Online",
-    // LDR & Bonding keywords (niche targeting)
+    // Core Keywords
+    "Wavelength Online",
+    "Play Wavelength Free",
+    "Social Guessing Game",
+    "Telepathic Party Game",
+    "Multiplayer Browser Game",
+    "Wavelength Game Online",
+    // LDR & Couples
     "Long distance relationship games",
     "LDR games online",
     "Couples bonding games",
-    "Online relationship games",
-    "Games to play with boyfriend long distance",
-    "Games to play with girlfriend long distance",
-    "Deep conversation starter game",
-    "Connection games for couples",
-    "Virtual date night games",
-    "Games for long distance friends",
-    // Valentine's Day keywords (seasonal)
-    "Valentine's Day games",
-    "Valentines games for couples",
-    "Romantic games for couples",
-    "Valentine's Day date ideas",
-    // Mini Games & Couple Games keywords
-    "Couple games online",
-    "2 player games for couples",
-    "Mini games for couples",
-    "This or that game couples",
-    "Red flag green flag game",
-    "Quick couple games",
-    "Date night games online",
-    "Fun games for couples",
-    "Compatibility games for couples",
-    // Long-tail keywords (GEO optimized)
-    "wavelength online free no download",
-    "play wavelength with friends online",
-    "telepathic guessing game browser",
-    "best party games to play online",
-    "spectrum guessing game free",
-    "wavelength game online multiplayer",
-    "free online party games for friends",
-    "mind reading party game online",
-    // Related keywords
-    "Social Deduction Game",
-    "Online Party Games",
-    "Wavelength Digital",
-    "Browser Party Game",
+    "Virtual date night ideas",
+    "Online games for couples",
+    // Party & Friends
+    "Free online party games",
+    "Zoom party games",
+    "Browser games with friends",
+    "Best web games 2026",
   ],
   authors: [{ name: "Hong Zhe", url: "https://wavelength.lol/about" }],
   creator: "Hong Zhe",
   publisher: "Wavelength Online",
   alternates: {
-    canonical: siteUrl,
+    canonical: `${siteUrl}/`,
   },
   openGraph: {
     type: "website",

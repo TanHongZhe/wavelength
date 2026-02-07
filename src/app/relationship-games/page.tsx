@@ -24,13 +24,13 @@ export const metadata: Metadata = {
         "Couples question games",
     ],
     alternates: {
-        canonical: "https://wavelength.lol/relationship-games",
+        canonical: "https://wavelength.lol/relationship-games/",
     },
     openGraph: {
         title: "Relationship Games for Couples | Wavelength",
         description:
             "The best relationship game for couples! Bond, laugh, and discover how well you know each other. Free to play online!",
-        url: "https://wavelength.lol/relationship-games",
+        url: "https://wavelength.lol/relationship-games/",
     },
 };
 
@@ -41,7 +41,7 @@ const relationshipGameSchema = {
     name: "Wavelength - Relationship Game for Couples",
     description:
         "The perfect relationship game for couples who want to bond and have fun. A telepathic guessing game that sparks deep conversations and helps you understand each other better.",
-    url: "https://wavelength.lol/relationship-games",
+    url: "https://wavelength.lol/relationship-games/",
     image: "https://wavelength.lol/og-image.png",
     operatingSystem: "Web Browser",
     applicationCategory: "Game",

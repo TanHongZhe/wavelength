@@ -27,13 +27,13 @@ export const metadata: Metadata = {
         "Icebreaker games for couples",
     ],
     alternates: {
-        canonical: "https://wavelength.lol/couple-games",
+        canonical: "https://wavelength.lol/couple-games/",
     },
     openGraph: {
         title: "Couple Games Online - Free 2 Player Mini Games",
         description:
             "Play fun couple games with your partner! Quick mini games like This or That, Red Flag Green Flag, and more. Free, no download, instant fun!",
-        url: "https://wavelength.lol/couple-games",
+        url: "https://wavelength.lol/couple-games/",
     },
 };
 
@@ -44,7 +44,7 @@ const coupleGamesSchema = {
     name: "Wavelength - Couple Games Collection",
     description:
         "A collection of fun couple games including Wavelength, Rapid Fire This or That, and Red Flag Green Flag. Perfect for date nights, LDR couples, and bonding with your partner.",
-    url: "https://wavelength.lol/couple-games",
+    url: "https://wavelength.lol/couple-games/",
     image: "https://wavelength.lol/og-image.png",
     operatingSystem: "Web Browser",
     applicationCategory: "Game",

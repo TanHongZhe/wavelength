@@ -15,12 +15,12 @@ export const metadata: Metadata = {
         "wavelength support",
     ],
     alternates: {
-        canonical: "https://wavelength.lol/faq",
+        canonical: "https://wavelength.lol/faq/",
     },
     openGraph: {
         title: "FAQ - Frequently Asked Questions About Wavelength",
         description: "Get answers to common questions about Wavelength Online. Everything you need to know!",
-        url: "https://wavelength.lol/faq",
+        url: "https://wavelength.lol/faq/",
     },
 };
 
@@ -105,7 +105,7 @@ const breadcrumbSchema = {
             "@type": "ListItem",
             position: 2,
             name: "FAQ",
-            item: "https://wavelength.lol/faq",
+            item: "https://wavelength.lol/faq/",
         },
     ],
 };
@@ -115,7 +115,7 @@ const speakableSchema = {
     "@context": "https://schema.org",
     "@type": "WebPage",
     name: "Wavelength Online FAQ",
-    url: "https://wavelength.lol/faq",
+    url: "https://wavelength.lol/faq/",
     speakable: {
         "@type": "SpeakableSpecification",
         cssSelector: ["article", "h1", "summary", "p"],
