@@ -9,7 +9,7 @@ const siteUrl = process.env.NEXT_PUBLIC_APP_URL || "https://wavelength.lol";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Wavelength Online - Free Multiplayer Social Party Guessing Game",
+    default: "Wavelength Online - Free Multiplayer Social Party Game",
     template: "%s | Wavelength Online",
   },
   description:
@@ -45,9 +45,9 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: siteUrl,
     siteName: "Wavelength Online",
-    title: "Wavelength Online - Free Multiplayer Social Party Guessing Game",
+    title: "Wavelength Online - Free Multiplayer Social Party Game",
     description:
-      "Play Wavelength Online free! The viral telepathic party game perfect for long distance relationships and couples bonding. No download required - instant browser play.",
+      "Play Wavelength Online free! The viral party game perfect for long distance relationships and couples bonding. No download required - instant browser play.",
     images: [
       {
         url: "/og-image.png",
@@ -59,9 +59,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Wavelength Online - Free Multiplayer Social Party Guessing Game",
+    title: "Wavelength Online - Free Multiplayer Social Party Game",
     description:
-      "Play Wavelength Online free! The viral telepathic party game perfect for long distance relationships and couples bonding. No download required - instant browser play.",
+      "Play Wavelength Online free! The viral party game perfect for long distance relationships and couples bonding. No download required - instant browser play.",
     images: ["/og-image.png"],
     creator: "@WavelengthGame",
   },
@@ -168,7 +168,7 @@ const webSiteSchema = {
 const speakableSchema = {
   "@context": "https://schema.org",
   "@type": "WebPage",
-  name: "Wavelength Online - Free Multiplayer Social Party Guessing Game",
+  name: "Wavelength Online - Free Multiplayer Social Party Game",
   url: "https://wavelength.lol",
   speakable: {
     "@type": "SpeakableSpecification",

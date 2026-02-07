@@ -3,9 +3,9 @@ import { GameLoader } from "../components/game/GameLoader";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Wavelength Online - Free Multiplayer Social Party Guessing Game",
+  title: "Wavelength Online - Free Multiplayer Social Party Game",
   description:
-    "Play Wavelength Online free! The viral telepathic party game perfect for long distance relationships and couples bonding. No download required - instant browser play.",
+    "Play Wavelength Online free! The viral party game perfect for long distance relationships and couples bonding. No download required - instant browser play.",
   keywords: [
     "Play Wavelength Online",
     "Wavelength Game",
