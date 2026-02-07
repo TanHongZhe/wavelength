@@ -3,10 +3,12 @@ import { GameLoader } from "../../components/game/GameLoader";
 import { LandingOverlay } from "../../components/LandingOverlay";
 
 export const metadata: Metadata = {
-    title: "Couple Games Online - 2 Player Games for Couples | Free Mini Games",
+    title: "Couple Games Online | Free 2 Player Mini Games & Card Games",
     description:
-        "Play fun couple games online with your partner! Free 2-player mini games perfect for date nights, LDR couples, and bonding. Red Flag Green Flag, This or That, and more. No download required!",
+        "Play fun couple games & card games online! Wavelength, Red Flag Green Flag & This or That. Free 2-player mini games for date nights & LDR bonding.",
     keywords: [
+        "Wavelength Game Online",
+        "Couple Card Games",
         "Couple games online",
         "2 player games for couples",
         "Mini games for couples",
@@ -30,9 +32,9 @@ export const metadata: Metadata = {
         canonical: "https://wavelength.lol/couple-games/",
     },
     openGraph: {
-        title: "Couple Games Online - Free 2 Player Mini Games",
+        title: "Couple Games Online | Free 2 Player Mini Games & Card Games",
         description:
-            "Play fun couple games with your partner! Quick mini games like This or That, Red Flag Green Flag, and more. Free, no download, instant fun!",
+            "Play fun couple games & card games online! Wavelength, Red Flag Green Flag & This or That. Free 2-player mini games for date nights & LDR bonding.",
         url: "https://wavelength.lol/couple-games/",
     },
 };
@@ -199,7 +201,7 @@ export default function CoupleGamesPage() {
 
             {/* SEO hidden content */}
             <div className="sr-only">
-                <h1>Couple Games Online - 2 Player Mini Games</h1>
+                <h2>Couple Games Online - 2 Player Mini Games</h2>
                 <h2>Best Online Games for Couples FAQ</h2>
                 <p>
                     Looking for fun games to play with your boyfriend or girlfriend? Our collection

@@ -3,16 +3,15 @@ import { GameLoader } from "../components/game/GameLoader";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Wavelength Online - Free Multiplayer Social Party Game",
+  title: "Play Wavelength Game Online | Free Multiplayer Couple Card Games",
   description:
-    "Play Wavelength Online free! The viral party game perfect for long distance relationships and couples bonding. No download required - instant browser play.",
+    "Play Wavelength Game Online free! The viral telepathic party game perfect for long distance relationships and couple card games. Instant browser play.",
   keywords: [
+    "Wavelength Game Online",
+    "Couple Card Games",
     "Play Wavelength Online",
     "Wavelength Game",
     "Wavelength",
-    "Wavelength Game Online",
-    "Wavelength Online",
-    "Wavelength Game Online",
     "Wavelength Browser Game",
     "Free Social Guessing Game",
     "Free Party Game",
@@ -42,6 +41,7 @@ export default function HomePage() {
   return (
     <main className="flex flex-col min-h-screen">
       {/* Interactive Game Component - Client-side rendered */}
+      <h1 className="sr-only">Wavelength Game Online - Free Multiplayer Couple Card Games</h1>
       <GameLoader />
 
       {/* Visible SEO Content - Placed below the game, visible to crawlers and users */}

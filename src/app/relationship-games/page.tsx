@@ -4,10 +4,12 @@ import Link from "next/link";
 import { LandingOverlay } from "../../components/LandingOverlay";
 
 export const metadata: Metadata = {
-    title: "Relationship Games for Couples | Fun Bonding Games Online",
+    title: "Relationship Games for Couples | Wavelength Game Online",
     description:
-        "Discover the best relationship games to play with your partner. Wavelength is a fun, free couples game that sparks deep conversations and strengthens your bond.",
+        "Discover the best relationship games & couple card games online. Wavelength Game sparks deep conversations & strengthens bonds. Free to play.",
     keywords: [
+        "Wavelength Game Online",
+        "Couple Card Games",
         "Relationship games",
         "Relationship games for couples",
         "Couples games online",
@@ -27,9 +29,9 @@ export const metadata: Metadata = {
         canonical: "https://wavelength.lol/relationship-games/",
     },
     openGraph: {
-        title: "Relationship Games for Couples | Wavelength",
+        title: "Relationship Games for Couples | Wavelength Game Online",
         description:
-            "The best relationship game for couples! Bond, laugh, and discover how well you know each other. Free to play online!",
+            "Discover the best relationship games & couple card games online. Wavelength Game sparks deep conversations & strengthens bonds. Free to play.",
         url: "https://wavelength.lol/relationship-games/",
     },
 };
@@ -208,7 +210,7 @@ export default function RelationshipGamesPage() {
 
             {/* SEO hidden content */}
             <div className="sr-only">
-                <h1>Relationship Games for Couples</h1>
+                <h2>Relationship Games for Couples</h2>
                 <h2>Best Games for Couples FAQ</h2>
                 <p>
                     Looking for relationship games to play with your partner? Wavelength is one of the best

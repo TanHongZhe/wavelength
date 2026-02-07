@@ -4,10 +4,12 @@ import Link from "next/link";
 import { LandingOverlay } from "../../components/LandingOverlay";
 
 export const metadata: Metadata = {
-    title: "Valentine's Day Games for Couples 2026 | Free Online Games",
+    title: "Valentine's Day Games for Couples 2026 | Wavelength Game Online",
     description:
-        "Looking for Valentine's Day games to play with your partner? Wavelength is the perfect couples game for Valentine's 2026. Free, fun, and romantic - play together online!",
+        "Play Wavelength Game Online this Valentine's 2026! The perfect romantic couple card game for date nights. Free, fun & instant multiplayer.",
     keywords: [
+        "Wavelength Game Online",
+        "Couple Card Games",
         "Valentine's Day games",
         "Valentines games for couples",
         "Valentine's Day games online",
@@ -27,9 +29,9 @@ export const metadata: Metadata = {
         canonical: "https://wavelength.lol/valentines-games/",
     },
     openGraph: {
-        title: "Valentine's Day Games for Couples 2026 | Wavelength",
+        title: "Valentine's Day Games for Couples 2026 | Wavelength Game Online",
         description:
-            "The perfect game for Valentine's Day! Connect with your partner in this fun, romantic guessing game. Free to play online!",
+            "Play Wavelength Game Online this Valentine's 2026! The perfect romantic couple card game for date nights. Free, fun & instant multiplayer.",
         url: "https://wavelength.lol/valentines-games/",
     },
 };
@@ -240,7 +242,7 @@ export default function ValentinesGamesPage() {
 
             {/* SEO hidden content */}
             <div className="sr-only">
-                <h1>Valentine&apos;s Day Games for Couples 2026</h1>
+                <h2>Valentine&apos;s Day Games for Couples 2026</h2>
                 <h2>Valentine&apos;s Day Games FAQ</h2>
                 <p>
                     Looking for Valentine&apos;s Day games to play with your boyfriend, girlfriend, husband, or wife?

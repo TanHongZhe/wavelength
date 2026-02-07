@@ -4,10 +4,12 @@ import Link from "next/link";
 import { LandingOverlay } from "../../components/LandingOverlay";
 
 export const metadata: Metadata = {
-    title: "Best Games for Long Distance Relationships | LDR Games Online",
+    title: "Best Games for Long Distance Relationships | Wavelength Game Online",
     description:
-        "Looking for games to play with your long distance partner? Wavelength is the perfect LDR game for couples bonding. Free, no download, instant multiplayer connection.",
+        "Play Wavelength Game Online, the best LDR couple card game. Perfect for long distance relationships & virtual date nights. Free browser play, no download.",
     keywords: [
+        "Wavelength Game Online",
+        "Couple Card Games",
         "Long distance relationship games",
         "LDR games online",
         "Games to play with boyfriend long distance",
@@ -25,9 +27,9 @@ export const metadata: Metadata = {
         canonical: "https://wavelength.lol/long-distance-games/",
     },
     openGraph: {
-        title: "Best Games for Long Distance Relationships | Wavelength",
+        title: "Best Games for Long Distance Relationships | Wavelength Game Online",
         description:
-            "The perfect game for LDR couples. Connect, bond, and have fun together even when you're miles apart. Free to play in your browser!",
+            "Play Wavelength Game Online, the best LDR couple card game. Perfect for long distance relationships & virtual date nights. Free browser play, no download.",
         url: "https://wavelength.lol/long-distance-games/",
     },
 };
@@ -176,7 +178,7 @@ export default function LongDistanceGamesPage() {
 
             {/* SEO hidden content */}
             <div className="sr-only">
-                <h1>Best Games for Long Distance Relationships</h1>
+                <h2>Best Games for Long Distance Relationships</h2>
                 <h2>Long Distance Relationship Games FAQ</h2>
                 <p>
                     Looking for games to play with your boyfriend or girlfriend in a long distance relationship?
