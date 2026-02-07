@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { AudioWaveform, Users, Sparkles, ChevronDown, Gamepad2, PartyPopper } from "lucide-react";
+import { AudioWaveform, Users, Sparkles, ChevronDown, Gamepad2, PartyPopper, Dices } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { MiniGamesModal } from "@/components/minigames/MiniGamesModal";
 
 interface LandingScreenProps {
     onCreateGame: (mode: "classic" | "party", name: string, avatar: string) => void;
@@ -21,8 +22,9 @@ export function LandingScreen({ onCreateGame, onJoinGame, isLoading, error }: La
     const [roomCode, setRoomCode] = useState("");
     const [playerName, setPlayerName] = useState("");
     const [selectedAvatar, setSelectedAvatar] = useState(AVATARS[0]);
-    const [mode, setMode] = useState<"initial" | "create" | "join">("initial");
+    const [mode, setMode] = useState<"initial" | "wavelength" | "create" | "join">("initial");
     const [isAvatarExpanded, setIsAvatarExpanded] = useState(false);
+    const [showMiniGames, setShowMiniGames] = useState(false);
 
     return (
         <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-background text-foreground transition-colors duration-300">
@@ -78,6 +80,52 @@ export function LandingScreen({ onCreateGame, onJoinGame, isLoading, error }: La
                     <>
                         <motion.button
                             className="game-card w-full text-left group hover:scale-[1.02] transition-transform"
+                            onClick={() => setMode("wavelength")}
+                            whileTap={{ scale: 0.98 }}
+                        >
+                            <div className="flex items-start gap-4">
+                                <div className="p-3 rounded-xl bg-gradient-to-br from-wedge-teal to-wedge-orange text-white transition-all">
+                                    <AudioWaveform className="w-6 h-6" />
+                                </div>
+                                <div className="flex-1">
+                                    <h3 className="font-display text-xl font-semibold text-primary mb-1">
+                                        Wavelength
+                                    </h3>
+                                    <p className="text-muted-foreground">
+                                        Signature telepathic game • 2-6 players
+                                    </p>
+                                </div>
+                            </div>
+                        </motion.button>
+
+                        <motion.button
+                            className="game-card w-full text-left group hover:scale-[1.02] transition-transform"
+                            onClick={() => setShowMiniGames(true)}
+                            whileTap={{ scale: 0.98 }}
+                        >
+                            <div className="flex items-start gap-4">
+                                <div className="p-3 rounded-xl bg-gradient-to-br from-blue-500/20 to-purple-500/20 text-purple-500 group-hover:from-blue-500 group-hover:to-purple-500 group-hover:text-white transition-all">
+                                    <Dices className="w-6 h-6" />
+                                </div>
+                                <div>
+                                    <h3 className="font-display text-xl font-semibold text-primary mb-1">
+                                        Mini Games 🎲
+                                    </h3>
+                                    <p className="text-muted-foreground">
+                                        Quick 2-player games to play together
+                                    </p>
+                                </div>
+                            </div>
+                        </motion.button>
+                    </>
+                ) : mode === "wavelength" ? (
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="space-y-3"
+                    >
+                        <motion.button
+                            className="game-card w-full text-left group hover:scale-[1.02] transition-transform"
                             onClick={() => setMode("create")}
                             whileTap={{ scale: 0.98 }}
                         >
@@ -115,7 +163,15 @@ export function LandingScreen({ onCreateGame, onJoinGame, isLoading, error }: La
                                 </div>
                             </div>
                         </motion.button>
-                    </>
+
+                        <Button
+                            variant="ghost"
+                            className="w-full text-muted-foreground"
+                            onClick={() => setMode("initial")}
+                        >
+                            Back
+                        </Button>
+                    </motion.div>
                 ) : mode === "create" ? (
                     <motion.div
                         initial={{ opacity: 0, scale: 0.95 }}
@@ -366,6 +422,12 @@ export function LandingScreen({ onCreateGame, onJoinGame, isLoading, error }: La
             >
                 Crafted with ❤️ by Hong Zhe
             </motion.p>
+
+            {/* Mini Games Modal */}
+            <MiniGamesModal
+                isOpen={showMiniGames}
+                onClose={() => setShowMiniGames(false)}
+            />
         </div>
     );
 }
