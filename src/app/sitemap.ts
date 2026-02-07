@@ -55,6 +55,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
             changeFrequency: 'monthly',
             priority: 0.7,
         },
+        {
+            url: `${baseUrl}/couple-games`,
+            lastModified: currentDate,
+            changeFrequency: 'weekly',
+            priority: 0.95,
+        },
     ]
 }
 

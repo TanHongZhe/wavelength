@@ -37,6 +37,16 @@ export const metadata: Metadata = {
     "Valentines games for couples",
     "Romantic games for couples",
     "Valentine's Day date ideas",
+    // Mini Games & Couple Games keywords
+    "Couple games online",
+    "2 player games for couples",
+    "Mini games for couples",
+    "This or that game couples",
+    "Red flag green flag game",
+    "Quick couple games",
+    "Date night games online",
+    "Fun games for couples",
+    "Compatibility games for couples",
     // Long-tail keywords (GEO optimized)
     "wavelength online free no download",
     "play wavelength with friends online",
