@@ -9,11 +9,11 @@ const siteUrl = process.env.NEXT_PUBLIC_APP_URL || "https://wavelength.lol";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Wavelength Online - Free Multiplayer Social Guessing Game",
+    default: "Wavelength Online - Free MultiplayerSocial Party Guessing Game",
     template: "%s | Wavelength Online",
   },
   description:
-    "Play Wavelength Online free! The viral telepathic party game. Guess where concepts fall on a spectrum. No downloads required - instant browser play for friends & couples.",
+    "Play Wavelength Online free! The viral telepathic party game. No downloads required - instant browser play for friends & couples.",
   keywords: [
     // Core Keywords
     "Wavelength Online",
