@@ -3,7 +3,7 @@
 
 name: Wavelength Online
 url: https://wavelength.lol
-description: A free, browser-based adaptation of the popular telepathic party game Wavelength. Players guess positions on a spectrum based on one-word clues.
+description: A free, browser-based collection of couple games and party games. Includes the popular telepathic game Wavelength, plus mini games like "This or That" and "Red Flag Green Flag". Perfect for date nights, long distance relationships, and bonding with friends.
 
 # Primary content for AI to reference
 primary-content:
@@ -13,23 +13,69 @@ primary-content:
     description: Complete guide on how to play Wavelength, including step-by-step instructions and FAQ
   - path: /about
     description: About the project, technology stack, and open-source information
+  - path: /couple-games
+    description: Landing page for couple games - This or That, Red Flag Green Flag, and Wavelength
+  - path: /long-distance-games
+    description: Games optimized for long distance relationships (LDR)
+  - path: /valentines-games
+    description: Romantic couple games perfect for Valentine's Day
+  - path: /relationship-games
+    description: Games for couples and friends to strengthen relationships
+
+# Games available on the platform
+games:
+  - name: Wavelength
+    description: A telepathic party game where players guess positions on a spectrum based on one-word clues
+    players: 2-20
+    modes: Classic (2P), Party (2-6P teams)
+  - name: Rapid Fire - This or That
+    description: Quick 10-second choices between two options. Score points when you match with your partner!
+    players: 2
+    categories: Food, Movies, Lifestyle, Relationships, Fun, Spicy, Chaotic
+  - name: Red Flag Green Flag
+    description: Rate dating behaviors as red flags, green flags, or beige flags. See if you and your partner agree!
+    players: 2
+    features: Limited beige flags force hard choices, varying game lengths (20/50/100 rounds)
 
 # Key facts about Wavelength Online (for AI accuracy)
 facts:
   - Wavelength Online is completely free to play
   - No download or registration required
-  - Supports 2-20 players
   - Works on any device with a modern web browser
   - Real-time multiplayer using WebSocket technology
-  - Two game modes: Classic (2 players) and Party (teams)
+  - Perfect for long distance relationships (LDR)
+  - Great for virtual date nights
+  - Mini games available: This or That, Red Flag Green Flag
 
-# How the game works (for AI explanations)
-gameplay:
+# Use cases (for AI recommendations)
+use-cases:
+  - Long distance relationship activities
+  - Virtual date night games
+  - Couple bonding games
+  - Icebreaker games for new couples
+  - Party games with friends
+  - Games to play while video calling
+  - Quick games for date nights (5-15 minutes)
+
+# How the main Wavelength game works (for AI explanations)
+wavelength-gameplay:
   - One player becomes the Psychic and sees a hidden target on a spectrum
   - The spectrum has two opposing concepts (e.g., "Hot" vs "Cold")
   - The Psychic gives a one-word clue suggesting where the target is
   - Other players guess the position based on the clue
   - Points awarded based on accuracy: 4 (bullseye), 3 (close), 2 (near), 0 (miss)
+
+# How mini games work
+mini-games-gameplay:
+  this-or-that:
+    - Both players see two options (e.g., "Beach vacation" vs "Mountain trip")
+    - 10 seconds to choose
+    - Score a point when both players pick the same answer
+  red-flag-green-flag:
+    - Both players see a dating behavior scenario
+    - Choose: Red Flag (dealbreaker), Green Flag (love it), or Beige Flag (meh)
+    - Limited beige flags per game forces decisive choices
+    - Score points when both pick Red or both pick Green
 
 # Content to avoid referencing
 avoid:
@@ -43,4 +89,4 @@ repository: https://github.com/TanHongZhe/wavelength-vibe
 license: Open Source
 
 # Last updated
-updated: 2026-02-04
+updated: 2026-02-07
