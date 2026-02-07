@@ -236,10 +236,9 @@ export function FlagGameScreen({
         const myActualChoice = myChoice || "__TIMEOUT__";
         const opponentActualChoice = opponentChoice || "__TIMEOUT__";
 
-        // Both picked the same non-timeout flag = match
+        // Both picked the same non-timeout flag = match (including BEIGE)
         const matched = myActualChoice === opponentActualChoice &&
-            myActualChoice !== "__TIMEOUT__" &&
-            myActualChoice !== "BEIGE";
+            myActualChoice !== "__TIMEOUT__";
 
         const newTeamScore = matched ? teamScore + 1 : teamScore;
 
@@ -423,9 +422,10 @@ export function FlagGameScreen({
     const isRedAlert = (myChoice === "RED" && opponentChoice === "GREEN") ||
         (myChoice === "GREEN" && opponentChoice === "RED");
 
-    // Check if matched (both red or both green)
+    // Check if matched (both red, both green, or both beige)
     const isMatch = (myChoice === "RED" && opponentChoice === "RED") ||
-        (myChoice === "GREEN" && opponentChoice === "GREEN");
+        (myChoice === "GREEN" && opponentChoice === "GREEN") ||
+        (myChoice === "BEIGE" && opponentChoice === "BEIGE");
 
     const waitingForOpponent = myChoice && !opponentChoice && phase === "choosing";
 
@@ -671,29 +671,6 @@ export function FlagGameScreen({
                                     <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-red-500/20 text-red-500 font-display font-bold border border-red-500/30">
                                         ✗ No points - you disagree!
                                     </div>
-                                    {!showDebatePrompt ? (
-                                        <div>
-                                            <Button
-                                                variant="outline"
-                                                size="sm"
-                                                onClick={() => setShowDebatePrompt(true)}
-                                                className="gap-2"
-                                            >
-                                                <MessageCircle className="w-4 h-4" />
-                                                Wait, why?!
-                                            </Button>
-                                        </div>
-                                    ) : (
-                                        <motion.div
-                                            initial={{ opacity: 0, y: 10 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            className="bg-secondary/50 rounded-xl p-4"
-                                        >
-                                            <p className="text-sm text-muted-foreground">
-                                                💬 Time to debate! Discuss why you picked different flags before moving on.
-                                            </p>
-                                        </motion.div>
-                                    )}
                                 </motion.div>
                             ) : (
                                 <motion.div

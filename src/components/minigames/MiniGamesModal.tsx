@@ -55,15 +55,15 @@ export function MiniGamesModal({ isOpen, onClose }: MiniGamesModalProps) {
                         initial={{ opacity: 0, scale: 0.95, y: 20 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                        className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-card border-2 border-border rounded-2xl shadow-2xl z-50 p-6"
+                        className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[95%] md:w-full max-w-2xl max-h-[80vh] overflow-y-auto bg-card border-2 border-border rounded-2xl shadow-2xl z-50 p-4 md:p-6"
                     >
                         {/* Header */}
-                        <div className="flex items-center justify-between mb-6">
+                        <div className="flex items-center justify-between mb-4 md:mb-6">
                             <div>
-                                <h2 className="text-3xl font-display font-bold text-primary">
+                                <h2 className="text-2xl md:text-3xl font-display font-bold text-primary">
                                     Mini Games 🎲
                                 </h2>
-                                <p className="text-muted-foreground mt-1">
+                                <p className="text-sm md:text-base text-muted-foreground mt-1">
                                     Quick 2-player games to play together
                                 </p>
                             </div>
@@ -76,22 +76,22 @@ export function MiniGamesModal({ isOpen, onClose }: MiniGamesModalProps) {
                         </div>
 
                         {/* Games Grid */}
-                        <div className="space-y-4">
+                        <div className="space-y-3 md:space-y-4">
                             {/* Rapid Fire Game Card */}
                             <motion.button
                                 className="game-card w-full text-left group hover:scale-[1.02] transition-transform"
                                 onClick={() => setSelectedGame("rapid-fire")}
                                 whileTap={{ scale: 0.98 }}
                             >
-                                <div className="flex items-start gap-4">
-                                    <div className="p-4 rounded-xl bg-gradient-to-br from-yellow-400/20 to-orange-400/20 text-orange-500 group-hover:from-yellow-400 group-hover:to-orange-400 group-hover:text-white transition-all">
-                                        <Zap className="w-8 h-8" />
+                                <div className="flex items-start gap-3 md:gap-4">
+                                    <div className="p-3 md:p-4 rounded-xl bg-gradient-to-br from-yellow-400/20 to-orange-400/20 text-orange-500 group-hover:from-yellow-400 group-hover:to-orange-400 group-hover:text-white transition-all">
+                                        <Zap className="w-6 h-6 md:w-8 md:h-8" />
                                     </div>
                                     <div className="flex-1">
-                                        <h3 className="font-display text-xl font-semibold text-primary mb-1">
+                                        <h3 className="font-display text-lg md:text-xl font-semibold text-primary mb-1">
                                             ⚡ Rapid Fire: This or That
                                         </h3>
-                                        <p className="text-sm text-muted-foreground mb-2">
+                                        <p className="text-xs md:text-sm text-muted-foreground mb-2">
                                             10 seconds to choose between this or that with your partner. See if you&apos;re on the same page!
                                         </p>
                                         <div className="flex gap-2 flex-wrap">
@@ -112,15 +112,15 @@ export function MiniGamesModal({ isOpen, onClose }: MiniGamesModalProps) {
                                 onClick={() => setSelectedGame("flag-game")}
                                 whileTap={{ scale: 0.98 }}
                             >
-                                <div className="flex items-start gap-4">
-                                    <div className="p-4 rounded-xl bg-gradient-to-br from-red-400/20 to-green-400/20 text-red-500 group-hover:from-red-400 group-hover:to-green-400 group-hover:text-white transition-all">
-                                        <Flag className="w-8 h-8" />
+                                <div className="flex items-start gap-3 md:gap-4">
+                                    <div className="p-3 md:p-4 rounded-xl bg-gradient-to-br from-red-400/20 to-green-400/20 text-red-500 group-hover:from-red-400 group-hover:to-green-400 group-hover:text-white transition-all">
+                                        <Flag className="w-6 h-6 md:w-8 md:h-8" />
                                     </div>
                                     <div className="flex-1">
-                                        <h3 className="font-display text-xl font-semibold text-primary mb-1">
+                                        <h3 className="font-display text-lg md:text-xl font-semibold text-primary mb-1">
                                             🚩 Rapid Fire: Red, Green, Beige
                                         </h3>
-                                        <p className="text-sm text-muted-foreground mb-2">
+                                        <p className="text-xs md:text-sm text-muted-foreground mb-2">
                                             Rate dating behaviors as red flags, green flags, or beige flags! Limited beige flags forces hard choices.
                                         </p>
                                         <div className="flex gap-2 flex-wrap">
@@ -138,15 +138,15 @@ export function MiniGamesModal({ isOpen, onClose }: MiniGamesModalProps) {
                                 </div>
                             </motion.button>
 
-                            {/* Placeholder for future games */}
-                            <div className="grid md:grid-cols-2 gap-3">
-                                {[1, 2, 3].map((i) => (
+                            {/* Placeholder for future games - only show 1 on mobile */}
+                            <div className="hidden md:grid md:grid-cols-2 gap-3">
+                                {[1, 2].map((i) => (
                                     <div
                                         key={i}
                                         className="game-card opacity-50 cursor-not-allowed"
                                     >
-                                        <div className="text-center py-8">
-                                            <div className="text-4xl mb-2">🎮</div>
+                                        <div className="text-center py-6">
+                                            <div className="text-3xl mb-2">🎮</div>
                                             <p className="text-sm font-semibold text-muted-foreground">
                                                 Coming Soon
                                             </p>
@@ -156,8 +156,8 @@ export function MiniGamesModal({ isOpen, onClose }: MiniGamesModalProps) {
                             </div>
                         </div>
 
-                        {/* Footer */}
-                        <div className="mt-6 pt-4 border-t border-border">
+                        {/* Footer - hidden on mobile */}
+                        <div className="hidden md:block mt-6 pt-4 border-t border-border">
                             <p className="text-sm text-muted-foreground text-center">
                                 More mini games coming soon! Have suggestions? Send us feedback.
                             </p>
