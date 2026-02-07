@@ -22,13 +22,13 @@ export const metadata: Metadata = {
         "Long distance date ideas",
     ],
     alternates: {
-        canonical: "https://wavelength.lol/long-distance-games",
+        canonical: "https://wavelength.lol/long-distance-games/",
     },
     openGraph: {
         title: "Best Games for Long Distance Relationships | Wavelength",
         description:
             "The perfect game for LDR couples. Connect, bond, and have fun together even when you're miles apart. Free to play in your browser!",
-        url: "https://wavelength.lol/long-distance-games",
+        url: "https://wavelength.lol/long-distance-games/",
     },
 };
 
@@ -39,7 +39,7 @@ const ldrGameSchema = {
     name: "Wavelength - Long Distance Relationship Game",
     description:
         "The perfect game for couples in long distance relationships. A telepathic guessing game that helps you connect and bond with your partner from anywhere in the world.",
-    url: "https://wavelength.lol/long-distance-games",
+    url: "https://wavelength.lol/long-distance-games/",
     image: "https://wavelength.lol/og-image.png",
     operatingSystem: "Web Browser",
     applicationCategory: "Game",

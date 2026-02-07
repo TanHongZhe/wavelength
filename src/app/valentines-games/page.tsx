@@ -24,13 +24,13 @@ export const metadata: Metadata = {
         "Fun Valentine's games",
     ],
     alternates: {
-        canonical: "https://wavelength.lol/valentines-games",
+        canonical: "https://wavelength.lol/valentines-games/",
     },
     openGraph: {
         title: "Valentine's Day Games for Couples 2026 | Wavelength",
         description:
             "The perfect game for Valentine's Day! Connect with your partner in this fun, romantic guessing game. Free to play online!",
-        url: "https://wavelength.lol/valentines-games",
+        url: "https://wavelength.lol/valentines-games/",
     },
 };
 
@@ -41,7 +41,7 @@ const valentinesGameSchema = {
     name: "Wavelength - Valentine's Day Couples Game",
     description:
         "The perfect game for Valentine's Day 2026. A telepathic guessing game that helps couples connect and have fun together. Discover how well you know each other!",
-    url: "https://wavelength.lol/valentines-games",
+    url: "https://wavelength.lol/valentines-games/",
     image: "https://wavelength.lol/og-image.png",
     operatingSystem: "Web Browser",
     applicationCategory: "Game",
@@ -108,19 +108,19 @@ const eventSchema = {
     eventAttendanceMode: "https://schema.org/OnlineEventAttendanceMode",
     location: {
         "@type": "VirtualLocation",
-        url: "https://wavelength.lol/valentines-games",
+        url: "https://wavelength.lol/valentines-games/",
     },
     organizer: {
         "@type": "Organization",
         name: "Wavelength Online",
-        url: "https://wavelength.lol",
+        url: "https://wavelength.lol/",
     },
     offers: {
         "@type": "Offer",
         price: "0",
         priceCurrency: "USD",
         availability: "https://schema.org/InStock",
-        url: "https://wavelength.lol/valentines-games",
+        url: "https://wavelength.lol/valentines-games/",
     },
 };
 

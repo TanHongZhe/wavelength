@@ -32,7 +32,7 @@ const webPageSchema = {
     isPartOf: {
         "@type": "WebSite",
         name: "Wavelength Online",
-        url: "https://wavelength.lol",
+        url: "https://wavelength.lol/",
     },
     about: {
         "@type": "VideoGame",
@@ -57,7 +57,7 @@ const breadcrumbSchema = {
             "@type": "ListItem",
             position: 1,
             name: "Home",
-            item: "https://wavelength.lol",
+            item: "https://wavelength.lol/",
         },
         {
             "@type": "ListItem",

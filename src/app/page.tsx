@@ -59,10 +59,10 @@ export default function HomePage() {
             <div>
               <h3 className="text-xl font-semibold text-foreground mb-2">Game Resources</h3>
               <ul className="list-disc pl-5 space-y-1">
-                <li><Link href="/rules" className="hover:text-primary transition-colors">Read Official Rules & Scoring</Link></li>
-                <li><Link href="/faq" className="hover:text-primary transition-colors">Frequently Asked Questions</Link></li>
-                <li><Link href="/about" className="hover:text-primary transition-colors">About the Project</Link></li>
-                <li><Link href="/long-distance-games" className="hover:text-primary transition-colors">Games for Long Distance Couples</Link></li>
+                <li><Link href="/rules/" className="hover:text-primary transition-colors">Read Official Rules & Scoring</Link></li>
+                <li><Link href="/faq/" className="hover:text-primary transition-colors">Frequently Asked Questions</Link></li>
+                <li><Link href="/about/" className="hover:text-primary transition-colors">About the Project</Link></li>
+                <li><Link href="/long-distance-games/" className="hover:text-primary transition-colors">Games for Long Distance Couples</Link></li>
               </ul>
             </div>
 

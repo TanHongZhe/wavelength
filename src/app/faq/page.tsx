@@ -99,7 +99,7 @@ const breadcrumbSchema = {
             "@type": "ListItem",
             position: 1,
             name: "Home",
-            item: "https://wavelength.lol",
+            item: "https://wavelength.lol/",
         },
         {
             "@type": "ListItem",
@@ -146,11 +146,11 @@ export default function FAQPage() {
                         </h1>
                         <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
                             Everything you need to know about playing Wavelength Online. Can&apos;t find your answer? Check out our{" "}
-                            <Link href="/rules" className="text-primary hover:underline">
+                            <Link href="/rules/" className="text-primary hover:underline">
                                 rules page
                             </Link>{" "}
                             or{" "}
-                            <Link href="/about" className="text-primary hover:underline">
+                            <Link href="/about/" className="text-primary hover:underline">
                                 about page
                             </Link>.
                         </p>
@@ -182,7 +182,7 @@ export default function FAQPage() {
                     <section aria-labelledby="quick-links" className="grid md:grid-cols-2 gap-6 mb-16">
                         <h2 id="quick-links" className="sr-only">Quick Links</h2>
                         <Link
-                            href="/rules"
+                            href="/rules/"
                             className="flex items-center p-6 bg-card rounded-2xl border border-border hover:border-primary/50 transition-colors group"
                         >
                             <div>

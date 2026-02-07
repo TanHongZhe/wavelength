@@ -107,7 +107,7 @@ const breadcrumbSchema = {
             "@type": "ListItem",
             position: 1,
             name: "Home",
-            item: "https://wavelength.lol",
+            item: "https://wavelength.lol/",
         },
         {
             "@type": "ListItem",

@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     "Browser games with friends",
     "Best web games 2026",
   ],
-  authors: [{ name: "Hong Zhe", url: "https://wavelength.lol/about" }],
+  authors: [{ name: "Hong Zhe", url: "https://wavelength.lol/about/" }],
   creator: "Hong Zhe",
   publisher: "Wavelength Online",
   alternates: {
@@ -87,7 +87,7 @@ const organizationSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",
   name: "Wavelength Online",
-  url: "https://wavelength.lol",
+  url: "https://wavelength.lol/",
   logo: "https://wavelength.lol/icon-512.png",
   sameAs: [
     "https://github.com/TanHongZhe/wavelength-vibe",
@@ -96,7 +96,7 @@ const organizationSchema = {
   contactPoint: {
     "@type": "ContactPoint",
     contactType: "customer support",
-    url: "https://wavelength.lol/about",
+    url: "https://wavelength.lol/about/",
   },
 };
 
@@ -106,7 +106,7 @@ const videoGameSchema = {
   name: "Wavelength Online",
   description:
     "A telepathic party game where players try to read each other's minds by guessing where a hidden target falls on a spectrum between two opposing concepts.",
-  url: "https://wavelength.lol",
+  url: "https://wavelength.lol/",
   image: "https://wavelength.lol/og-image.png",
   operatingSystem: "Web Browser",
   applicationCategory: "Game",
@@ -146,7 +146,7 @@ const breadcrumbSchema = {
       "@type": "ListItem",
       position: 1,
       name: "Home",
-      item: "https://wavelength.lol",
+      item: "https://wavelength.lol/",
     },
   ],
 };
@@ -155,7 +155,7 @@ const webSiteSchema = {
   "@context": "https://schema.org",
   "@type": "WebSite",
   name: "Wavelength Online",
-  url: "https://wavelength.lol",
+  url: "https://wavelength.lol/",
   description: "Play the viral telepathic party game in your browser!",
   potentialAction: {
     "@type": "SearchAction",
@@ -169,7 +169,7 @@ const speakableSchema = {
   "@context": "https://schema.org",
   "@type": "WebPage",
   name: "Wavelength Online - Free Multiplayer Social Party Game",
-  url: "https://wavelength.lol",
+  url: "https://wavelength.lol/",
   speakable: {
     "@type": "SpeakableSpecification",
     cssSelector: ["#main-content", "h1", ".game-description"],
