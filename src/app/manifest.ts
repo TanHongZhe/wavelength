@@ -4,7 +4,7 @@ export const dynamic = 'force-static'
 
 export default function manifest(): MetadataRoute.Manifest {
     return {
-        name: 'Wavelength Online - Free Social Guessing Game',
+        name: 'Wavelength Online - Free Multiplayer Social Party Guessing Game',
         short_name: 'Wavelength',
         description: 'Play the viral telepathic party game in your browser! A social guessing game where players guess positions on a spectrum based on one-word clues.',
         start_url: '/',

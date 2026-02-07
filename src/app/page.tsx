@@ -3,19 +3,38 @@ import { GameLoader } from "../components/game/GameLoader";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Wavelength Online - Free Social Guessing Game",
+  title: "Wavelength Online - Free Multiplayer Social Party Guessing Game",
   description:
-    "Play Wavelength Online free! The viral telepathic party game perfect for long distance relationships and couples bonding. Guess where concepts fall on a spectrum. No download required - instant browser play.",
+    "Play Wavelength Online free! The viral telepathic party game perfect for long distance relationships and couples bonding. No download required - instant browser play.",
   keywords: [
     "Play Wavelength Online",
+    "Wavelength Game",
+    "Wavelength",
+    "Wavelength Game Online",
+    "Wavelength Online",
+    "Wavelength Game Online",
     "Wavelength Browser Game",
     "Free Social Guessing Game",
+    "Free Party Game",
     "Telepathic Party Game",
     "Multiplayer Browser Game",
+    "Multiplayer Party Game",
     "Long distance relationship games",
     "LDR games online",
+    "LDR games",
+    "LDR party games",
     "Couples bonding games",
+    "Relationship games for couples",
     "Virtual date night games",
+    "Games to play with partner",
+    "Fun games for couples",
+    "Games to strengthen relationship",
+    "Couples bonding activities",
+    "Free relationship games",
+    "Online games for couples",
+    "Communication games for couples",
+    "Games to get to know your partner",
+    "Couples question games",
   ],
 };
 

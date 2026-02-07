@@ -36,7 +36,7 @@ LEFT JOIN RoundsStats r ON d.stat_date = r.stat_date
 ORDER BY d.stat_date DESC;
 
 -- Detailed Player Breakdown (Optional - Comment out if list is too long)
-/*
+
 SELECT 
     p.name,
     COUNT(DISTINCT p.room_id) as games_joined,
@@ -48,7 +48,7 @@ WHERE p.joined_at > now() - interval '3 days'
 GROUP BY p.name
 ORDER BY games_joined DESC
 LIMIT 50;
-*/
+
 
 -- ==========================================
 -- 2. AUTOMATED CLEANUP (Requires pg_cron)

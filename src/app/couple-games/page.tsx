@@ -141,7 +141,7 @@ export default function CoupleGamesPage() {
                             <div className="text-3xl mb-3">🌊</div>
                             <h3 className="font-semibold mb-2">Wavelength</h3>
                             <p className="text-sm text-muted-foreground">
-                                The telepathic game! Give clues and guess where concepts fall on a spectrum. Are you on the same wavelength?
+                                The telepathic game! Give clues and guess on the dial. Are you on the same wavelength?
                             </p>
                         </div>
                         <div className="bg-card/50 backdrop-blur-sm border border-border/50 rounded-xl p-6">
