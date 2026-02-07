@@ -4,8 +4,10 @@ import { ArrowRight, HelpCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
-    title: "FAQ - Frequently Asked Questions About Wavelength",
-    description: "Get answers to common questions about Wavelength Online. Learn about gameplay, scoring, player limits, and more. Everything you need to know to start playing!",
+    title: {
+        absolute: "Wavelength Game FAQ | Common Questions",
+    },
+    description: "Find answers to common questions about Wavelength Game Online. Learn rules, scoring, and player limits for our free telepathic party game for couples.",
     keywords: [
         "wavelength faq",
         "wavelength questions",
@@ -18,8 +20,8 @@ export const metadata: Metadata = {
         canonical: "https://wavelength.lol/faq/",
     },
     openGraph: {
-        title: "FAQ - Frequently Asked Questions About Wavelength",
-        description: "Get answers to common questions about Wavelength Online. Everything you need to know!",
+        title: "Wavelength Game FAQ | Common Questions",
+        description: "Find answers to common questions about Wavelength Game Online. Learn rules, scoring, and player limits for our free telepathic party game for couples.",
         url: "https://wavelength.lol/faq/",
     },
 };

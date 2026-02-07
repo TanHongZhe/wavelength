@@ -3,9 +3,20 @@ import { GameLoader } from "../components/game/GameLoader";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Play Wavelength Game Online | Free Multiplayer Couple Card Games",
+  title: {
+    absolute: "Wavelength Game Online | Free Couple Card Games",
+  },
   description:
-    "Play Wavelength Game Online free! The viral telepathic party game perfect for long distance relationships and couple card games. Instant browser play.",
+    "Play Wavelength Game Online free! The viral telepathic party game perfect for long distance relationships and couple card games. Instant play in browser.",
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "https://wavelength.lol/",
+    siteName: "Wavelength Game Online",
+    title: "Wavelength Game Online | Free Couple Card Games",
+    description:
+      "Play Wavelength Game Online free! The viral telepathic party game perfect for long distance relationships and couple card games. Instant play in browser.",
+  },
   keywords: [
     "Wavelength Game Online",
     "Couple Card Games",

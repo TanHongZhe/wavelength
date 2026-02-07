@@ -4,8 +4,10 @@ import { ArrowRight, Target, Brain, Trophy, HelpCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
-    title: "How to Play Wavelength - Rules & Instructions",
-    description: "Learn how to play Wavelength Online. Complete guide to rules, scoring, and gameplay mechanics for the social guessing game. Master the art of giving clues on a spectrum!",
+    title: {
+        absolute: "How to Play Wavelength | Rules & Instructions",
+    },
+    description: "Your complete guide to Wavelength Online rules. Learn gameplay, scoring, and how to give the perfect clue in this social guessing game. Master it now!",
     keywords: [
         "wavelength rules",
         "how to play wavelength",
@@ -17,8 +19,8 @@ export const metadata: Metadata = {
         canonical: "https://wavelength.lol/rules/",
     },
     openGraph: {
-        title: "How to Play Wavelength - Rules & Instructions",
-        description: "Learn how to play Wavelength Online. Complete guide to rules, scoring, and gameplay mechanics.",
+        title: "How to Play Wavelength | Rules & Instructions",
+        description: "Your complete guide to Wavelength Online rules. Learn gameplay, scoring, and how to give the perfect clue in this social guessing game. Master it now!",
         url: "https://wavelength.lol/rules/",
     },
 };

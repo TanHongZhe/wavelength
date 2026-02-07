@@ -3,9 +3,11 @@ import { GameLoader } from "../../components/game/GameLoader";
 import { LandingOverlay } from "../../components/LandingOverlay";
 
 export const metadata: Metadata = {
-    title: "Couple Games Online | Free 2 Player Mini Games & Card Games",
+    title: {
+        absolute: "Couple Games Online | Free Top Mini Games",
+    },
     description:
-        "Play fun couple games & card games online! Wavelength, Red Flag Green Flag & This or That. Free 2-player mini games for date nights & LDR bonding.",
+        "Play top couple games online! Features Wavelength, Red Flag Green Flag & more. Free 2-player mini games perfect for date nights. No download needed.",
     keywords: [
         "Wavelength Game Online",
         "Couple Card Games",
@@ -32,9 +34,9 @@ export const metadata: Metadata = {
         canonical: "https://wavelength.lol/couple-games/",
     },
     openGraph: {
-        title: "Couple Games Online | Free 2 Player Mini Games & Card Games",
+        title: "Couple Games Online | Free Top Mini Games",
         description:
-            "Play fun couple games & card games online! Wavelength, Red Flag Green Flag & This or That. Free 2-player mini games for date nights & LDR bonding.",
+            "Play top couple games online! Features Wavelength, Red Flag Green Flag & more. Free 2-player mini games perfect for date nights. No download needed.",
         url: "https://wavelength.lol/couple-games/",
     },
 };

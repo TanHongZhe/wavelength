@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next'
 
 export function getSitemapItems(): MetadataRoute.Sitemap {
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://wavelength.lol'
+    const baseUrl = (process.env.NEXT_PUBLIC_APP_URL || 'https://wavelength.lol').replace(/\/$/, '')
     const currentDate = new Date().toISOString()
 
     return [

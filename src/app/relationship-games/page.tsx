@@ -4,9 +4,11 @@ import Link from "next/link";
 import { LandingOverlay } from "../../components/LandingOverlay";
 
 export const metadata: Metadata = {
-    title: "Relationship Games for Couples | Wavelength Game Online",
+    title: {
+        absolute: "Relationship Games | Wavelength Game Online",
+    },
     description:
-        "Discover the best relationship games & couple card games online. Wavelength Game sparks deep conversations & strengthens bonds. Free to play.",
+        "Discover the best online relationship games for couples. Wavelength Game sparks deep conversations & fun bonding. Free to play instant browser game.",
     keywords: [
         "Wavelength Game Online",
         "Couple Card Games",
@@ -29,9 +31,9 @@ export const metadata: Metadata = {
         canonical: "https://wavelength.lol/relationship-games/",
     },
     openGraph: {
-        title: "Relationship Games for Couples | Wavelength Game Online",
+        title: "Relationship Games | Wavelength Game Online",
         description:
-            "Discover the best relationship games & couple card games online. Wavelength Game sparks deep conversations & strengthens bonds. Free to play.",
+            "Discover the best online relationship games for couples. Wavelength Game sparks deep conversations & fun bonding. Free to play instant browser game.",
         url: "https://wavelength.lol/relationship-games/",
     },
 };

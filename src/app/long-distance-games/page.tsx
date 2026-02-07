@@ -4,9 +4,11 @@ import Link from "next/link";
 import { LandingOverlay } from "../../components/LandingOverlay";
 
 export const metadata: Metadata = {
-    title: "Best Games for Long Distance Relationships | Wavelength Game Online",
+    title: {
+        absolute: "Best LDR Games Online | Wavelength Game",
+    },
     description:
-        "Play Wavelength Game Online, the best LDR couple card game. Perfect for long distance relationships & virtual date nights. Free browser play, no download.",
+        "Play Wavelength Game Online! The top choice for LDR couples. Free, instant multiplayer fun perfect for long distance date nights and virtual bonding.",
     keywords: [
         "Wavelength Game Online",
         "Couple Card Games",
@@ -27,9 +29,9 @@ export const metadata: Metadata = {
         canonical: "https://wavelength.lol/long-distance-games/",
     },
     openGraph: {
-        title: "Best Games for Long Distance Relationships | Wavelength Game Online",
+        title: "Best LDR Games Online | Wavelength Game",
         description:
-            "Play Wavelength Game Online, the best LDR couple card game. Perfect for long distance relationships & virtual date nights. Free browser play, no download.",
+            "Play Wavelength Game Online! The top choice for LDR couples. Free, instant multiplayer fun perfect for long distance date nights and virtual bonding.",
         url: "https://wavelength.lol/long-distance-games/",
     },
 };

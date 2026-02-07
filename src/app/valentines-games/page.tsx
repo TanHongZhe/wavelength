@@ -4,9 +4,11 @@ import Link from "next/link";
 import { LandingOverlay } from "../../components/LandingOverlay";
 
 export const metadata: Metadata = {
-    title: "Valentine's Day Games for Couples 2026 | Wavelength Game Online",
+    title: {
+        absolute: "Valentine's Day Games | Couple Card Games",
+    },
     description:
-        "Play Wavelength Game Online this Valentine's 2026! The perfect romantic couple card game for date nights. Free, fun & instant multiplayer.",
+        "Play Wavelength Game Online this Valentine's 2026! A romantic couple card game perfect for date nights. Free, fun, instant & no downloads required.",
     keywords: [
         "Wavelength Game Online",
         "Couple Card Games",
@@ -29,9 +31,9 @@ export const metadata: Metadata = {
         canonical: "https://wavelength.lol/valentines-games/",
     },
     openGraph: {
-        title: "Valentine's Day Games for Couples 2026 | Wavelength Game Online",
+        title: "Valentine's Day Games | Couple Card Games",
         description:
-            "Play Wavelength Game Online this Valentine's 2026! The perfect romantic couple card game for date nights. Free, fun & instant multiplayer.",
+            "Play Wavelength Game Online this Valentine's 2026! A romantic couple card game perfect for date nights. Free, fun, instant & no downloads required.",
         url: "https://wavelength.lol/valentines-games/",
     },
 };
