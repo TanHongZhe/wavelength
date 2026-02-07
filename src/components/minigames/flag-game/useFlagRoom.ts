@@ -39,7 +39,7 @@ function parseRoomData(data: Record<string, unknown>): FlagRoom {
         player2_name: (data.player2_name as string) || "Player 2",
         player1_avatar: (data.player1_avatar as string) || "🐼",
         player2_avatar: (data.player2_avatar as string) || "🐯",
-        card_count: (data.card_count as number) || 20,
+        card_count: (data.target_angle as number) || 20, // Stored in target_angle field
         current_round: (data.round_number as number) || 1,
         team_score: (data.psychic_score as number) || 0,
         phase: (data.phase as string) === "waiting" ? "waiting" :
@@ -135,10 +135,9 @@ export function useFlagRoom() {
                     player1_name: playerName.trim(),
                     player1_avatar: avatar,
                     phase: "waiting",
-                    target_angle: 90,
+                    target_angle: cardCount, // Store card_count in target_angle field
                     current_card: { left: "A", right: "B" },
                     game_mode: "mini_flag_game",
-                    // Note: card_count stored locally, not in DB
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 } as any)
                 .select()
@@ -252,11 +251,10 @@ export function useFlagRoom() {
             joinedRoom.player2_id = playerId;
             joinedRoom.player2_name = playerName.trim();
             joinedRoom.player2_avatar = avatar;
-            // Get card count from room
-            if (typedRoomData.card_count) {
-                joinedRoom.card_count = typedRoomData.card_count as number;
-                setLocalConfig({ cardCount: typedRoomData.card_count as number });
-            }
+            // Get card count from room (stored in target_angle field)
+            const roomCardCount = (typedRoomData.target_angle as number) || 20;
+            joinedRoom.card_count = roomCardCount;
+            setLocalConfig({ cardCount: roomCardCount });
             setRoom(joinedRoom);
             setRoomId(joinedRoom.id as string);
             setIsLoading(false);
