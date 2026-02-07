@@ -331,7 +331,7 @@ export function FlagGameScreen({
 
                         <div className="bg-secondary/50 rounded-xl p-4">
                             <p className="text-sm text-muted-foreground">
-                                <strong>Scoring:</strong> You get a point when you both pick Red or both pick Green!
+                                <strong>Scoring:</strong> You get a point when you both pick the same flag!
                             </p>
                         </div>
                     </div>

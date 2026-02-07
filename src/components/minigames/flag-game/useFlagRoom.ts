@@ -43,7 +43,7 @@ function parseRoomData(data: Record<string, unknown>): FlagRoom {
         current_round: (data.round_number as number) || 1,
         team_score: (data.psychic_score as number) || 0,
         phase: (data.phase as string) === "waiting" ? "waiting" :
-            (data.phase as string) === "clue" ? "playing" :
+            ((data.phase as string) === "clue" || (data.phase as string) === "rules") ? "playing" :
                 (data.phase as string) === "ended" ? "ended" : "waiting",
     };
 }
@@ -270,7 +270,7 @@ export function useFlagRoom() {
         if (!roomId) return;
         await supabase
             .from("rooms")
-            .update({ phase: "clue" })
+            .update({ phase: "rules" })
             .eq("id", roomId);
         setRoom(prev => prev ? { ...prev, phase: "playing" } : null);
     }, [roomId]);

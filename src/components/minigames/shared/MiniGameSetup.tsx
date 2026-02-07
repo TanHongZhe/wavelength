@@ -135,7 +135,7 @@ export function MiniGameSetup({
                             initial={{ opacity: 0, scale: 0.95 }}
                             animate={{ opacity: 1, scale: 1 }}
                             exit={{ opacity: 0, scale: 0.95 }}
-                            className="game-card"
+                            className="game-card border border-white/10"
                         >
                             {/* Header */}
                             <div className="flex items-center gap-3 mb-6">
@@ -153,7 +153,7 @@ export function MiniGameSetup({
                             {/* Create/Join buttons */}
                             <div className="space-y-3">
                                 <motion.button
-                                    className="game-card w-full text-left group hover:scale-[1.02] transition-transform"
+                                    className="game-card border border-white/10 w-full text-left group hover:scale-[1.02] transition-transform"
                                     onClick={() => setMode("create")}
                                     whileTap={{ scale: 0.98 }}
                                 >
@@ -173,7 +173,7 @@ export function MiniGameSetup({
                                 </motion.button>
 
                                 <motion.button
-                                    className="game-card w-full text-left group hover:scale-[1.02] transition-transform"
+                                    className="game-card border border-white/10 w-full text-left group hover:scale-[1.02] transition-transform"
                                     onClick={() => setMode("join")}
                                     whileTap={{ scale: 0.98 }}
                                 >
@@ -199,7 +199,7 @@ export function MiniGameSetup({
                             initial={{ opacity: 0, scale: 0.95 }}
                             animate={{ opacity: 1, scale: 1 }}
                             exit={{ opacity: 0, scale: 0.95 }}
-                            className="game-card"
+                            className="game-card border border-white/10"
                         >
                             {/* Header */}
                             <div className="flex items-center gap-3 mb-4">
@@ -257,7 +257,7 @@ export function MiniGameSetup({
                             initial={{ opacity: 0, scale: 0.95 }}
                             animate={{ opacity: 1, scale: 1 }}
                             exit={{ opacity: 0, scale: 0.95 }}
-                            className="game-card"
+                            className="game-card border border-white/10"
                         >
                             {/* Header */}
                             <div className="flex items-center gap-3 mb-4">

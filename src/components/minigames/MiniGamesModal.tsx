@@ -79,7 +79,7 @@ export function MiniGamesModal({ isOpen, onClose }: MiniGamesModalProps) {
                         <div className="space-y-3 md:space-y-4">
                             {/* Rapid Fire Game Card */}
                             <motion.button
-                                className="game-card w-full text-left group hover:scale-[1.02] transition-transform"
+                                className="game-card border border-white/10 w-full text-left group hover:scale-[1.02] transition-transform"
                                 onClick={() => setSelectedGame("rapid-fire")}
                                 whileTap={{ scale: 0.98 }}
                             >
@@ -108,7 +108,7 @@ export function MiniGamesModal({ isOpen, onClose }: MiniGamesModalProps) {
 
                             {/* Flag Game Card */}
                             <motion.button
-                                className="game-card w-full text-left group hover:scale-[1.02] transition-transform"
+                                className="game-card border border-white/10 w-full text-left group hover:scale-[1.02] transition-transform"
                                 onClick={() => setSelectedGame("flag-game")}
                                 whileTap={{ scale: 0.98 }}
                             >
@@ -143,7 +143,7 @@ export function MiniGamesModal({ isOpen, onClose }: MiniGamesModalProps) {
                                 {[1, 2].map((i) => (
                                     <div
                                         key={i}
-                                        className="game-card opacity-50 cursor-not-allowed"
+                                        className="game-card border border-white/5 opacity-50 cursor-not-allowed"
                                     >
                                         <div className="text-center py-6">
                                             <div className="text-3xl mb-2">🎮</div>
