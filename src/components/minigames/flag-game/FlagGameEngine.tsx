@@ -131,8 +131,8 @@ export function FlagGameEngine({ onClose }: FlagGameEngineProps) {
         );
     }
 
-    // Playing - show game screen
-    if (room.phase === "playing" || room.phase === "reveal" || room.phase === "results") {
+    // Playing - show game screen (including ended state so we can show leaderboard)
+    if (room.phase === "playing" || room.phase === "reveal" || room.phase === "results" || room.phase === "ended") {
         return (
             <FlagGameScreen
                 config={{

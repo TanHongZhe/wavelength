@@ -190,13 +190,20 @@ export function FlagGameScreen({
                     setTimedOut(false);
                     hasSubmittedTimeout.current = false;
                 }
+
+                // Check for game end from server
+                if (roomData.phase === "ended" && !gameOver) {
+                    setTimeout(() => {
+                        setGameOver(true);
+                    }, 2000);
+                }
             }
         };
 
         poll();
         const interval = setInterval(poll, 400);
         return () => clearInterval(interval);
-    }, [roomId, isPlayer1, currentRound, phase, myChoice]);
+    }, [roomId, isPlayer1, currentRound, phase, myChoice, gameOver]);
 
     const handleChoice = async (choice: FlagChoice) => {
         if (myChoice || timedOut || !choice) return;
@@ -252,7 +259,11 @@ export function FlagGameScreen({
                     player2_choice: null,
                 } as Record<string, unknown>)
                 .eq("id", roomId);
-            setGameOver(true);
+
+            // Add delay
+            setTimeout(() => {
+                setGameOver(true);
+            }, 2000);
         } else {
             await supabase
                 .from("rooms")
@@ -360,16 +371,18 @@ export function FlagGameScreen({
         );
     }
 
+
+
     // Game Over Screen
     if (gameOver) {
         return (
-            <div className="fixed inset-0 bg-background z-50 flex items-center justify-center p-6">
+            <div className="fixed inset-0 bg-background z-50 flex items-center justify-center p-6 overflow-y-auto">
                 <motion.div
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    className="game-card max-w-md w-full text-center"
+                    className="game-card max-w-md w-full text-center my-auto"
                 >
-                    <h2 className="font-display text-3xl font-bold text-primary mb-4">🎉 Game Over!</h2>
+                    <h2 className="font-display text-3xl font-bold text-primary mb-4">🎉 Final Score</h2>
 
                     <div className="flex items-center justify-center gap-3 mb-4">
                         <span className="text-4xl">{config.playerAvatar}</span>
@@ -389,8 +402,8 @@ export function FlagGameScreen({
                                 : "💭 Opposites attract?"}
                     </p>
 
-                    <Button onClick={onLeave} className="w-full h-12 btn-game">
-                        Back to Home
+                    <Button onClick={onLeave} className="w-full h-12 btn-game mt-6">
+                        Play Again
                     </Button>
                 </motion.div>
             </div>

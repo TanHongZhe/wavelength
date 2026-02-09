@@ -146,6 +146,8 @@ export function useRapidFireRoom() {
                     target_angle: 90, // Required field
                     current_card: { left: "A", right: "B" }, // Required field
                     game_mode: "mini_rapid_fire", // Mark as mini game
+                    card_count: cardCount,
+                    deck_type: deckType,
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 } as any)
                 .select()
@@ -214,6 +216,13 @@ export function useRapidFireRoom() {
             }
 
             const typedRoomData = roomData as Record<string, unknown>;
+
+            // Strict Check: Ensure this is a Rapid Fire game
+            if (typedRoomData.game_mode !== "mini_rapid_fire") {
+                setIsLoading(false);
+                setError("Invalid room code. This room is for " + (typedRoomData.game_mode === "mini_flag_game" ? "Flags" : "Classic"));
+                return;
+            }
 
             // Check if already the creator
             if (typedRoomData.psychic_id === playerId) {

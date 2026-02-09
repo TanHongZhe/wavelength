@@ -35,6 +35,10 @@ export type Database = {
                     player1_avatar: string | null
                     player2_avatar: string | null
                     game_mode: string | null
+                    player1_choice: string | null
+                    player2_choice: string | null
+                    deck_type: string | null
+                    card_count: number | null
                 }
                 Insert: {
                     clue?: string | null
@@ -56,6 +60,10 @@ export type Database = {
                     player1_avatar?: string | null
                     player2_avatar?: string | null
                     game_mode?: string | null
+                    player1_choice?: string | null
+                    player2_choice?: string | null
+                    deck_type?: string | null
+                    card_count?: number | null
                 }
                 Update: {
                     clue?: string | null
@@ -77,6 +85,10 @@ export type Database = {
                     player1_avatar?: string | null
                     player2_avatar?: string | null
                     game_mode?: string | null
+                    player1_choice?: string | null
+                    player2_choice?: string | null
+                    deck_type?: string | null
+                    card_count?: number | null
                 }
                 Relationships: []
             }

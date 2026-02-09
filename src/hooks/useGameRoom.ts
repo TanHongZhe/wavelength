@@ -150,6 +150,7 @@ export function useGameRoom() {
                 phase: "waiting",
                 player1_name: trimmedName,
                 player1_avatar: avatar,
+                game_mode: "classic",
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
             } as any)
             .select()
@@ -169,6 +170,7 @@ export function useGameRoom() {
                         target_angle: targetAngle,
                         current_card: cardToJson(card),
                         phase: "waiting",
+                        game_mode: "classic",
                     })
                     .select()
                     .single();
@@ -231,6 +233,14 @@ export function useGameRoom() {
             return;
         }
 
+        // Strict Check: Ensure this is a Classic game
+        // We accept null as "classic" for legacy rooms created before game_mode existed
+        if (roomData.game_mode && roomData.game_mode !== "classic") {
+            setIsLoading(false);
+            setError("Invalid room code. This room is for " + (roomData.game_mode === "mini_rapid_fire" ? "Rapid Fire" : "Flags"));
+            return;
+        }
+
         // Check if already in room as creator
         if (roomData.psychic_id === playerId && !roomData.guesser_id) {
 
@@ -268,6 +278,8 @@ export function useGameRoom() {
                 guesser_id: playerId,
                 player2_name: trimmedName,
                 player2_avatar: avatar,
+                // Ensure game mode is classic just in case
+                game_mode: "classic",
             } as Record<string, unknown>)
             .eq("id", roomData.id);
 

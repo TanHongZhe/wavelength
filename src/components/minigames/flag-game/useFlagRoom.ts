@@ -138,6 +138,7 @@ export function useFlagRoom() {
                     target_angle: cardCount, // Store card_count in target_angle field
                     current_card: { left: "A", right: "B" },
                     game_mode: "mini_flag_game",
+                    card_count: cardCount,
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 } as any)
                 .select()
@@ -207,6 +208,13 @@ export function useFlagRoom() {
             }
 
             const typedRoomData = roomData as Record<string, unknown>;
+
+            // Strict Check: Ensure this is a Flag game
+            if (typedRoomData.game_mode !== "mini_flag_game") {
+                setIsLoading(false);
+                setError("Invalid room code. This room is for " + (typedRoomData.game_mode === "mini_rapid_fire" ? "Rapid Fire" : "Classic"));
+                return;
+            }
 
             // Check if already the creator
             if (typedRoomData.psychic_id === playerId) {
