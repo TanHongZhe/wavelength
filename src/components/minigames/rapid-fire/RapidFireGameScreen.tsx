@@ -5,7 +5,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { GameConfig } from "./RapidFireGameEngine";
 import { Button } from "@/components/ui/button";
 import { getDeckCards, RapidFireCard, DeckType } from "./cards";
-import { supabase } from "@/lib/supabase/client";
+import { useQuery, useMutation } from "convex/react";
+import { api } from "convex/_generated/api";
+import { Id } from "convex/_generated/dataModel";
 import { ArrowRight, Check, X } from "lucide-react";
 
 interface RapidFireGameScreenProps {
@@ -46,7 +48,12 @@ export function RapidFireGameScreen({
 
     const currentCard = cards[currentRound - 1];
 
-    // Submit timeout choice to Supabase
+    // Convex reactive query + mutation
+    const convexRoomId = roomId as Id<"rooms">;
+    const convexRoom = useQuery(api.rooms.getRoom, { roomId: convexRoomId });
+    const updateRoomMutation = useMutation(api.rooms.updateRoom);
+
+    // Submit timeout choice to Convex
     const submitTimeout = useCallback(async () => {
         if (hasSubmittedTimeout.current) return;
         hasSubmittedTimeout.current = true;
@@ -58,11 +65,11 @@ export function RapidFireGameScreen({
             ? { player1_choice: "__TIMEOUT__" }
             : { player2_choice: "__TIMEOUT__" };
 
-        await supabase
-            .from("rooms")
-            .update(updateData as Record<string, unknown>)
-            .eq("id", roomId);
-    }, [isPlayer1, roomId]);
+        await updateRoomMutation({
+            roomId: convexRoomId,
+            updates: updateData,
+        });
+    }, [isPlayer1, convexRoomId, updateRoomMutation]);
 
     // Timer countdown - keeps running even after choice, stops on reveal
     useEffect(() => {
@@ -103,73 +110,59 @@ export function RapidFireGameScreen({
         hasSubmittedTimeout.current = false;
     }, [currentRound]);
 
-    // Poll for game state updates
+    // Reactive room state updates (replaces polling)
     useEffect(() => {
-        if (!roomId) return;
+        if (!convexRoom) return;
 
-        const poll = async () => {
-            const { data } = await supabase
-                .from("rooms")
-                .select("*")
-                .eq("id", roomId)
-                .single();
+        const roomData = convexRoom as Record<string, unknown>;
+        const roundNum = (roomData.round_number as number) || 1;
+        const p1Choice = roomData.player1_choice as string | null;
+        const p2Choice = roomData.player2_choice as string | null;
+        const serverTeamScore = (roomData.psychic_score as number) || 0;
 
-            if (data) {
-                const roomData = data as Record<string, unknown>;
-                const roundNum = (roomData.round_number as number) || 1;
-                const p1Choice = roomData.player1_choice as string | null;
-                const p2Choice = roomData.player2_choice as string | null;
-                const serverTeamScore = (roomData.psychic_score as number) || 0;
+        // Update team score
+        setTeamScore(serverTeamScore);
 
-                // Update team score
-                setTeamScore(serverTeamScore);
+        // Get choices based on player role
+        const theirChoice = isPlayer1 ? p2Choice : p1Choice;
+        const serverMyChoice = isPlayer1 ? p1Choice : p2Choice;
 
-                // Get choices based on player role
-                const theirChoice = isPlayer1 ? p2Choice : p1Choice;
-                const serverMyChoice = isPlayer1 ? p1Choice : p2Choice;
+        // Update opponent choice
+        if (theirChoice) {
+            setOpponentChoice(theirChoice);
+        }
 
-                // Update opponent choice
-                if (theirChoice) {
-                    setOpponentChoice(theirChoice);
-                }
-
-                // Sync my choice from server if we don't have it locally
-                if (serverMyChoice && !myChoice) {
-                    setMyChoice(serverMyChoice);
-                    if (serverMyChoice === "__TIMEOUT__") {
-                        setTimedOut(true);
-                    }
-                }
-
-                // CRITICAL: Check if both players have made choices - go to reveal
-                if (p1Choice && p2Choice && phase === "choosing") {
-                    setPhase("reveal");
-                }
-
-                // If round changed from server, sync it
-                if (roundNum > currentRound) {
-                    setCurrentRound(roundNum);
-                    setMyChoice(null);
-                    setOpponentChoice(null);
-                    setPhase("choosing");
-                    setTimeLeft(ROUND_TIME_SECONDS);
-                    setTimedOut(false);
-                    hasSubmittedTimeout.current = false;
-                }
-
-                // Check for game end from server
-                if (roomData.phase === "ended" && !gameOver) {
-                    setTimeout(() => {
-                        setGameOver(true);
-                    }, 2000);
-                }
+        // Sync my choice from server if we don't have it locally
+        if (serverMyChoice && !myChoice) {
+            setMyChoice(serverMyChoice);
+            if (serverMyChoice === "__TIMEOUT__") {
+                setTimedOut(true);
             }
-        };
+        }
 
-        poll();
-        const interval = setInterval(poll, 400); // Poll slightly faster
-        return () => clearInterval(interval);
-    }, [roomId, isPlayer1, currentRound, phase, myChoice, gameOver]);
+        // CRITICAL: Check if both players have made choices - go to reveal
+        if (p1Choice && p2Choice && phase === "choosing") {
+            setPhase("reveal");
+        }
+
+        // If round changed from server, sync it
+        if (roundNum > currentRound) {
+            setCurrentRound(roundNum);
+            setMyChoice(null);
+            setOpponentChoice(null);
+            setPhase("choosing");
+            setTimeLeft(ROUND_TIME_SECONDS);
+            setTimedOut(false);
+            hasSubmittedTimeout.current = false;
+        }
+
+        // Check for game end from server
+        if (roomData.phase === "ended" && !gameOver) {
+            setTimeout(() => {
+                setGameOver(true);
+            }, 2000);
+        }
+    }, [convexRoom, isPlayer1, currentRound, phase, myChoice, gameOver]);
 
     const handleChoice = async (choice: string) => {
         if (myChoice || timedOut) return;
@@ -180,10 +173,10 @@ export function RapidFireGameScreen({
             ? { player1_choice: choice }
             : { player2_choice: choice };
 
-        await supabase
-            .from("rooms")
-            .update(updateData as Record<string, unknown>)
-            .eq("id", roomId);
+        await updateRoomMutation({
+            roomId: convexRoomId,
+            updates: updateData,
+        });
     };
 
     const handleNextRound = async () => {
@@ -198,30 +191,30 @@ export function RapidFireGameScreen({
         const newTeamScore = matched ? teamScore + 1 : teamScore;
 
         if (currentRound >= config.cardCount) {
-            await supabase
-                .from("rooms")
-                .update({
+            await updateRoomMutation({
+                roomId: convexRoomId,
+                updates: {
                     psychic_score: newTeamScore,
                     phase: "ended",
                     player1_choice: null,
                     player2_choice: null,
-                } as Record<string, unknown>)
-                .eq("id", roomId);
+                },
+            });
 
             // Add delay before showing game over so they see the last reveal
             setTimeout(() => {
                 setGameOver(true);
             }, 2000);
         } else {
-            await supabase
-                .from("rooms")
-                .update({
+            await updateRoomMutation({
+                roomId: convexRoomId,
+                updates: {
                     round_number: currentRound + 1,
                     psychic_score: newTeamScore,
                     player1_choice: null,
                     player2_choice: null,
-                } as Record<string, unknown>)
-                .eq("id", roomId);
+                },
+            });
 
             // Reset local state for next round
             setMyChoice(null);

@@ -4,7 +4,9 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { getFlagCards, FlagCard } from "./flagCards";
-import { supabase } from "@/lib/supabase/client";
+import { useQuery, useMutation } from "convex/react";
+import { api } from "convex/_generated/api";
+import { Id } from "convex/_generated/dataModel";
 import { ArrowRight, MessageCircle } from "lucide-react";
 
 interface FlagGameConfig {
@@ -62,7 +64,12 @@ export function FlagGameScreen({
 
     const currentCard = cards[currentRound - 1];
 
-    // Submit timeout choice to Supabase
+    // Convex reactive query + mutation
+    const convexRoomId = roomId as Id<"rooms">;
+    const convexRoom = useQuery(api.rooms.getRoom, { roomId: convexRoomId });
+    const updateRoomMutation = useMutation(api.rooms.updateRoom);
+
+    // Submit timeout choice to Convex
     const submitTimeout = useCallback(async () => {
         if (hasSubmittedTimeout.current) return;
         hasSubmittedTimeout.current = true;
@@ -74,11 +81,11 @@ export function FlagGameScreen({
             ? { player1_choice: "__TIMEOUT__" }
             : { player2_choice: "__TIMEOUT__" };
 
-        await supabase
-            .from("rooms")
-            .update(updateData as Record<string, unknown>)
-            .eq("id", roomId);
-    }, [isPlayer1, roomId]);
+        await updateRoomMutation({
+            roomId: convexRoomId,
+            updates: updateData,
+        });
+    }, [isPlayer1, convexRoomId, updateRoomMutation]);
 
     // Timer countdown - keeps running even after choice, stops on reveal
     useEffect(() => {
@@ -118,92 +125,66 @@ export function FlagGameScreen({
         setShowDebatePrompt(false);
     }, [currentRound]);
 
-    // Poll for game start (rules phase sync)
+    // Reactive room state updates (replaces Supabase polling)
     useEffect(() => {
-        if (!roomId || phase !== "rules") return;
+        if (!convexRoom) return;
 
-        const poll = async () => {
-            const { data } = await supabase
-                .from("rooms")
-                .select("phase")
-                .eq("id", roomId)
-                .single();
+        const roomData = convexRoom as Record<string, unknown>;
+        const serverPhase = roomData.phase as string;
+        const roundNum = (roomData.round_number as number) || 1;
+        const p1Choice = roomData.player1_choice as FlagChoice;
+        const p2Choice = roomData.player2_choice as FlagChoice;
+        const serverTeamScore = (roomData.psychic_score as number) || 0;
 
-            if (data) {
-                const roomData = data as Record<string, unknown>;
-                // If room phase is "clue" (playing), start the game
-                if (roomData.phase === "clue") {
-                    setPhase("choosing");
-                }
+        // Rules phase sync: if room phase is "clue" (playing), start the game
+        if (phase === "rules" && serverPhase === "clue") {
+            setPhase("choosing");
+            return;
+        }
+
+        // Update team score
+        setTeamScore(serverTeamScore);
+
+        // Get choices based on player role
+        const theirChoice = isPlayer1 ? p2Choice : p1Choice;
+        const serverMyChoice = isPlayer1 ? p1Choice : p2Choice;
+
+        // Update opponent choice
+        if (theirChoice) {
+            setOpponentChoice(theirChoice);
+        }
+
+        // Sync my choice from server if we don't have it locally
+        if (serverMyChoice && !myChoice) {
+            setMyChoice(serverMyChoice);
+            if (serverMyChoice === "__TIMEOUT__") {
+                setTimedOut(true);
             }
-        };
+        }
 
-        poll();
-        const interval = setInterval(poll, 500);
-        return () => clearInterval(interval);
-    }, [roomId, phase]);
+        // CRITICAL: Check if both players have made choices - go to reveal
+        if (p1Choice && p2Choice && phase === "choosing") {
+            setPhase("reveal");
+        }
 
-    // Poll for game state updates
-    useEffect(() => {
-        if (!roomId || phase === "rules") return;
+        // If round changed from server, sync it
+        if (roundNum > currentRound) {
+            setCurrentRound(roundNum);
+            setMyChoice(null);
+            setOpponentChoice(null);
+            setPhase("choosing");
+            setTimeLeft(ROUND_TIME_SECONDS);
+            setTimedOut(false);
+            hasSubmittedTimeout.current = false;
+        }
 
-        const poll = async () => {
-            const { data } = await supabase
-                .from("rooms")
-                .select("*")
-                .eq("id", roomId)
-                .single();
-
-            if (data) {
-                const roomData = data as Record<string, unknown>;
-                const roundNum = (roomData.round_number as number) || 1;
-                const p1Choice = roomData.player1_choice as FlagChoice;
-                const p2Choice = roomData.player2_choice as FlagChoice;
-                const serverTeamScore = (roomData.psychic_score as number) || 0;
-
-                setTeamScore(serverTeamScore);
-
-                const theirChoice = isPlayer1 ? p2Choice : p1Choice;
-                const serverMyChoice = isPlayer1 ? p1Choice : p2Choice;
-
-                if (theirChoice) {
-                    setOpponentChoice(theirChoice);
-                }
-
-                if (serverMyChoice && !myChoice) {
-                    setMyChoice(serverMyChoice);
-                    if (serverMyChoice === "__TIMEOUT__") {
-                        setTimedOut(true);
-                    }
-                }
-
-                if (p1Choice && p2Choice && phase === "choosing") {
-                    setPhase("reveal");
-                }
-
-                if (roundNum > currentRound) {
-                    setCurrentRound(roundNum);
-                    setMyChoice(null);
-                    setOpponentChoice(null);
-                    setPhase("choosing");
-                    setTimeLeft(ROUND_TIME_SECONDS);
-                    setTimedOut(false);
-                    hasSubmittedTimeout.current = false;
-                }
-
-                // Check for game end from server
-                if (roomData.phase === "ended" && !gameOver) {
-                    setTimeout(() => {
-                        setGameOver(true);
-                    }, 2000);
-                }
-            }
-        };
-
-        poll();
-        const interval = setInterval(poll, 400);
-        return () => clearInterval(interval);
-    }, [roomId, isPlayer1, currentRound, phase, myChoice, gameOver]);
+        // Check for game end from server
+        if (serverPhase === "ended" && !gameOver) {
+            setTimeout(() => {
+                setGameOver(true);
+            }, 2000);
+        }
+    }, [convexRoom, isPlayer1, currentRound, phase, myChoice, gameOver]);
 
     const handleChoice = async (choice: FlagChoice) => {
         if (myChoice || timedOut || !choice) return;
@@ -219,20 +200,20 @@ export function FlagGameScreen({
             ? { player1_choice: choice }
             : { player2_choice: choice };
 
-        await supabase
-            .from("rooms")
-            .update(updateData as Record<string, unknown>)
-            .eq("id", roomId);
+        await updateRoomMutation({
+            roomId: convexRoomId,
+            updates: updateData,
+        });
     };
 
     const handleStartGame = async () => {
         if (!isPlayer1) return; // Only host can start
 
         // Update room phase to start the game for both players
-        await supabase
-            .from("rooms")
-            .update({ phase: "clue" } as Record<string, unknown>)
-            .eq("id", roomId);
+        await updateRoomMutation({
+            roomId: convexRoomId,
+            updates: { phase: "clue" },
+        });
 
         setPhase("choosing");
     };
@@ -250,30 +231,30 @@ export function FlagGameScreen({
         const newTeamScore = matched ? teamScore + 1 : teamScore;
 
         if (currentRound >= config.cardCount) {
-            await supabase
-                .from("rooms")
-                .update({
+            await updateRoomMutation({
+                roomId: convexRoomId,
+                updates: {
                     psychic_score: newTeamScore,
                     phase: "ended",
                     player1_choice: null,
                     player2_choice: null,
-                } as Record<string, unknown>)
-                .eq("id", roomId);
+                },
+            });
 
             // Add delay
             setTimeout(() => {
                 setGameOver(true);
             }, 2000);
         } else {
-            await supabase
-                .from("rooms")
-                .update({
+            await updateRoomMutation({
+                roomId: convexRoomId,
+                updates: {
                     round_number: currentRound + 1,
                     psychic_score: newTeamScore,
                     player1_choice: null,
                     player2_choice: null,
-                } as Record<string, unknown>)
-                .eq("id", roomId);
+                },
+            });
 
             setMyChoice(null);
             setOpponentChoice(null);

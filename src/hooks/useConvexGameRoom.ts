@@ -7,25 +7,25 @@ import { Id } from "convex/_generated/dataModel";
 import { generateRoomCode, generateRandomTarget, getRandomCard, Card, DeckType } from "@/lib/gameData";
 
 export interface Room {
-    id: string;
+    _id: Id<"rooms">;
     room_code: string;
-    psychic_id: string | null;
-    guesser_id: string | null;
-    target_angle: number;
-    guess_angle: number;
+    psychic_id: string | undefined;
+    guesser_id: string | undefined;
+    target_angle: number | undefined;
+    guess_angle: number | undefined;
     phase: "waiting" | "clue" | "guessing" | "revealed" | "ended";
-    current_card: Card | null;
-    psychic_score: number;
-    guesser_score: number;
-    round_number: number;
-    clue: string | null;
-    player1_name: string;
-    player2_name: string;
-    player1_avatar: string;
-    player2_avatar: string;
+    current_card: Card | null | undefined;
+    psychic_score: number | undefined;
+    guesser_score: number | undefined;
+    round_number: number | undefined;
+    clue: string | null | undefined;
+    player1_name: string | undefined;
+    player2_name: string | undefined;
+    player1_avatar: string | undefined;
+    player2_avatar: string | undefined;
 }
 
-export function useGameRoom() {
+export function useConvexGameRoom() {
     const [roomId, setRoomId] = useState<Id<"rooms"> | null>(null);
     const [playerId, setPlayerId] = useState<string>("");
     const [playerName, setPlayerName] = useState<string>("");
@@ -36,35 +36,14 @@ export function useGameRoom() {
     const [isGameFinished, setIsGameFinished] = useState(false);
     const [currentDeck, setCurrentDeck] = useState<DeckType>("fun");
 
-    // Reactive Convex query - auto-updates via WebSocket!
-    const convexRoom = useQuery(api.rooms.getRoom, roomId ? { roomId } : "skip");
+    // Reactive query - automatically updates!
+    const room = useQuery(api.rooms.getRoom, roomId ? { roomId } : "skip") as Room | null | undefined;
 
     // Mutations
     const createRoomMutation = useMutation(api.rooms.createRoom);
     const updateRoomMutation = useMutation(api.rooms.updateRoom);
-    const joinRoomMutation = useMutation(api.rooms.joinRoomByCode);
 
-    // Convert Convex room to expected format
-    const room: Room | null = convexRoom ? {
-        id: convexRoom._id,
-        room_code: convexRoom.room_code,
-        psychic_id: convexRoom.psychic_id ?? null,
-        guesser_id: convexRoom.guesser_id ?? null,
-        target_angle: convexRoom.target_angle ?? 90,
-        guess_angle: convexRoom.guess_angle ?? 90,
-        phase: convexRoom.phase as Room["phase"],
-        current_card: convexRoom.current_card ?? null,
-        psychic_score: convexRoom.psychic_score ?? 0,
-        guesser_score: convexRoom.guesser_score ?? 0,
-        round_number: convexRoom.round_number ?? 1,
-        clue: convexRoom.clue ?? null,
-        player1_name: convexRoom.player1_name ?? "Player 1",
-        player2_name: convexRoom.player2_name ?? "Player 2",
-        player1_avatar: convexRoom.player1_avatar ?? "🐼",
-        player2_avatar: convexRoom.player2_avatar ?? "🐯",
-    } : null;
-
-    // Initialize player ID (localStorage)
+    // Initialize player ID (stored in localStorage)
     useEffect(() => {
         const storedId = localStorage.getItem("wavelength_player_id");
         if (storedId) {
@@ -87,8 +66,15 @@ export function useGameRoom() {
 
     // CREATE ROOM
     const createRoom = useCallback(async (name: string, avatar: string) => {
-        if (!playerId) { setError("Please wait..."); return; }
-        if (!name.trim()) { setError("Please enter your name"); return; }
+        if (!playerId) {
+            setError("Please wait...");
+            return;
+        }
+
+        if (!name.trim()) {
+            setError("Please enter your name");
+            return;
+        }
 
         setIsLoading(true);
         setError(null);
@@ -112,18 +98,27 @@ export function useGameRoom() {
                 player1_avatar: avatar,
                 game_mode: "classic",
             });
+
             setRoomId(newRoomId);
+            setIsLoading(false);
         } catch (err) {
             console.error("Create error:", err);
             setError("Failed to create room");
+            setIsLoading(false);
         }
-        setIsLoading(false);
     }, [playerId, createRoomMutation]);
 
-    // JOIN ROOM - uses Convex mutation (atomic: find + join)
+    // JOIN ROOM
     const joinRoom = useCallback(async (roomCode: string, name: string, avatar: string) => {
-        if (!playerId) { setError("Please wait..."); return; }
-        if (!name.trim()) { setError("Please enter your name"); return; }
+        if (!playerId) {
+            setError("Please wait...");
+            return;
+        }
+
+        if (!name.trim()) {
+            setError("Please enter your name");
+            return;
+        }
 
         setIsLoading(true);
         setError(null);
@@ -132,113 +127,153 @@ export function useGameRoom() {
         setIsGameFinished(false);
 
         try {
-            const result = await joinRoomMutation({
-                roomCode: roomCode.toUpperCase(),
-                playerId,
-                playerName: trimmedName,
-                playerAvatar: avatar,
-                expectedGameMode: "classic",
-            });
-
-            if (result.error) {
-                setError(result.error);
-            } else if (result.roomId) {
-                if (result.room) {
-                    setPlayer1Id(result.room.psychic_id ?? null);
-                }
-                setRoomId(result.roomId);
-            }
+            // This will be handled differently - we'll need to fetch first, then join
+            // For now, showing the pattern
+            setError("Join functionality being implemented");
+            setIsLoading(false);
         } catch (err) {
             console.error("Join error:", err);
-            setError("Room not found");
+            setError("Failed to join room");
+            setIsLoading(false);
         }
-        setIsLoading(false);
-    }, [playerId, joinRoomMutation]);
+    }, [playerId]);
 
-    // Game actions
+    // Game actions using mutations
     const updateGuessAngle = useCallback(async (angle: number) => {
         if (!roomId) return;
-        await updateRoomMutation({ roomId, updates: { guess_angle: Math.round(angle) } });
+        await updateRoomMutation({
+            roomId,
+            updates: { guess_angle: Math.round(angle) },
+        });
     }, [roomId, updateRoomMutation]);
 
     const submitClue = useCallback(async (clue: string) => {
         if (!roomId) return;
-        await updateRoomMutation({ roomId, updates: { clue: clue.trim(), phase: "guessing" } });
+        await updateRoomMutation({
+            roomId,
+            updates: { clue: clue.trim(), phase: "guessing" },
+        });
     }, [roomId, updateRoomMutation]);
 
     const skipClue = useCallback(async () => {
         if (!roomId) return;
-        await updateRoomMutation({ roomId, updates: { clue: "(verbal clue)", phase: "guessing" } });
+        await updateRoomMutation({
+            roomId,
+            updates: { clue: "(verbal clue)", phase: "guessing" },
+        });
     }, [roomId, updateRoomMutation]);
 
     const finalizeGuess = useCallback(async (finalAngle: number) => {
         if (!roomId) return;
-        await updateRoomMutation({ roomId, updates: { phase: "revealed", guess_angle: Math.round(finalAngle) } });
+        await updateRoomMutation({
+            roomId,
+            updates: {
+                phase: "revealed",
+                guess_angle: Math.round(finalAngle),
+            },
+        });
     }, [roomId, updateRoomMutation]);
 
     const nextRound = useCallback(async () => {
         if (!roomId || !room) return;
+
         const targetAngle = generateRandomTarget();
         const card = getRandomCard(currentDeck);
 
         await updateRoomMutation({
             roomId,
             updates: {
-                psychic_id: room.guesser_id ?? undefined,
-                guesser_id: room.psychic_id ?? undefined,
+                psychic_id: room.guesser_id,
+                guesser_id: room.psychic_id,
                 target_angle: targetAngle,
                 guess_angle: 90,
                 current_card: card,
                 phase: "clue",
                 clue: null,
-                round_number: room.round_number + 1,
+                round_number: (room.round_number ?? 1) + 1,
             },
         });
     }, [room, roomId, currentDeck, updateRoomMutation]);
 
     const updateScore = useCallback(async (points: number) => {
         if (!roomId || !room) return;
-        const guesserIsPlayer1 = room.guesser_id === player1Id;
+
+        const currentGuesserId = room.guesser_id;
+        const guesserIsPlayer1 = currentGuesserId === player1Id;
 
         if (guesserIsPlayer1) {
-            await updateRoomMutation({ roomId, updates: { psychic_score: room.psychic_score + points } });
+            await updateRoomMutation({
+                roomId,
+                updates: {
+                    psychic_score: (room.psychic_score ?? 0) + points,
+                },
+            });
         } else {
-            await updateRoomMutation({ roomId, updates: { guesser_score: room.guesser_score + points } });
+            await updateRoomMutation({
+                roomId,
+                updates: {
+                    guesser_score: (room.guesser_score ?? 0) + points,
+                },
+            });
         }
     }, [room, roomId, player1Id, updateRoomMutation]);
 
     const endGame = useCallback(async () => {
         if (!roomId) return;
         setIsGameFinished(true);
-        await updateRoomMutation({ roomId, updates: { phase: "ended" } });
+        await updateRoomMutation({
+            roomId,
+            updates: { phase: "ended" },
+        });
     }, [roomId, updateRoomMutation]);
 
     const setCustomCard = useCallback(async (left: string, right: string) => {
         if (!roomId) return;
-        await updateRoomMutation({ roomId, updates: { current_card: { left: left.trim(), right: right.trim() } } });
+        await updateRoomMutation({
+            roomId,
+            updates: {
+                current_card: { left: left.trim(), right: right.trim() },
+            },
+        });
     }, [roomId, updateRoomMutation]);
 
     const changeCard = useCallback(async () => {
         if (!roomId) return;
         const newCard = getRandomCard(currentDeck);
-        await updateRoomMutation({ roomId, updates: { current_card: newCard } });
+        await updateRoomMutation({
+            roomId,
+            updates: {
+                current_card: newCard,
+            },
+        });
     }, [roomId, currentDeck, updateRoomMutation]);
 
     const switchDeck = useCallback(async (deck: DeckType) => {
         setCurrentDeck(deck);
         if (!roomId) return;
         const newCard = getRandomCard(deck);
-        await updateRoomMutation({ roomId, updates: { current_card: newCard } });
+        await updateRoomMutation({
+            roomId,
+            updates: {
+                current_card: newCard,
+            },
+        });
     }, [roomId, updateRoomMutation]);
 
     const startGame = useCallback(async () => {
         if (!roomId) return;
-        await updateRoomMutation({ roomId, updates: { phase: "clue" } });
+        await updateRoomMutation({
+            roomId,
+            updates: { phase: "clue" },
+        });
     }, [roomId, updateRoomMutation]);
 
     const leaveRoom = useCallback(async () => {
         if (roomId) {
-            await updateRoomMutation({ roomId, updates: { phase: "ended" } });
+            await updateRoomMutation({
+                roomId,
+                updates: { phase: "ended" },
+            });
         }
         setRoomId(null);
         setPlayer1Id(null);
@@ -246,12 +281,32 @@ export function useGameRoom() {
         setIsGameFinished(false);
     }, [roomId, updateRoomMutation]);
 
+    // Convert Convex room to expected format
+    const convertedRoom = room ? {
+        id: room._id,
+        room_code: room.room_code,
+        psychic_id: room.psychic_id ?? null,
+        guesser_id: room.guesser_id ?? null,
+        target_angle: room.target_angle ?? 90,
+        guess_angle: room.guess_angle ?? 90,
+        phase: room.phase,
+        current_card: room.current_card ?? null,
+        psychic_score: room.psychic_score ?? 0,
+        guesser_score: room.guesser_score ?? 0,
+        round_number: room.round_number ?? 1,
+        clue: room.clue ?? null,
+        player1_name: room.player1_name ?? "Player 1",
+        player2_name: room.player2_name ?? "Player 2",
+        player1_avatar: room.player1_avatar ?? "🐼",
+        player2_avatar: room.player2_avatar ?? "🐯",
+    } : null;
+
     return {
-        room,
+        room: convertedRoom,
         playerId,
         playerName,
-        isPsychic: room?.psychic_id === playerId,
-        isGuesser: room?.guesser_id === playerId,
+        isPsychic: convertedRoom?.psychic_id === playerId,
+        isGuesser: convertedRoom?.guesser_id === playerId,
         isGameFinished,
         isLoading,
         error,

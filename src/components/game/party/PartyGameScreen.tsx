@@ -438,7 +438,7 @@ export function PartyGameScreen({
                                         // We should sort by joined_at to match logic, but here we depend on 'players' array.
                                         // Ideally 'players' comes sorted from the hook?
                                         // Let's rely on the hook sort: 
-                                        const sortedForLogic = [...players].sort((a, b) => a.joined_at.localeCompare(b.joined_at));
+                                        const sortedForLogic = [...players].sort((a, b) => a.id.localeCompare(b.id));
                                         const currentPsychicIndex = sortedForLogic.findIndex(p => p.role === "psychic");
                                         const nextPsychicIndex = (currentPsychicIndex + 1) % sortedForLogic.length;
                                         const nextPsychic = sortedForLogic[nextPsychicIndex];

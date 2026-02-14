@@ -1,11 +1,11 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { supabase } from "@/lib/supabase/client";
+import { useQuery, useMutation } from "convex/react";
+import { api } from "convex/_generated/api";
+import { Id } from "convex/_generated/dataModel";
 import { generateRoomCode, generateRandomTarget, getRandomCard, calculatePoints, Card, DeckType } from "@/lib/gameData";
-import { Json } from "@/lib/supabase/types";
 
-// Re-using Room interface but we mainly care about common fields
 export interface Room {
     id: string;
     room_code: string;
@@ -28,106 +28,72 @@ export interface PartyPlayer {
     score: number;
     guess_angle: number | null;
     locked_in: boolean;
-    joined_at: string;
-}
-
-function parseCard(json: Json | null): Card | null {
-    if (!json || typeof json !== "object" || Array.isArray(json)) return null;
-    const obj = json as Record<string, unknown>;
-    if (typeof obj.left === "string" && typeof obj.right === "string") {
-        return { left: obj.left, right: obj.right };
-    }
-    return null;
-}
-
-function cardToJson(card: Card): Json {
-    return { left: card.left, right: card.right };
-}
-
-function parseRoomData(data: Record<string, unknown>): Room {
-    return {
-        id: data.id as string,
-        room_code: data.room_code as string,
-        target_angle: (data.target_angle as number) ?? 90,
-        phase: data.phase as Room["phase"],
-        current_card: parseCard(data.current_card as Json | null),
-        round_number: (data.round_number as number) ?? 1,
-        clue: data.clue as string | null,
-        game_mode: (data.game_mode as "classic" | "party") || "classic",
-        psychic_id: data.psychic_id as string | undefined, // Added psychic_id
-    };
 }
 
 export function usePartyRoom() {
-    const [room, setRoom] = useState<Room | null>(null);
-    const [players, setPlayers] = useState<PartyPlayer[]>([]);
-    const [roomId, setRoomId] = useState<string | null>(null);
+    const [roomId, setRoomId] = useState<Id<"rooms"> | null>(null);
     const [playerId, setPlayerId] = useState<string>("");
-
-    // Status
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [authInitialized, setAuthInitialized] = useState(false);
     const [isGameFinished, setIsGameFinished] = useState(false);
-
-    // Current deck selection
     const [currentDeck, setCurrentDeck] = useState<DeckType>("fun");
-
-    // Internal state to track round changes for self-reset
     const [lastProcessedRound, setLastProcessedRound] = useState<number>(0);
 
-    // Derived state
+    // Reactive Convex queries
+    const convexRoom = useQuery(api.rooms.getRoom, roomId ? { roomId } : "skip");
+    const convexPlayers = useQuery(api.rooms.getPartyPlayers, roomId ? { roomId } : "skip");
+
+    // Mutations
+    const createRoomMutation = useMutation(api.rooms.createRoom);
+    const updateRoomMutation = useMutation(api.rooms.updateRoom);
+    const addPartyPlayerMutation = useMutation(api.rooms.addPartyPlayer);
+    const updatePartyPlayerMutation = useMutation(api.rooms.updatePartyPlayer);
+    const removePartyPlayerMutation = useMutation(api.rooms.removePartyPlayer);
+    const joinPartyRoomMutation = useMutation(api.rooms.joinPartyRoomByCode);
+
+    // Convert to expected format
+    const room: Room | null = convexRoom ? {
+        id: convexRoom._id,
+        room_code: convexRoom.room_code,
+        target_angle: convexRoom.target_angle ?? 90,
+        phase: convexRoom.phase as Room["phase"],
+        current_card: convexRoom.current_card ?? null,
+        round_number: convexRoom.round_number ?? 1,
+        clue: convexRoom.clue ?? null,
+        game_mode: (convexRoom.game_mode as "classic" | "party") || "classic",
+        psychic_id: convexRoom.psychic_id,
+    } : null;
+
+    const players: PartyPlayer[] = convexPlayers ? convexPlayers.map((p: any) => ({
+        id: p._id,
+        room_id: p.room_id,
+        player_id: p.player_id,
+        name: p.name,
+        avatar: p.avatar,
+        role: p.role as "psychic" | "guesser",
+        score: p.score,
+        guess_angle: p.guess_angle ?? null,
+        locked_in: p.locked_in,
+    })) : [];
+
     const currentPlayer = players.find(p => p.player_id === playerId);
-    // Prefer room.psychic_id for truth, fallback to player role if not set
     const isPsychic = room?.psychic_id ? room.psychic_id === playerId : currentPlayer?.role === "psychic";
     const isGuesser = !isPsychic;
 
-    // Initialize Auth
+    // Initialize player ID
     useEffect(() => {
-        const init = async () => {
-            const { data: { session } } = await supabase.auth.getSession();
-            if (session?.user) {
-                setPlayerId(session.user.id);
-                setAuthInitialized(true);
-                return;
-            }
-            const { data } = await supabase.auth.signInAnonymously();
-            if (data?.user) {
-                setPlayerId(data.user.id);
-            }
+        const storedId = localStorage.getItem("wavelength_player_id");
+        if (storedId) {
+            setPlayerId(storedId);
             setAuthInitialized(true);
-        };
-        init();
+        } else {
+            const newId = `player_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+            localStorage.setItem("wavelength_player_id", newId);
+            setPlayerId(newId);
+            setAuthInitialized(true);
+        }
     }, []);
-
-    // Polling Room & Players
-    useEffect(() => {
-        if (!roomId || isGameFinished) return;
-
-        const poll = async () => {
-            // Fetch Room
-            const { data: roomData } = await supabase.from("rooms").select("*").eq("id", roomId).single();
-            if (roomData) {
-                setRoom(parseRoomData(roomData as Record<string, unknown>));
-            }
-
-            // Fetch Players
-            const { data: playersData } = await supabase
-                .from("party_players")
-                .select("*")
-                .eq("room_id", roomId)
-                .order("joined_at", { ascending: true });
-
-            if (playersData) {
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                setPlayers(playersData as any as PartyPlayer[]);
-            }
-        };
-
-        poll();
-        const interval = setInterval(poll, 1000);
-        return () => clearInterval(interval);
-    }, [roomId, isGameFinished]);
 
     // Check for game end
     useEffect(() => {
@@ -136,37 +102,31 @@ export function usePartyRoom() {
         }
     }, [room?.phase, isGameFinished]);
 
-    // *** SELF-RESET LOGIC ***
-    // When round number increases, each client resets THEIR OWN state.
-    // This bypasses RLS issues where one user can't update others.
+    // SELF-RESET LOGIC
     useEffect(() => {
         if (!room || !roomId || !playerId) return;
 
-        // If we see a new round number that is higher than what we last processed...
         if (room.round_number > lastProcessedRound) {
-            // Update local tracker immediately to prevent double-firing
             setLastProcessedRound(room.round_number);
 
-            // Only perform DB reset if we are actually in the room (have a player record)
             const myPlayer = players.find(p => p.player_id === playerId);
             if (myPlayer) {
                 const newRole = (room.psychic_id === playerId) ? "psychic" : "guesser";
 
-                // Reset my own state
-                supabase.from("party_players").update({
-                    role: newRole,
-                    locked_in: false,
-                    guess_angle: null
-                }).eq("player_id", playerId).eq("room_id", roomId).then(({ error }) => {
-                    if (error) console.error("Error resetting player state:", error);
-                });
+                updatePartyPlayerMutation({
+                    room_id: roomId,
+                    player_id: playerId,
+                    updates: {
+                        role: newRole,
+                        locked_in: false,
+                        guess_angle: null,
+                    },
+                }).catch(err => console.error("Error resetting player state:", err));
             }
         } else if (lastProcessedRound === 0 && room.round_number > 0) {
-            // Initial sync on join
             setLastProcessedRound(room.round_number);
         }
-    }, [room?.round_number, room?.psychic_id, roomId, playerId, players, lastProcessedRound]);
-
+    }, [room?.round_number, room?.psychic_id, roomId, playerId, players, lastProcessedRound, updatePartyPlayerMutation]);
 
     // CREATE PARTY ROOM
     const createPartyRoom = useCallback(async (name: string, avatar: string) => {
@@ -179,221 +139,135 @@ export function usePartyRoom() {
         const targetAngle = generateRandomTarget();
         const card = getRandomCard("random");
 
-        // 1. Create Room
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const { data: roomData, error: roomErr } = await supabase.from("rooms").insert({
-            room_code: roomCode,
-            target_angle: targetAngle,
-            current_card: cardToJson(card),
-            phase: "waiting",
-            game_mode: "party",
-            psychic_id: playerId,
-            round_number: 1
-        } as any).select().single();
+        try {
+            const newRoomId = await createRoomMutation({
+                room_code: roomCode,
+                target_angle: targetAngle,
+                current_card: card,
+                phase: "waiting",
+                game_mode: "party",
+                psychic_id: playerId,
+                round_number: 1,
+            });
 
-        if (roomErr || !roomData) {
-            console.error(roomErr);
+            setRoomId(newRoomId);
+            setLastProcessedRound(1);
+
+            await addPartyPlayerMutation({
+                room_id: newRoomId,
+                player_id: playerId,
+                name: name.trim(),
+                avatar: avatar,
+                role: "psychic",
+                score: 0,
+                locked_in: false,
+            });
+
+            setIsLoading(false);
+        } catch (err) {
+            console.error("Create error:", err);
             setError("Failed to create party room");
             setIsLoading(false);
-            return;
         }
+    }, [playerId, createRoomMutation, addPartyPlayerMutation]);
 
-        const newRoom = parseRoomData(roomData as Record<string, unknown>);
-        setRoomId(newRoom.id);
-        setRoom(newRoom);
-        setLastProcessedRound(1); // Set initial round
-
-        // 2. Add Host as Player (Psychic)
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const { data: playerData, error: playerErr } = await supabase.from("party_players").insert({
-            room_id: newRoom.id,
-            player_id: playerId,
-            name: name,
-            avatar: avatar,
-            role: "psychic",
-            score: 0,
-            locked_in: false,
-            guess_angle: null
-        } as any).select().single();
-
-        if (playerErr) {
-            console.error(playerErr);
-            setError("Failed to join as host");
-        } else if (playerData) {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            setPlayers([playerData as any as PartyPlayer]);
-        }
-
-        setIsLoading(false);
-    }, [playerId]);
-
-
-    // JOIN PARTY ROOM
+    // JOIN PARTY ROOM - uses Convex mutation (atomic)
     const joinPartyRoom = useCallback(async (roomCode: string, name: string, avatar: string) => {
         if (!playerId) { setError("Please wait..."); return; }
         setIsLoading(true);
         setError(null);
         setIsGameFinished(false);
 
-        // 1. Find Room
-        const { data: roomData, error: findErr } = await supabase
-            .from("rooms")
-            .select("*")
-            .eq("room_code", roomCode.toUpperCase())
-            .single();
+        try {
+            const result = await joinPartyRoomMutation({
+                roomCode: roomCode.toUpperCase(),
+                playerId,
+                playerName: name.trim(),
+                playerAvatar: avatar,
+            });
 
-        if (findErr || !roomData) {
+            if (result.error) {
+                setError(result.error);
+            } else if (result.roomId) {
+                setRoomId(result.roomId);
+                setLastProcessedRound(result.roundNumber || 1);
+            }
+        } catch (err) {
+            console.error("Join error:", err);
             setError("Room not found");
-            setIsLoading(false);
-            return;
         }
-
-        // Check compatibility
-        if (roomData.game_mode !== "party") {
-            setError("This looks like a valid room, but it's not a Party Mode room!");
-            setIsLoading(false);
-            return;
-        }
-
-        const roomId = roomData.id;
-        const currentRound = roomData.round_number || 1;
-        setLastProcessedRound(currentRound); // Sync round number
-
-        // 2. Check if already in
-        const { data: existingPlayer } = await supabase
-            .from("party_players")
-            .select("*")
-            .eq("room_id", roomId)
-            .eq("player_id", playerId)
-            .single();
-
-        if (existingPlayer) {
-            // Rejoining
-            setRoomId(roomId);
-            setRoom(parseRoomData(roomData as Record<string, unknown>));
-            setIsLoading(false);
-            return;
-        }
-
-        // 3. Join as Guesser
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        await supabase.from("party_players").insert({
-            room_id: roomId,
-            player_id: playerId,
-            name: name,
-            avatar: avatar,
-            role: "guesser",
-            score: 0,
-            locked_in: false,
-            guess_angle: null
-        } as any);
-
-        setRoomId(roomId);
-        setRoom(parseRoomData(roomData as Record<string, unknown>));
         setIsLoading(false);
-    }, [playerId]);
-
+    }, [playerId, joinPartyRoomMutation]);
 
     // GAME ACTIONS
-
     const startPartyGame = useCallback(async () => {
         if (!roomId) return;
-        await supabase.from("rooms").update({ phase: "clue" }).eq("id", roomId);
-    }, [roomId]);
+        await updateRoomMutation({ roomId, updates: { phase: "clue" } });
+    }, [roomId, updateRoomMutation]);
 
     const submitClue = useCallback(async (clue: string) => {
         if (!roomId) return;
-        await supabase.from("rooms").update({ clue: clue.trim(), phase: "guessing" }).eq("id", roomId);
-    }, [roomId]);
+        await updateRoomMutation({ roomId, updates: { clue: clue.trim(), phase: "guessing" } });
+    }, [roomId, updateRoomMutation]);
 
     const updateMyGuess = useCallback(async (angle: number) => {
-        if (!roomId || !currentPlayer) return;
-        // Don't update locked guesses
-        if (currentPlayer.locked_in) return;
+        if (!roomId || !currentPlayer || currentPlayer.locked_in) return;
 
-        // Optimistic update
-        setPlayers(prev => prev.map(p =>
-            p.player_id === playerId ? { ...p, guess_angle: angle } : p
-        ));
-
-        // DB Update
-        await supabase.from("party_players").update({
-            guess_angle: Math.round(angle)
-        }).eq("player_id", playerId).eq("room_id", roomId);
-    }, [roomId, currentPlayer, playerId]);
+        await updatePartyPlayerMutation({
+            room_id: roomId,
+            player_id: playerId,
+            updates: { guess_angle: Math.round(angle) },
+        });
+    }, [roomId, currentPlayer, playerId, updatePartyPlayerMutation]);
 
     // SCORING EFFECT
-    // Each client calculates and updates their OWN score when phase updates to 'revealed'.
-    // This bypasses RLS restrictions (users can only update themselves) and handles multi-tab testing via sessionStorage.
     useEffect(() => {
         if (!roomId || !currentPlayer || !room) return;
 
-        // Only run if we are in the 'revealed' phase and I am a guesser who needs to score
         if (room.phase === "revealed" && currentPlayer.role === "guesser" && currentPlayer.guess_angle !== null) {
             const sessionKey = `wavelength_scored_${roomId}_${room.round_number}`;
 
-            // Check if we already scored this round in this session
             if (sessionStorage.getItem(sessionKey)) return;
 
-            // Mark as scored immediately to prevent double-fire
             sessionStorage.setItem(sessionKey, "true");
 
-            // Calculate points
             const points = calculatePoints(room.target_angle, currentPlayer.guess_angle);
+            const newScore = currentPlayer.score + points;
 
-            // Update DB
-            const newScore = (currentPlayer.score || 0) + points;
-
-            supabase.from("party_players").update({
-                score: newScore
-            }).eq("player_id", playerId).eq("room_id", roomId).then(({ error }) => {
-                if (error) {
-                    console.error("Failed to update own score:", error);
-                    // If failed, maybe clear session key to retry? 
-                    // For now, let's leave it to prevent infinite loops.
-                }
-            });
+            updatePartyPlayerMutation({
+                room_id: roomId,
+                player_id: playerId,
+                updates: { score: newScore },
+            }).catch(err => console.error("Failed to update own score:", err));
         }
-    }, [room?.phase, room?.round_number, roomId, playerId, currentPlayer?.guess_angle, room?.target_angle, currentPlayer?.role, currentPlayer?.score]);
+    }, [room?.phase, room?.round_number, room?.target_angle, roomId, playerId, currentPlayer, updatePartyPlayerMutation]);
 
     const lockInGuess = useCallback(async (angle: number) => {
         if (!roomId || !currentPlayer) return;
 
-        // 1. Lock in for THIS player
-        await supabase.from("party_players").update({
-            guess_angle: Math.round(angle),
-            locked_in: true
-        }).eq("player_id", playerId).eq("room_id", roomId);
+        await updatePartyPlayerMutation({
+            room_id: roomId,
+            player_id: playerId,
+            updates: {
+                guess_angle: Math.round(angle),
+                locked_in: true,
+            },
+        });
 
-        // 2. Refresh state to check if everyone is done
-        const { data: allPlayers } = await supabase
-            .from("party_players")
-            .select("player_id, role, locked_in")
-            .eq("room_id", roomId);
+        // Check if everyone is locked in
+        const guessingPlayers = players.filter(p => p.role === "guesser");
+        const allLocked = guessingPlayers.every(p => p.player_id === playerId || p.locked_in);
 
-        if (allPlayers) {
-            const guessingPlayers = allPlayers.filter((p: any) => p.role === "guesser");
-
-            const isEveryoneLocked = guessingPlayers.every((p: any) => {
-                if (p.player_id === playerId) return true;
-                return p.locked_in === true;
-            });
-
-            if (isEveryoneLocked && guessingPlayers.length > 0) {
-                // ALL PLAYERS LOCKED
-                // We simply update the phase. Each client will see 'revealed' and calculate their own score.
-                await supabase.from("rooms").update({ phase: "revealed" }).eq("id", roomId);
-            }
+        if (allLocked && guessingPlayers.length > 0) {
+            await updateRoomMutation({ roomId, updates: { phase: "revealed" } });
         }
-    }, [roomId, currentPlayer, playerId]);
+    }, [roomId, currentPlayer, playerId, players, updateRoomMutation, updatePartyPlayerMutation]);
 
     const nextRound = useCallback(async () => {
         if (!roomId || !players.length) return;
 
-        // Determine next psychic
-        const sortedPlayers = [...players].sort((a, b) => a.joined_at.localeCompare(b.joined_at));
+        const sortedPlayers = [...players].sort((a, b) => a.id.localeCompare(b.id));
         const currentPsychicIndex = sortedPlayers.findIndex(p => p.role === "psychic");
-        // Safe check if index is -1
         const safeIndex = currentPsychicIndex === -1 ? 0 : currentPsychicIndex;
         const nextPsychicIndex = (safeIndex + 1) % sortedPlayers.length;
         const nextPsychicId = sortedPlayers[nextPsychicIndex].player_id;
@@ -401,62 +275,52 @@ export function usePartyRoom() {
         const targetAngle = generateRandomTarget();
         const card = getRandomCard(currentDeck);
 
-        // Only update ROOM. Each player will see 'round_number' increase and reset THEMSELVES.
-        await supabase.from("rooms").update({
-            target_angle: targetAngle,
-            current_card: cardToJson(card),
-            phase: "clue",
-            clue: null,
-            round_number: (room?.round_number ?? 0) + 1,
-            psychic_id: nextPsychicId // Set the source of truth for psychic
-        }).eq("id", roomId);
-
-    }, [roomId, players, room?.round_number, currentDeck]);
+        await updateRoomMutation({
+            roomId,
+            updates: {
+                target_angle: targetAngle,
+                current_card: card,
+                phase: "clue",
+                clue: null,
+                round_number: (room?.round_number ?? 0) + 1,
+                psychic_id: nextPsychicId,
+            },
+        });
+    }, [roomId, players, room?.round_number, currentDeck, updateRoomMutation]);
 
     const setCustomCard = useCallback(async (left: string, right: string) => {
         if (!roomId) return;
-        await supabase.from("rooms").update({
-            current_card: cardToJson({ left: left.trim(), right: right.trim() })
-        }).eq("id", roomId);
-    }, [roomId]);
+        await updateRoomMutation({
+            roomId,
+            updates: { current_card: { left: left.trim(), right: right.trim() } },
+        });
+    }, [roomId, updateRoomMutation]);
 
     const changeCard = useCallback(async () => {
         if (!roomId) return;
         const newCard = getRandomCard(currentDeck);
-        await supabase.from("rooms").update({
-            current_card: cardToJson(newCard)
-        }).eq("id", roomId);
-    }, [roomId, currentDeck]);
+        await updateRoomMutation({ roomId, updates: { current_card: newCard } });
+    }, [roomId, currentDeck, updateRoomMutation]);
 
     const switchDeck = useCallback(async (deck: DeckType) => {
         setCurrentDeck(deck);
-        // Optionally change the current card immediately when switching decks
         if (!roomId) return;
         const newCard = getRandomCard(deck);
-        await supabase.from("rooms").update({
-            current_card: cardToJson(newCard)
-        }).eq("id", roomId);
-    }, [roomId]);
+        await updateRoomMutation({ roomId, updates: { current_card: newCard } });
+    }, [roomId, updateRoomMutation]);
 
     const endGame = useCallback(async () => {
         if (!roomId) return;
-        await supabase.from("rooms").update({ phase: "ended" }).eq("id", roomId);
-    }, [roomId]);
+        await updateRoomMutation({ roomId, updates: { phase: "ended" } });
+    }, [roomId, updateRoomMutation]);
 
     const leavePartyRoom = useCallback(async () => {
         if (roomId && currentPlayer) {
-            // Maybe remove player from DB? Or just mark inactive?
-            // For now, let's keep it simple: just clear local state.
-            // Ideally we delete the record so they disappear from the list.
-            await supabase.from("party_players").delete().eq("player_id", playerId).eq("room_id", roomId);
-
-            // If no players left, maybe delete room? Supabase generic cleanup usually handles this.
+            await removePartyPlayerMutation({ room_id: roomId, player_id: playerId });
         }
         setRoomId(null);
-        setRoom(null);
-        setPlayers([]);
         setIsGameFinished(false);
-    }, [roomId, currentPlayer, playerId]);
+    }, [roomId, currentPlayer, playerId, removePartyPlayerMutation]);
 
     return {
         room,
@@ -480,6 +344,6 @@ export function usePartyRoom() {
         changeCard,
         switchDeck,
         endGame,
-        leavePartyRoom
+        leavePartyRoom,
     };
 }

@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import { useMutation } from "convex/react";
+import { api } from "convex/_generated/api";
 import { LandingScreen } from "./LandingScreen";
 import { ClassicGameEngine } from "./ClassicGameEngine";
 import { PartyGameEngine } from "./party/PartyGameEngine";
-import { supabase } from "@/lib/supabase/client";
 
 export function GameEngine() {
     const [gameState, setGameState] = useState<{
@@ -17,6 +18,9 @@ export function GameEngine() {
 
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+
+    // Use Convex mutation to check room mode during join
+    const joinRoomByCode = useMutation(api.rooms.joinRoomByCode);
 
     const handleCreateGame = (mode: "classic" | "party", name: string, avatar: string) => {
         setGameState({
@@ -31,29 +35,42 @@ export function GameEngine() {
         setIsLoading(true);
         setError(null);
 
-        // 1. Check Room Mode
-        const { data, error } = await supabase
-            .from("rooms")
-            .select("game_mode")
-            .eq("room_code", code.toUpperCase())
-            .single();
+        try {
+            // Use Convex mutation to atomically find the room
+            const result = await joinRoomByCode({
+                roomCode: code.toUpperCase(),
+                playerId: localStorage.getItem("wavelength_player_id") || "temp",
+                playerName: name,
+                playerAvatar: avatar,
+            });
 
-        if (error || !data) {
+            if (result.error) {
+                setError(result.error);
+                setIsLoading(false);
+                return;
+            }
+
+            if (!result.room) {
+                setError("Room not found");
+                setIsLoading(false);
+                return;
+            }
+
+            const mode = (result.room.game_mode as "classic" | "party") || "classic";
+
+            setGameState({
+                mode,
+                isCreating: false,
+                name,
+                avatar,
+                roomCode: code
+            });
+            setIsLoading(false);
+        } catch (err) {
+            console.error("Join error:", err);
             setError("Room not found");
             setIsLoading(false);
-            return;
         }
-
-        const mode = (data.game_mode as "classic" | "party") || "classic";
-
-        setGameState({
-            mode,
-            isCreating: false,
-            name,
-            avatar,
-            roomCode: code
-        });
-        setIsLoading(false);
     };
 
     if (gameState) {

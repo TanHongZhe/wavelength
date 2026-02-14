@@ -74,7 +74,7 @@ const faqItems = [
     },
     {
         question: "Is Wavelength Online open source?",
-        answer: "Yes! Wavelength Online is an open-source project. You can view the source code, contribute, or learn how it was built by visiting our GitHub repository. The game is built with modern web technologies including Next.js, React, and Supabase for real-time multiplayer.",
+        answer: "Yes! Wavelength Online is an open-source project. You can view the source code, contribute, or learn how it was built by visiting our GitHub repository. The game is built with modern web technologies including Next.js, React, and Convex for real-time multiplayer.",
     },
 ];
 

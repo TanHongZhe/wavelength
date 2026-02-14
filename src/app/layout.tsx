@@ -3,6 +3,7 @@ import Script from "next/script";
 import "./globals.css";
 import { Navbar } from "@/components/Navbar";
 import { Toaster } from "@/components/ui/toaster";
+import { ConvexClientProvider } from "@/lib/convex/ConvexClientProvider";
 
 const siteUrl = process.env.NEXT_PUBLIC_APP_URL || "https://wavelength.lol";
 
@@ -216,7 +217,7 @@ export default function RootLayout({
         {/* Performance optimizations */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link rel="dns-prefetch" href="//supabase.co" />
+        <link rel="dns-prefetch" href="//convex.cloud" />
 
         {/* Favicons and PWA */}
         <link rel="icon" href="/logo.png" sizes="any" />
@@ -266,14 +267,16 @@ export default function RootLayout({
             })(window, document, "clarity", "script", "vd4ou3bzy8");
           `}
         </Script>
-        <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-md">
-          Skip to main content
-        </a>
-        <Navbar />
-        <main id="main-content">
-          {children}
-        </main>
-        <Toaster />
+        <ConvexClientProvider>
+          <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-md">
+            Skip to main content
+          </a>
+          <Navbar />
+          <main id="main-content">
+            {children}
+          </main>
+          <Toaster />
+        </ConvexClientProvider>
       </body>
     </html>
   );

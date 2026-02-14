@@ -5,7 +5,8 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, Send, MessageSquare, Star, Sparkles, CheckCircle, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { supabase } from "@/lib/supabase/client";
+import { useMutation } from "convex/react";
+import { api } from "convex/_generated/api";
 
 type FeedbackCategory = "bug" | "feature" | "general" | "praise";
 
@@ -60,6 +61,7 @@ const categoryOptions: { value: FeedbackCategory; label: string; emoji: string; 
 ];
 
 export default function FeedbackForm() {
+    const submitFeedbackMutation = useMutation(api.feedback.submitFeedback);
     const [formData, setFormData] = useState<FormData>({
         name: "",
         email: "",
@@ -98,29 +100,24 @@ export default function FeedbackForm() {
         setIsSubmitting(true);
 
         try {
-            const { error } = await supabase.from("feedback").insert({
-                name: formData.name || null,
-                email: formData.email || null,
+            await submitFeedbackMutation({
+                name: formData.name || undefined,
+                email: formData.email || undefined,
                 category: formData.category,
                 message: formData.message,
-                rating: formData.rating || null,
+                rating: formData.rating || undefined,
             });
 
-            if (error) {
-                console.error("Feedback submission error:", error);
-                setSubmitStatus("error");
-            } else {
-                recordSubmission();
-                setSubmitStatus("success");
-                setFormData({
-                    name: "",
-                    email: "",
-                    category: "general",
-                    message: "",
-                    rating: 0,
-                    honeypot: "",
-                });
-            }
+            recordSubmission();
+            setSubmitStatus("success");
+            setFormData({
+                name: "",
+                email: "",
+                category: "general",
+                message: "",
+                rating: 0,
+                honeypot: "",
+            });
         } catch (error) {
             console.error("Feedback submission error:", error);
             setSubmitStatus("error");

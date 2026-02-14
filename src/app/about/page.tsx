@@ -107,7 +107,7 @@ export default function AboutPage() {
 
                         <h2 className="font-display font-bold text-primary mt-12 mb-6 text-2xl">How It Works</h2>
                         <p>
-                            Using modern web technologies like Next.js, React, and Supabase, Wavelength Online offers real-time synchronization
+                            Using modern web technologies like Next.js, React, and Convex, Wavelength Online offers real-time synchronization
                             across devices. This means when you spin the dial on your phone, your friends see it move on their screens instantly.
                             No app downloads tailored for any specific platform—just share a link and play.
                         </p>

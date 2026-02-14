@@ -1,7 +1,9 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { supabase } from "@/lib/supabase/client";
+import { useQuery, useMutation } from "convex/react";
+import { api } from "convex/_generated/api";
+import { Id } from "convex/_generated/dataModel";
 import { DeckType } from "./cards";
 
 // Generate 4-letter room code
@@ -31,102 +33,64 @@ export interface RapidFireRoom {
     phase: "waiting" | "playing" | "reveal" | "results" | "ended";
 }
 
-// Map room data from Supabase using the existing rooms table structure
-// We reuse psychic_id as player1_id, guesser_id as player2_id
-function parseRoomData(data: Record<string, unknown>): RapidFireRoom {
-    return {
-        id: data.id as string,
-        room_code: data.room_code as string,
-        player1_id: data.psychic_id as string | null,
-        player2_id: data.guesser_id as string | null,
-        player1_name: (data.player1_name as string) || "Player 1",
-        player2_name: (data.player2_name as string) || "Player 2",
-        player1_avatar: (data.player1_avatar as string) || "🐼",
-        player2_avatar: (data.player2_avatar as string) || "🐯",
-        deck_type: "couples" as DeckType, // Default for now
-        card_count: 20, // Default for now
-        current_round: (data.round_number as number) || 1,
-        player1_score: (data.psychic_score as number) || 0,
-        player2_score: (data.guesser_score as number) || 0,
-        phase: (data.phase as string) === "waiting" ? "waiting" :
-            (data.phase as string) === "clue" ? "playing" :
-                (data.phase as string) === "ended" ? "ended" : "waiting",
-    };
-}
-
 export function useRapidFireRoom() {
-    const [room, setRoom] = useState<RapidFireRoom | null>(null);
-    const [roomId, setRoomId] = useState<string | null>(null);
+    const [roomId, setRoomId] = useState<Id<"rooms"> | null>(null);
     const [playerId, setPlayerId] = useState<string>("");
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [authInitialized, setAuthInitialized] = useState(false);
 
-    // Store local config since we can't store in DB without migration
-    const [localConfig, setLocalConfig] = useState<{ deckType: DeckType; cardCount: number } | null>(null);
+    // Reactive Convex query
+    const convexRoom = useQuery(api.rooms.getRoom, roomId ? { roomId } : "skip");
 
-    // Initialize authentication
+    // Mutations
+    const createRoomMutation = useMutation(api.rooms.createRoom);
+    const updateRoomMutation = useMutation(api.rooms.updateRoom);
+    const joinRoomMutation = useMutation(api.rooms.joinRoomByCode);
+
+    // Convert to expected format
+    const room: RapidFireRoom | null = convexRoom ? {
+        id: convexRoom._id,
+        room_code: convexRoom.room_code,
+        player1_id: convexRoom.psychic_id ?? null,
+        player2_id: convexRoom.guesser_id ?? null,
+        player1_name: convexRoom.player1_name || "Player 1",
+        player2_name: convexRoom.player2_name || "Player 2",
+        player1_avatar: convexRoom.player1_avatar || "🐼",
+        player2_avatar: convexRoom.player2_avatar || "🐯",
+        deck_type: (convexRoom.deck_type as DeckType) || "couples",
+        card_count: convexRoom.card_count || 20,
+        current_round: convexRoom.round_number || 1,
+        player1_score: convexRoom.psychic_score || 0,
+        player2_score: convexRoom.guesser_score || 0,
+        phase: (convexRoom.phase === "waiting" ? "waiting" :
+            convexRoom.phase === "clue" ? "playing" :
+                convexRoom.phase === "ended" ? "ended" : "waiting") as RapidFireRoom["phase"],
+    } : null;
+
+    // Initialize player ID
     useEffect(() => {
-        const init = async () => {
-            const { data: { session } } = await supabase.auth.getSession();
-
-            if (session?.user) {
-                setPlayerId(session.user.id);
-                setAuthInitialized(true);
-                return;
-            }
-
-            const { data } = await supabase.auth.signInAnonymously();
-            if (data?.user) {
-                setPlayerId(data.user.id);
-            }
+        const storedId = localStorage.getItem("wavelength_player_id");
+        if (storedId) {
+            setPlayerId(storedId);
             setAuthInitialized(true);
-        };
-        init();
+        } else {
+            const newId = `player_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+            localStorage.setItem("wavelength_player_id", newId);
+            setPlayerId(newId);
+            setAuthInitialized(true);
+        }
     }, []);
 
-    // Polling for room updates (same as main game)
-    useEffect(() => {
-        if (!roomId) return;
-
-        const poll = async () => {
-            const { data } = await supabase
-                .from("rooms")
-                .select("*")
-                .eq("id", roomId)
-                .single();
-            if (data) {
-                const parsedRoom = parseRoomData(data as Record<string, unknown>);
-                // Merge local config
-                if (localConfig) {
-                    parsedRoom.deck_type = localConfig.deckType;
-                    parsedRoom.card_count = localConfig.cardCount;
-                }
-                setRoom(parsedRoom);
-            }
-        };
-
-        poll();
-        const interval = setInterval(poll, 1000);
-        return () => clearInterval(interval);
-    }, [roomId, localConfig]);
-
-    // CREATE ROOM - uses existing rooms table
+    // CREATE ROOM
     const createRoom = useCallback(async (
         playerName: string,
         avatar: string,
         deckType: DeckType,
         cardCount: number
     ) => {
-        if (!playerId) {
-            setError("Please wait...");
-            return;
-        }
-
-        if (!playerName.trim()) {
-            setError("Please enter your name");
-            return;
-        }
+        if (!playerId) { setError("Please wait..."); return; }
+        if (!playerName.trim()) { setError("Please enter your name"); return; }
 
         setIsLoading(true);
         setError(null);
@@ -134,64 +98,36 @@ export function useRapidFireRoom() {
         const roomCode = generateRoomCode();
 
         try {
-            // Use existing rooms table structure
-            const { data, error: err } = await supabase
-                .from("rooms")
-                .insert({
-                    room_code: roomCode,
-                    psychic_id: playerId, // reuse as player1_id
-                    player1_name: playerName.trim(),
-                    player1_avatar: avatar,
-                    phase: "waiting",
-                    target_angle: 90, // Required field
-                    current_card: { left: "A", right: "B" }, // Required field
-                    game_mode: "mini_rapid_fire", // Mark as mini game
-                    card_count: cardCount,
-                    deck_type: deckType,
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                } as any)
-                .select()
-                .single();
+            const newRoomId = await createRoomMutation({
+                room_code: roomCode,
+                psychic_id: playerId,
+                player1_name: playerName.trim(),
+                player1_avatar: avatar,
+                phase: "waiting",
+                target_angle: 90,
+                current_card: { left: "A", right: "B" },
+                game_mode: "mini_rapid_fire",
+                card_count: cardCount,
+                deck_type: deckType,
+            });
 
+            setRoomId(newRoomId);
             setIsLoading(false);
-
-            if (err) {
-                console.error("Create error:", err);
-                setError("Failed to create room");
-                return;
-            }
-
-            if (data) {
-                const newRoom = parseRoomData(data as Record<string, unknown>);
-                newRoom.deck_type = deckType;
-                newRoom.card_count = cardCount;
-                setLocalConfig({ deckType, cardCount });
-                setRoom(newRoom);
-                setRoomId(newRoom.id);
-            }
         } catch (e) {
             console.error("Create error:", e);
             setError("Failed to create room");
             setIsLoading(false);
         }
-    }, [playerId]);
+    }, [playerId, createRoomMutation]);
 
-    // JOIN ROOM
+    // JOIN ROOM - uses Convex mutation (atomic)
     const joinRoom = useCallback(async (
         playerName: string,
         avatar: string,
         roomCode: string
     ) => {
-        if (!playerId) {
-            setError("Please wait...");
-            return;
-        }
-
-        if (!playerName.trim()) {
-            setError("Please enter your name");
-            return;
-        }
-
+        if (!playerId) { setError("Please wait..."); return; }
+        if (!playerName.trim()) { setError("Please enter your name"); return; }
         if (!roomCode.trim() || roomCode.trim().length !== 4) {
             setError("Please enter a valid 4-letter code");
             return;
@@ -201,104 +137,45 @@ export function useRapidFireRoom() {
         setError(null);
 
         try {
-            // Find the room
-            const { data: roomData, error: findErr } = await supabase
-                .from("rooms")
-                .select("*")
-                .eq("room_code", roomCode.toUpperCase())
-                .eq("phase", "waiting")
-                .single();
+            const result = await joinRoomMutation({
+                roomCode: roomCode.toUpperCase(),
+                playerId,
+                playerName: playerName.trim(),
+                playerAvatar: avatar,
+                expectedGameMode: "mini_rapid_fire",
+            });
 
-            if (findErr || !roomData) {
-                setIsLoading(false);
-                setError("Room not found or game already started");
-                return;
+            if (result.error) {
+                setError(result.error);
+            } else if (result.roomId) {
+                setRoomId(result.roomId);
             }
-
-            const typedRoomData = roomData as Record<string, unknown>;
-
-            // Strict Check: Ensure this is a Rapid Fire game
-            if (typedRoomData.game_mode !== "mini_rapid_fire") {
-                setIsLoading(false);
-                setError("Invalid room code. This room is for " + (typedRoomData.game_mode === "mini_flag_game" ? "Flags" : "Classic"));
-                return;
-            }
-
-            // Check if already the creator
-            if (typedRoomData.psychic_id === playerId) {
-                const existingRoom = parseRoomData(typedRoomData);
-                setRoom(existingRoom);
-                setRoomId(existingRoom.id);
-                setIsLoading(false);
-                return;
-            }
-
-            // Check if room is full
-            if (typedRoomData.guesser_id) {
-                if (typedRoomData.guesser_id === playerId) {
-                    const existingRoom = parseRoomData(typedRoomData);
-                    setRoom(existingRoom);
-                    setRoomId(existingRoom.id);
-                    setIsLoading(false);
-                    return;
-                }
-                setIsLoading(false);
-                setError("Room is full");
-                return;
-            }
-
-            // Join as player 2
-            const { error: updateErr } = await supabase
-                .from("rooms")
-                .update({
-                    guesser_id: playerId,
-                    player2_name: playerName.trim(),
-                    player2_avatar: avatar,
-                } as Record<string, unknown>)
-                .eq("id", typedRoomData.id as string);
-
-            if (updateErr) {
-                setIsLoading(false);
-                setError("Failed to join room");
-                return;
-            }
-
-            const joinedRoom = parseRoomData(typedRoomData);
-            joinedRoom.player2_id = playerId;
-            joinedRoom.player2_name = playerName.trim();
-            joinedRoom.player2_avatar = avatar;
-            setRoom(joinedRoom);
-            setRoomId(joinedRoom.id as string);
-            setIsLoading(false);
         } catch (e) {
             console.error("Join error:", e);
             setError("Failed to join room");
-            setIsLoading(false);
         }
-    }, [playerId]);
+        setIsLoading(false);
+    }, [playerId, joinRoomMutation]);
 
     // START GAME
     const startGame = useCallback(async () => {
         if (!roomId) return;
-        await supabase
-            .from("rooms")
-            .update({ phase: "clue" }) // Use "clue" to represent "playing"
-            .eq("id", roomId);
-        setRoom(prev => prev ? { ...prev, phase: "playing" } : null);
-    }, [roomId]);
+        await updateRoomMutation({
+            roomId,
+            updates: { phase: "clue" },
+        });
+    }, [roomId, updateRoomMutation]);
 
     // LEAVE ROOM
     const leaveRoom = useCallback(async () => {
         if (roomId) {
-            await supabase
-                .from("rooms")
-                .update({ phase: "ended" })
-                .eq("id", roomId);
+            await updateRoomMutation({
+                roomId,
+                updates: { phase: "ended" },
+            });
         }
         setRoomId(null);
-        setRoom(null);
-        setLocalConfig(null);
-    }, [roomId]);
+    }, [roomId, updateRoomMutation]);
 
     return {
         room,
