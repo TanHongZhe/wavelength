@@ -228,7 +228,7 @@ export function usePartyRoom() {
         const now = Date.now();
         const timeSinceLast = now - guessLastUpdateRef.current;
 
-        if (timeSinceLast >= 500) {
+        if (timeSinceLast >= 1000) {
             if (guessTimeoutRef.current) {
                 clearTimeout(guessTimeoutRef.current);
                 guessTimeoutRef.current = null;
@@ -243,7 +243,7 @@ export function usePartyRoom() {
             if (guessTimeoutRef.current) {
                 clearTimeout(guessTimeoutRef.current);
             }
-            const wait = 500 - timeSinceLast;
+            const wait = 1000 - timeSinceLast;
             guessTimeoutRef.current = setTimeout(() => {
                 updatePartyPlayerMutation({
                     room_id: roomId,
