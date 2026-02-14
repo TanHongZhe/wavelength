@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useCallback } from "react";
+import { useRef, useState, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Card } from "@/lib/gameData";
 
@@ -52,25 +52,80 @@ export function Dial({
         return angle;
     }, [guessAngle]);
 
+    // Local state for smooth dragging
+    const [localAngle, setLocalAngle] = useState(guessAngle);
+
+    // Sync local state with prop when not dragging
+    useEffect(() => {
+        if (!isDragging) {
+            setLocalAngle(guessAngle);
+        }
+    }, [guessAngle, isDragging]);
+
+    // Throttling helper
+    const lastUpdateRef = useRef(0);
+    const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+    const handleAngleUpdate = useCallback((angle: number) => {
+        setLocalAngle(angle); // Update UI immediately
+
+        const now = Date.now();
+        const timeSinceLast = now - lastUpdateRef.current;
+
+        if (timeSinceLast >= 250) {
+            // Ready to send immediately
+            if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current);
+                timeoutRef.current = null;
+            }
+            onAngleChange?.(angle);
+            lastUpdateRef.current = now;
+        } else {
+            // Not ready, schedule for the end of the 250ms window
+            // If a timeout is already scheduled, we strictly only update the *angle* it will eventually send?
+            // Actually, for a closure, we need to ensure the most recent angle is sent. 
+            // The simplest way with strict throttling is to clear and reschedule the tail call 
+            // so it always sends the LATEST angle at the end of the window.
+            if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current);
+            }
+            const wait = 250 - timeSinceLast;
+            timeoutRef.current = setTimeout(() => {
+                onAngleChange?.(angle);
+                lastUpdateRef.current = Date.now();
+                timeoutRef.current = null;
+            }, wait);
+        }
+    }, [onAngleChange]);
+
+    const handlePointerUp = useCallback(() => {
+        setIsDragging(false);
+        // Cancel any pending throttled update, because we want to send the FINAL position immediately
+        if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
+            timeoutRef.current = null;
+        }
+        // Force send the exact final position instantly
+        // We override the rate limit here because precision on release is critical
+        onAngleChange?.(localAngle);
+        lastUpdateRef.current = Date.now();
+    }, [localAngle, onAngleChange]);
+
     const handlePointerDown = useCallback((e: React.PointerEvent) => {
         if (!canInteract) return;
         setIsDragging(true);
         e.currentTarget.setPointerCapture(e.pointerId);
 
         const angle = calculateAngle(e.clientX, e.clientY);
-        onAngleChange?.(angle);
-    }, [canInteract, calculateAngle, onAngleChange]);
+        handleAngleUpdate(angle);
+    }, [canInteract, calculateAngle, handleAngleUpdate]);
 
     const handlePointerMove = useCallback((e: React.PointerEvent) => {
         if (!isDragging || !canInteract) return;
 
         const angle = calculateAngle(e.clientX, e.clientY);
-        onAngleChange?.(angle);
-    }, [isDragging, canInteract, calculateAngle, onAngleChange]);
-
-    const handlePointerUp = useCallback(() => {
-        setIsDragging(false);
-    }, []);
+        handleAngleUpdate(angle);
+    }, [isDragging, canInteract, calculateAngle, handleAngleUpdate]);
 
     const segmentWidths = [6, 8, 10, 8, 6];
     const wedgeWidth = segmentWidths.reduce((a, b) => a + b, 0); // Should be 38
@@ -81,7 +136,8 @@ export function Dial({
     // guessAngle 0° = needle points LEFT = rotate -90°
     // guessAngle 90° = needle points UP = rotate 0°
     // guessAngle 180° = needle points RIGHT = rotate +90°
-    const needleRotation = guessAngle - 90;
+    // Use localAngle for immediate feedback, otherwise fallback to guessAngle
+    const needleRotation = (isDragging ? localAngle : guessAngle) - 90;
 
     return (
         <div className="relative w-full max-w-lg mx-auto">
