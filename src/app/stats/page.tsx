@@ -1,9 +1,9 @@
 "use client";
 
-import { useQuery } from "convex/react";
+import { useConvex } from "convex/react";
 import { api } from "convex/_generated/api";
-import { useState } from "react";
-import { Loader2, BarChart3, TrendingUp, Gamepad2, Users, Lock, ArrowRight } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Loader2, BarChart3, TrendingUp, Gamepad2, Users, Lock, ArrowRight, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -11,7 +11,23 @@ export default function StatsPage() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [password, setPassword] = useState("");
     const [days, setDays] = useState(7);
-    const stats = useQuery(api.stats.getDailyStats, { days });
+    const convex = useConvex();
+    const [stats, setStats] = useState<any[] | undefined>(undefined);
+    const [isLoading, setIsLoading] = useState(false);
+
+    const fetchStats = async () => {
+        setIsLoading(true);
+        const data = await convex.query(api.stats.getDailyStats, { days });
+        setStats(data);
+        setIsLoading(false);
+    };
+
+    // Initial fetch on mount or days change
+    useEffect(() => {
+        if (isAuthenticated) {
+            fetchStats();
+        }
+    }, [isAuthenticated, days]);
 
     const handleLogin = (e: React.FormEvent) => {
         e.preventDefault();
@@ -152,7 +168,7 @@ export default function StatsPage() {
                 )}
 
                 {/* Loading */}
-                {stats === undefined && (
+                {(stats === undefined && isLoading) && (
                     <div className="flex justify-center items-center py-20">
                         <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
                     </div>
@@ -300,8 +316,24 @@ export default function StatsPage() {
                     </div>
                 )}
 
-                <p className="text-xs text-muted-foreground text-center mt-6">
-                    Stats based on room creation time • Auto-refreshes in real-time
+                <div className="flex justify-center mt-8">
+                    <Button
+                        variant="outline"
+                        onClick={fetchStats}
+                        disabled={isLoading}
+                        className="gap-2"
+                    >
+                        {isLoading ? (
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                        ) : (
+                            <RefreshCw className="w-4 h-4" />
+                        )}
+                        Refresh Stats
+                    </Button>
+                </div>
+
+                <p className="text-xs text-muted-foreground text-center mt-4">
+                    Stats based on room creation time • Click refresh to update
                 </p>
             </div>
         </div>
