@@ -174,6 +174,7 @@ export function useFlagRoom() {
     return {
         room,
         roomId,
+        convexRoom,
         playerId,
         isPlayer1: room?.player1_id === playerId,
         isPlayer2: room?.player2_id === playerId,

@@ -72,7 +72,7 @@ export function Dial({
         const now = Date.now();
         const timeSinceLast = now - lastUpdateRef.current;
 
-        if (timeSinceLast >= 250) {
+        if (timeSinceLast >= 500) {
             // Ready to send immediately
             if (timeoutRef.current) {
                 clearTimeout(timeoutRef.current);
@@ -89,7 +89,7 @@ export function Dial({
             if (timeoutRef.current) {
                 clearTimeout(timeoutRef.current);
             }
-            const wait = 250 - timeSinceLast;
+            const wait = 500 - timeSinceLast;
             timeoutRef.current = setTimeout(() => {
                 onAngleChange?.(angle);
                 lastUpdateRef.current = Date.now();

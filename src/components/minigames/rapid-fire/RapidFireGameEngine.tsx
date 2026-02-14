@@ -26,6 +26,7 @@ export function RapidFireGameEngine({ onClose }: RapidFireGameEngineProps) {
     const {
         room,
         roomId,
+        convexRoom,
         playerId,
         isPlayer1,
         hasOpponent,
@@ -173,6 +174,7 @@ export function RapidFireGameEngine({ onClose }: RapidFireGameEngineProps) {
                 opponentName={isPlayer1 ? room.player2_name : room.player1_name}
                 opponentAvatar={isPlayer1 ? room.player2_avatar : room.player1_avatar}
                 onLeave={handleLeave}
+                convexRoom={convexRoom as Record<string, unknown> | null | undefined}
             />
         );
     }

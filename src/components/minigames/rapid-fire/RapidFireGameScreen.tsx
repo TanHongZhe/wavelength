@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { GameConfig } from "./RapidFireGameEngine";
 import { Button } from "@/components/ui/button";
 import { getDeckCards, RapidFireCard, DeckType } from "./cards";
-import { useQuery, useMutation } from "convex/react";
+import { useMutation } from "convex/react";
 import { api } from "convex/_generated/api";
 import { Id } from "convex/_generated/dataModel";
 import { ArrowRight, Check, X } from "lucide-react";
@@ -17,6 +17,7 @@ interface RapidFireGameScreenProps {
     opponentName: string;
     opponentAvatar: string;
     onLeave: () => void;
+    convexRoom: Record<string, unknown> | null | undefined;
 }
 
 const ROUND_TIME_SECONDS = 10;
@@ -27,7 +28,8 @@ export function RapidFireGameScreen({
     isPlayer1,
     opponentName,
     opponentAvatar,
-    onLeave
+    onLeave,
+    convexRoom,
 }: RapidFireGameScreenProps) {
     const [cards] = useState<RapidFireCard[]>(() => {
         const seed = config.roomCode?.split('').reduce((a, b) => a + b.charCodeAt(0), 0) || 0;
@@ -48,9 +50,8 @@ export function RapidFireGameScreen({
 
     const currentCard = cards[currentRound - 1];
 
-    // Convex reactive query + mutation
+    // Convex mutation (room data comes from parent via props to avoid duplicate subscriptions)
     const convexRoomId = roomId as Id<"rooms">;
-    const convexRoom = useQuery(api.rooms.getRoom, { roomId: convexRoomId });
     const updateRoomMutation = useMutation(api.rooms.updateRoom);
 
     // Submit timeout choice to Convex

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "convex/_generated/api";
 import { Id } from "convex/_generated/dataModel";
@@ -39,6 +39,8 @@ export function usePartyRoom() {
     const [isGameFinished, setIsGameFinished] = useState(false);
     const [currentDeck, setCurrentDeck] = useState<DeckType>("fun");
     const [lastProcessedRound, setLastProcessedRound] = useState<number>(0);
+    const resetInFlightRef = useRef(false);
+    const scoredRoundsRef = useRef<Set<number>>(new Set());
 
     // Reactive Convex queries
     const convexRoom = useQuery(api.rooms.getRoom, roomId ? { roomId } : "skip");
@@ -102,31 +104,37 @@ export function usePartyRoom() {
         }
     }, [room?.phase, isGameFinished]);
 
-    // SELF-RESET LOGIC
+    // SELF-RESET LOGIC — only runs when round_number actually changes
+    // IMPORTANT: `players` is NOT in the dependency array to prevent feedback loops.
+    // Every updatePartyPlayer triggers getPartyPlayers → new players array → re-trigger.
     useEffect(() => {
         if (!room || !roomId || !playerId) return;
 
         if (room.round_number > lastProcessedRound) {
+            // Guard against duplicate calls while mutation is in-flight
+            if (resetInFlightRef.current) return;
+            resetInFlightRef.current = true;
+
             setLastProcessedRound(room.round_number);
 
-            const myPlayer = players.find(p => p.player_id === playerId);
-            if (myPlayer) {
-                const newRole = (room.psychic_id === playerId) ? "psychic" : "guesser";
+            const newRole = (room.psychic_id === playerId) ? "psychic" : "guesser";
 
-                updatePartyPlayerMutation({
-                    room_id: roomId,
-                    player_id: playerId,
-                    updates: {
-                        role: newRole,
-                        locked_in: false,
-                        guess_angle: null,
-                    },
-                }).catch(err => console.error("Error resetting player state:", err));
-            }
+            updatePartyPlayerMutation({
+                room_id: roomId,
+                player_id: playerId,
+                updates: {
+                    role: newRole,
+                    locked_in: false,
+                    guess_angle: null,
+                },
+            })
+                .catch(err => console.error("Error resetting player state:", err))
+                .finally(() => { resetInFlightRef.current = false; });
         } else if (lastProcessedRound === 0 && room.round_number > 0) {
             setLastProcessedRound(room.round_number);
         }
-    }, [room?.round_number, room?.psychic_id, roomId, playerId, players, lastProcessedRound, updatePartyPlayerMutation]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [room?.round_number, room?.psychic_id, roomId, playerId, lastProcessedRound, updatePartyPlayerMutation]);
 
     // CREATE PARTY ROOM
     const createPartyRoom = useCallback(async (name: string, avatar: string) => {
@@ -210,37 +218,70 @@ export function usePartyRoom() {
         await updateRoomMutation({ roomId, updates: { clue: clue.trim(), phase: "guessing" } });
     }, [roomId, updateRoomMutation]);
 
+    // Throttling for updateMyGuess (same pattern as Dial throttle)
+    const guessLastUpdateRef = useRef(0);
+    const guessTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
     const updateMyGuess = useCallback(async (angle: number) => {
         if (!roomId || !currentPlayer || currentPlayer.locked_in) return;
 
-        await updatePartyPlayerMutation({
-            room_id: roomId,
-            player_id: playerId,
-            updates: { guess_angle: Math.round(angle) },
-        });
-    }, [roomId, currentPlayer, playerId, updatePartyPlayerMutation]);
+        const now = Date.now();
+        const timeSinceLast = now - guessLastUpdateRef.current;
 
-    // SCORING EFFECT
-    useEffect(() => {
-        if (!roomId || !currentPlayer || !room) return;
-
-        if (room.phase === "revealed" && currentPlayer.role === "guesser" && currentPlayer.guess_angle !== null) {
-            const sessionKey = `wavelength_scored_${roomId}_${room.round_number}`;
-
-            if (sessionStorage.getItem(sessionKey)) return;
-
-            sessionStorage.setItem(sessionKey, "true");
-
-            const points = calculatePoints(room.target_angle, currentPlayer.guess_angle);
-            const newScore = currentPlayer.score + points;
-
+        if (timeSinceLast >= 500) {
+            if (guessTimeoutRef.current) {
+                clearTimeout(guessTimeoutRef.current);
+                guessTimeoutRef.current = null;
+            }
             updatePartyPlayerMutation({
                 room_id: roomId,
                 player_id: playerId,
-                updates: { score: newScore },
-            }).catch(err => console.error("Failed to update own score:", err));
+                updates: { guess_angle: Math.round(angle) },
+            }).catch(err => console.error("Error updating guess:", err));
+            guessLastUpdateRef.current = now;
+        } else {
+            if (guessTimeoutRef.current) {
+                clearTimeout(guessTimeoutRef.current);
+            }
+            const wait = 500 - timeSinceLast;
+            guessTimeoutRef.current = setTimeout(() => {
+                updatePartyPlayerMutation({
+                    room_id: roomId,
+                    player_id: playerId,
+                    updates: { guess_angle: Math.round(angle) },
+                }).catch(err => console.error("Error updating guess:", err));
+                guessLastUpdateRef.current = Date.now();
+                guessTimeoutRef.current = null;
+            }, wait);
         }
-    }, [room?.phase, room?.round_number, room?.target_angle, roomId, playerId, currentPlayer, updatePartyPlayerMutation]);
+    }, [roomId, currentPlayer, playerId, updatePartyPlayerMutation]);
+
+    // SCORING EFFECT — only runs when phase transitions to "revealed"
+    // Uses a ref-based guard rather than depending on `currentPlayer` (which changes on every player update)
+    useEffect(() => {
+        if (!roomId || !room || !playerId) return;
+        if (room.phase !== "revealed") return;
+
+        // Guard: only score once per round
+        const roundKey = room.round_number;
+        if (scoredRoundsRef.current.has(roundKey)) return;
+
+        // Need to read current player data from the latest convexPlayers snapshot
+        const myPlayer = convexPlayers?.find((p: any) => p.player_id === playerId);
+        if (!myPlayer || myPlayer.role !== "guesser" || myPlayer.guess_angle == null) return;
+
+        scoredRoundsRef.current.add(roundKey);
+
+        const points = calculatePoints(room.target_angle, myPlayer.guess_angle);
+        const newScore = (myPlayer.score ?? 0) + points;
+
+        updatePartyPlayerMutation({
+            room_id: roomId,
+            player_id: playerId,
+            updates: { score: newScore },
+        }).catch(err => console.error("Failed to update own score:", err));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [room?.phase, room?.round_number, room?.target_angle, roomId, playerId, updatePartyPlayerMutation]);
 
     const lockInGuess = useCallback(async (angle: number) => {
         if (!roomId || !currentPlayer) return;

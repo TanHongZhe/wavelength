@@ -1,7 +1,8 @@
 "use client";
 
-import { useQuery } from "convex/react";
+import { useConvex } from "convex/react";
 import { api } from "convex/_generated/api";
+import { useState, useEffect } from "react";
 import { Loader2 } from "lucide-react";
 
 interface LeaderboardProps {
@@ -10,7 +11,17 @@ interface LeaderboardProps {
 }
 
 export function Leaderboard({ gameMode, currentRoomId }: LeaderboardProps) {
-    const entries = useQuery(api.rooms.getLeaderboard, { gameMode });
+    const convex = useConvex();
+    const [entries, setEntries] = useState<any[] | undefined>(undefined);
+
+    // Fetch once on mount instead of using a reactive subscription
+    useEffect(() => {
+        let cancelled = false;
+        convex.query(api.rooms.getLeaderboard, { gameMode }).then((data) => {
+            if (!cancelled) setEntries(data);
+        });
+        return () => { cancelled = true; };
+    }, [gameMode, convex]);
 
     if (entries === undefined) {
         return <div className="flex justify-center p-4"><Loader2 className="animate-spin text-muted-foreground w-4 h-4" /></div>;
