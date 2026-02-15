@@ -29,6 +29,7 @@ import { api } from "convex/_generated/api";
 
 interface GameScreenProps {
     room: Room;
+    playerId?: string;
     isPsychic: boolean;
     isGuesser: boolean;
     currentDeck: DeckType;
@@ -47,6 +48,7 @@ interface GameScreenProps {
 
 export function GameScreen({
     room,
+    playerId,
     isPsychic,
     isGuesser,
     currentDeck,
