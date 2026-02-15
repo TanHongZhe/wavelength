@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import { GameLoader } from "../components/game/GameLoader";
 import Link from "next/link";
 
-export const dynamic = "force-dynamic";
+export const runtime = "edge";
 
 export const metadata: Metadata = {
   title: {
