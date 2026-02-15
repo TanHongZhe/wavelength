@@ -2,7 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   // Enable static export for Cloudflare Pages
-  // output: "export", // Disabled to allow middleware and dynamic routes
+  // output: "export", // Disabled to use @cloudflare/next-on-pages adapter
 
   // Image optimization config for static export
   images: {
