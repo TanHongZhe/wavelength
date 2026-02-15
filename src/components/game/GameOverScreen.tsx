@@ -227,7 +227,7 @@ export function GameOverScreen({ room, playerId, onLeave }: GameOverScreenProps)
                                 <Crown className="w-10 h-10 text-white fill-white/20 mb-3" />
                                 <h3 className="text-2xl font-bold font-display mb-2">Unlock Unlimited Play</h3>
                                 <p className="text-white/90 text-sm">
-                                    You've hit the daily free limit. Upgrade to Pro to keep playing!
+                                    Upgrade to Pro to keep playing! <span className="font-bold underline text-white">Only the host needs Pro for the whole party.</span>
                                 </p>
                             </div>
 
@@ -238,11 +238,11 @@ export function GameOverScreen({ room, playerId, onLeave }: GameOverScreenProps)
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <Star className="w-4 h-4 text-orange-500" />
-                                    <span className="text-sm">Exclusive Party Mode</span>
+                                    <span className="text-sm font-bold text-orange-600 dark:text-orange-400">Host Unlocks for Everyone</span>
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <Star className="w-4 h-4 text-orange-500" />
-                                    <span className="text-sm">Full Mini-Games Access</span>
+                                    <span className="text-sm">Unlock Decks for Party</span>
                                 </div>
                             </div>
 

@@ -48,6 +48,12 @@ export function PaywallModal({ isOpen, onClose, message }: PaywallModalProps) {
                         <DialogDescription className="text-slate-400 text-lg mt-2">
                             {message || "You've reached the limit. Upgrade to play without boundaries."}
                         </DialogDescription>
+                        <div className="mt-4">
+                            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-pink-500/10 to-violet-500/10 border border-pink-500/20 text-pink-200 text-sm font-medium">
+                                <Sparkles className="w-3.5 h-3.5 text-pink-400" />
+                                <span>Only the host needs Pro to unlock for the whole party!</span>
+                            </span>
+                        </div>
                     </DialogHeader>
 
                     {/* Bento Grid Benefits */}
@@ -60,7 +66,7 @@ export function PaywallModal({ isOpen, onClose, message }: PaywallModalProps) {
                                     <InfinityIcon className="w-5 h-5" />
                                 </div>
                                 <h3 className="text-xl font-bold mb-2">Unlimited Access</h3>
-                                <p className="text-slate-400">Create unlimited games and play infinite rounds. No daily limits, ever.</p>
+                                <p className="text-slate-400">Create unlimited games. <span className="text-pink-200 font-medium">Your pro status unlocks unlimited rounds for everyone in your party.</span></p>
                             </div>
                         </div>
 
@@ -74,7 +80,7 @@ export function PaywallModal({ isOpen, onClose, message }: PaywallModalProps) {
                                 <h3 className="text-xl font-bold mb-2">Wavelength Decks</h3>
                                 <div className="text-slate-400">
                                     <p className="mb-1"><span className="text-white font-semibold">6 Exclusive Decks</span> included</p>
-                                    <p>Unlock <span className="text-white font-semibold">200+ new cards</span> for the classic game mode.</p>
+                                    <p>Unlock <span className="text-white font-semibold">200+ new cards</span> for your entire group to play.</p>
                                 </div>
                             </div>
                         </div>
@@ -89,7 +95,7 @@ export function PaywallModal({ isOpen, onClose, message }: PaywallModalProps) {
                                 <h3 className="text-xl font-bold mb-2">Rapid Fire Content</h3>
                                 <div className="text-slate-400">
                                     <p className="mb-1"><span className="text-white font-semibold">7 Exclusive Decks</span> included</p>
-                                    <p>Unlock <span className="text-white font-semibold">500+ new prompts</span> like Couples, Food, & Deep questions.</p>
+                                    <p>Unlock <span className="text-white font-semibold">500+ new prompts</span> shared with all players.</p>
                                 </div>
                             </div>
                         </div>
@@ -119,14 +125,20 @@ export function PaywallModal({ isOpen, onClose, message }: PaywallModalProps) {
                             </thead>
                             <tbody className="text-sm">
                                 <tr className="border-b border-slate-800/50">
-                                    <td className="py-3 px-4 text-slate-300">Daily Games</td>
+                                    <td className="py-3 px-4 text-slate-300">
+                                        <div>Daily Games</div>
+                                        <div className="text-xs text-slate-500 font-normal">Per person</div>
+                                    </td>
                                     <td className="py-3 px-4 text-center text-slate-500">3 / day</td>
                                     <td className="py-3 px-4 text-center text-green-400 font-bold">Unlimited</td>
                                 </tr>
                                 <tr className="border-b border-slate-800/50">
-                                    <td className="py-3 px-4 text-slate-300">Game Rounds</td>
-                                    <td className="py-3 px-4 text-center text-slate-500">Limited</td>
-                                    <td className="py-3 px-4 text-center text-green-400 font-bold">Unlimited</td>
+                                    <td className="py-3 px-4 text-slate-300">
+                                        <div>Party Access</div>
+                                        <div className="text-xs text-slate-500 font-normal">Unlock for friends</div>
+                                    </td>
+                                    <td className="py-3 px-4 text-center text-slate-500">-</td>
+                                    <td className="py-3 px-4 text-center text-white">✅ Host Unlocks All</td>
                                 </tr>
                                 <tr className="border-b border-slate-800/50">
                                     <td className="py-3 px-4 text-slate-300">Wavelength Decks</td>
