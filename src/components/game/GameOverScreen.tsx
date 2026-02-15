@@ -10,7 +10,7 @@ import { useUser, SignInButton } from "@clerk/nextjs";
 
 // Stripe Payment Link for monthly upgrade (same as PaywallModal)
 // Stripe Payment Link for monthly upgrade (PRODUCTION)
-const STRIPE_MONTHLY_LINK = "https://buy.stripe.com/bJe3cxgmr2kT8183KDfQI00";
+const STRIPE_MONTHLY_LINK = "https://buy.stripe.com/5kQ4gBeej9Nla9g0yrfQI02";
 
 interface GameOverScreenProps {
     room: Room;
