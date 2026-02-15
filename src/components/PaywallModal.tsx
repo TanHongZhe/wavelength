@@ -160,13 +160,13 @@ export function PaywallModal({ isOpen, onClose, message }: PaywallModalProps) {
                                 <Button onClick={handleUpgrade} className="w-full bg-gradient-to-r from-pink-600 to-violet-600 hover:from-pink-500 hover:to-violet-500 text-white border-0 shadow-lg shadow-pink-500/20 py-6 text-lg transition-all hover:scale-[1.02]">
                                     <div className="flex flex-col items-center">
                                         <span className="font-bold">Upgrade Monthly</span>
-                                        <span className="text-xs opacity-90">$2.99 / month</span>
+                                        <span className="text-xs opacity-90">$0.99 / month</span>
                                     </div>
                                 </Button>
                                 <Button onClick={handleLifetime} variant="outline" className="w-full border-slate-700 hover:bg-slate-800 hover:text-white py-6 text-lg bg-transparent text-slate-400 transition-all hover:scale-[1.02]">
                                     <div className="flex flex-col items-center">
                                         <span className="font-bold">Lifetime Access</span>
-                                        <span className="text-xs opacity-90">$9.99 one-time</span>
+                                        <span className="text-xs opacity-90">$2.99 one-time</span>
                                     </div>
                                 </Button>
                             </>
