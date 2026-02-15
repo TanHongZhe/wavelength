@@ -9,34 +9,30 @@ export const cleanupOldRooms = mutation({
         const sixHoursAgo = Date.now() - 6 * 60 * 60 * 1000;
 
         // Scan all rooms
-        // Note: For large datasets, this should be paginated or indexed by updated_at
-        // But for this scale, a full scan is accepted for now.
         const allRooms = await ctx.db.query("rooms").collect();
 
-        let deletedRooms = 0;
-        let deletedPlayers = 0;
+        let archivedRooms = 0;
 
         for (const room of allRooms) {
             const lastActive = room.updated_at ?? room._creationTime;
 
             if (lastActive < sixHoursAgo) {
-                // Delete associated party players
-                const players = await ctx.db
-                    .query("party_players")
-                    .withIndex("by_room", (q) => q.eq("room_id", room._id))
-                    .collect();
+                // Archive the room by renaming it
+                // We add a suffix to hide it from standard lookups but keep the data
+                // The room remains in the 'rooms' table, so fetching stats via 'rooms' table will still work.
 
-                for (const player of players) {
-                    await ctx.db.delete(player._id);
-                    deletedPlayers++;
+                if (!room.room_code.includes("_archived")) {
+                    // Update room code to "CODE_archived_TIMESTAMP"
+                    await ctx.db.patch(room._id, {
+                        room_code: `${room.room_code}_archived_${Date.now()}`
+                    });
+
+                    // We DO NOT delete players or the room itself.
+                    archivedRooms++;
                 }
-
-                // Delete the room
-                await ctx.db.delete(room._id);
-                deletedRooms++;
             }
         }
 
-        console.log(`Cleanup complete: Deleted ${deletedRooms} rooms and ${deletedPlayers} players.`);
+        console.log(`Cleanup complete: Archived (renamed) ${archivedRooms} rooms.`);
     },
 });

@@ -21,8 +21,11 @@ import {
     Flag,
     Layers,
     X,
-    RefreshCw
+    RefreshCw,
+    Lock
 } from "lucide-react";
+import { useQuery } from "convex/react";
+import { api } from "convex/_generated/api";
 
 interface GameScreenProps {
     room: Room;
@@ -66,6 +69,11 @@ export function GameScreen({
     const [pointsAwarded, setPointsAwarded] = useState(false);
     const [shake, setShake] = useState(false);
     const [showDeckPicker, setShowDeckPicker] = useState(false);
+
+    // Check Pro status
+    const myUser = useQuery(api.rooms.getMyUser);
+    const isPro = myUser?.isPro ?? false;
+    const FREE_DECK = "fun"; // Only 'fun' deck is free
 
     useEffect(() => {
         if (room.phase === "revealed" && !pointsAwarded) {
@@ -202,21 +210,30 @@ export function GameScreen({
                                 {(Object.keys(DECK_INFO) as DeckType[]).map((deckKey) => {
                                     const deck = DECK_INFO[deckKey];
                                     const isSelected = currentDeck === deckKey;
+                                    const isLocked = !isPro && deckKey !== FREE_DECK;
+
                                     return (
                                         <button
                                             key={deckKey}
                                             onClick={() => {
+                                                if (isLocked) return;
                                                 onSwitchDeck(deckKey);
                                                 setShowDeckPicker(false);
                                             }}
-                                            className={`p-4 rounded-xl border-2 transition-all hover:scale-105 cursor-pointer ${isSelected
-                                                    ? "border-primary bg-primary/10"
-                                                    : "border-border hover:border-primary/50 bg-card"
+                                            disabled={isLocked}
+                                            className={`p-4 rounded-xl border-2 transition-all relative overflow-hidden ${isSelected
+                                                ? "border-primary bg-primary/20"
+                                                : isLocked
+                                                    ? "border-border/50 bg-muted/20 opacity-60 cursor-not-allowed"
+                                                    : "border-border hover:border-primary/50 bg-card hover:bg-secondary cursor-pointer"
                                                 }`}
                                         >
-                                            <div className="text-2xl mb-2">{deck.emoji}</div>
-                                            <div className="font-display font-bold text-sm">{deck.name}</div>
-                                            <div className="text-xs text-muted-foreground">{deck.count} cards</div>
+                                            <div className="flex justify-between items-start">
+                                                <div className="text-2xl mb-2">{deck.emoji}</div>
+                                                {isLocked && <Lock className="w-4 h-4 text-orange-500" />}
+                                            </div>
+                                            <div className="font-display font-bold text-sm text-left">{deck.name}</div>
+                                            <div className="text-xs text-muted-foreground text-left">{deck.count} cards</div>
                                         </button>
                                     );
                                 })}

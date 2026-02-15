@@ -1,6 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import { Lock } from "lucide-react";
+import { useQuery } from "convex/react";
+import { api } from "convex/_generated/api";
 import { MiniGameSetup, MiniGameWaitingRoom } from "../shared";
 import { FlagGameScreen } from "./FlagGameScreen";
 import { useFlagRoom } from "./useFlagRoom";
@@ -20,12 +23,16 @@ export function FlagGameEngine({ onClose }: FlagGameEngineProps) {
     const [gameConfig, setGameConfig] = useState<FlagGameConfig | null>(null);
     const [selectedCardCount, setSelectedCardCount] = useState(20);
 
+    const user = useQuery(api.rooms.getMyUser);
+    const isPro = user?.isPro ?? false;
+
     const {
         room,
         roomId,
         convexRoom,
         playerId,
         isPlayer1,
+        isPlayer2,
         hasOpponent,
         isLoading,
         error,
@@ -68,21 +75,30 @@ export function FlagGameEngine({ onClose }: FlagGameEngineProps) {
                     Number of Scenarios
                 </label>
                 <div className="grid grid-cols-3 gap-2">
-                    {[20, 50, 100].map((count) => (
-                        <button
-                            key={count}
-                            onClick={() => setSelectedCardCount(count)}
-                            className={`p-3 rounded-lg border-2 transition-all cursor-pointer ${selectedCardCount === count
-                                ? "border-primary bg-primary/10"
-                                : "border-primary/20 hover:border-primary/40 bg-secondary"
-                                }`}
-                        >
-                            <div className="text-lg font-bold">{count}</div>
-                            <div className="text-xs text-muted-foreground">
-                                {count === 20 ? "Quick" : count === 50 ? "Standard" : "Marathon"}
-                            </div>
-                        </button>
-                    ))}
+                    {[20, 50, 100].map((count) => {
+                        const isLocked = !isPro && count > 20;
+                        return (
+                            <button
+                                key={count}
+                                disabled={isLocked}
+                                onClick={() => !isLocked && setSelectedCardCount(count)}
+                                className={`p-3 rounded-lg border-2 transition-all cursor-pointer relative ${selectedCardCount === count
+                                    ? "border-primary bg-primary/10"
+                                    : isLocked
+                                        ? "border-white/5 bg-white/5 opacity-50 cursor-not-allowed"
+                                        : "border-primary/20 hover:border-primary/40 bg-secondary"
+                                    }`}
+                            >
+                                <div className="text-lg font-bold flex items-center justify-center gap-1">
+                                    {count}
+                                    {isLocked && <Lock className="w-3 h-3 text-orange-400" />}
+                                </div>
+                                <div className="text-xs text-muted-foreground">
+                                    {count === 20 ? "Quick" : count === 50 ? "Standard" : "Marathon"}
+                                </div>
+                            </button>
+                        );
+                    })}
                 </div>
             </div>
         </div>

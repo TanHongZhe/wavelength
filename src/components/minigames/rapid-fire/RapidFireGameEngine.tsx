@@ -1,6 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import { Lock } from "lucide-react";
+import { useQuery } from "convex/react";
+import { api } from "convex/_generated/api";
 import { DeckType, DECKS } from "./cards";
 import { MiniGameSetup, MiniGameWaitingRoom } from "../shared";
 import { RapidFireGameScreen } from "./RapidFireGameScreen";
@@ -20,8 +23,11 @@ interface RapidFireGameEngineProps {
 
 export function RapidFireGameEngine({ onClose }: RapidFireGameEngineProps) {
     const [gameConfig, setGameConfig] = useState<GameConfig | null>(null);
-    const [selectedDeck, setSelectedDeck] = useState<DeckType>("couples");
+    const [selectedDeck, setSelectedDeck] = useState<DeckType>("random");
     const [selectedCardCount, setSelectedCardCount] = useState(20);
+
+    const user = useQuery(api.rooms.getMyUser);
+    const isPro = user?.isPro ?? false;
 
     const {
         room,
@@ -72,21 +78,36 @@ export function RapidFireGameEngine({ onClose }: RapidFireGameEngineProps) {
                     Choose a Deck
                 </label>
                 <div className="grid grid-cols-2 gap-2">
-                    {(Object.keys(DECKS) as DeckType[]).map((deckKey) => (
-                        <button
-                            key={deckKey}
-                            onClick={() => setSelectedDeck(deckKey)}
-                            className={`p-3 rounded-lg border-2 transition-all cursor-pointer ${selectedDeck === deckKey
-                                ? "border-primary bg-primary/10"
-                                : "border-primary/20 hover:border-primary/40 bg-secondary"
-                                }`}
-                        >
-                            <div className="text-2xl mb-1">{DECKS[deckKey].emoji}</div>
-                            <div className="text-sm font-medium">
-                                {DECKS[deckKey].name.replace(DECKS[deckKey].emoji, '').trim()}
-                            </div>
-                        </button>
-                    ))}
+                    {(Object.keys(DECKS) as DeckType[])
+                        .sort((a, b) => {
+                            if (a === "random") return -1;
+                            if (b === "random") return 1;
+                            return 0;
+                        })
+                        .map((deckKey) => {
+                            const isLocked = !isPro && deckKey !== "random";
+                            return (
+                                <button
+                                    key={deckKey}
+                                    onClick={() => !isLocked && setSelectedDeck(deckKey)}
+                                    disabled={isLocked}
+                                    className={`p-3 rounded-lg border-2 transition-all relative overflow-hidden text-left ${selectedDeck === deckKey
+                                        ? "border-primary bg-primary/20"
+                                        : isLocked
+                                            ? "border-border/50 bg-muted/20 opacity-60 cursor-not-allowed"
+                                            : "border-border hover:border-primary/50 bg-card hover:bg-secondary cursor-pointer"
+                                        }`}
+                                >
+                                    <div className="flex justify-between items-start mb-1">
+                                        <div className="text-2xl">{DECKS[deckKey].emoji}</div>
+                                        {isLocked && <Lock className="w-4 h-4 text-orange-500" />}
+                                    </div>
+                                    <div className="text-sm font-medium">
+                                        {DECKS[deckKey].name.replace(DECKS[deckKey].emoji, '').trim()}
+                                    </div>
+                                </button>
+                            );
+                        })}
                 </div>
             </div>
 
@@ -96,19 +117,28 @@ export function RapidFireGameEngine({ onClose }: RapidFireGameEngineProps) {
                     Number of Rounds
                 </label>
                 <div className="grid grid-cols-3 gap-2">
-                    {[20, 50, 100].map((count) => (
-                        <button
-                            key={count}
-                            onClick={() => setSelectedCardCount(count)}
-                            className={`p-3 rounded-lg border-2 transition-all cursor-pointer ${selectedCardCount === count
-                                ? "border-primary bg-primary/10"
-                                : "border-primary/20 hover:border-primary/40 bg-secondary"
-                                }`}
-                        >
-                            <div className="text-lg font-bold">{count}</div>
-                            <div className="text-xs text-muted-foreground">rounds</div>
-                        </button>
-                    ))}
+                    {[20, 50, 100].map((count) => {
+                        const isLocked = !isPro && count > 20;
+                        return (
+                            <button
+                                key={count}
+                                disabled={isLocked}
+                                onClick={() => !isLocked && setSelectedCardCount(count)}
+                                className={`p-3 rounded-lg border-2 transition-all cursor-pointer relative ${selectedCardCount === count
+                                    ? "border-primary bg-primary/20"
+                                    : isLocked
+                                        ? "border-border/50 bg-muted/20 opacity-60 cursor-not-allowed"
+                                        : "border-border hover:border-primary/50 bg-card hover:bg-secondary"
+                                    }`}
+                            >
+                                <div className="text-lg font-bold flex items-center justify-center gap-1">
+                                    {count}
+                                    {isLocked && <Lock className="w-3 h-3 text-orange-400" />}
+                                </div>
+                                <div className="text-xs text-muted-foreground">rounds</div>
+                            </button>
+                        );
+                    })}
                 </div>
             </div>
         </div>

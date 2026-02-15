@@ -1,9 +1,104 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
+import { ConvexError } from "convex/values";
+
+// Helper to get today's date in YYYY-MM-DD
+function getTodayDate() {
+    return new Date().toISOString().split("T")[0];
+}
+
+// ... queries ...
 
 // ============================================
-// QUERIES (Read Operations)
+// MUTATIONS (Write Operations)
 // ============================================
+
+// Create a new room
+export const createRoom = mutation({
+    args: {
+        room_code: v.string(),
+        psychic_id: v.optional(v.string()),
+        guesser_id: v.optional(v.string()),
+        target_angle: v.optional(v.number()),
+        phase: v.string(),
+        current_card: v.optional(v.object({
+            left: v.string(),
+            right: v.string(),
+        })),
+        game_mode: v.optional(v.string()),
+        player1_name: v.optional(v.string()),
+        player1_avatar: v.optional(v.string()),
+        player2_name: v.optional(v.string()),
+        player2_avatar: v.optional(v.string()),
+        round_number: v.optional(v.number()),
+        psychic_score: v.optional(v.number()),
+        guesser_score: v.optional(v.number()),
+        card_count: v.optional(v.number()),
+        deck_type: v.optional(v.string()),
+        ip_hash: v.optional(v.string()), // Added for guest limits
+    },
+    handler: async (ctx, args) => {
+        const identity = await ctx.auth.getUserIdentity();
+        let isPro = false;
+        let creatorId: string | undefined;
+
+        if (identity) {
+            // 1. Logged in user
+            creatorId = identity.tokenIdentifier; // Use tokenIdentifier as creator_id
+            const user = await ctx.db
+                .query("users")
+                .withIndex("by_token", (q) => q.eq("tokenIdentifier", identity.tokenIdentifier))
+                .unique();
+
+            if (user) {
+                isPro = user.isPro;
+            } else {
+                // Create user if not exists (sync on the fly)
+                await ctx.db.insert("users", {
+                    tokenIdentifier: identity.tokenIdentifier,
+                    name: identity.name,
+                    email: identity.email,
+                    isPro: false,
+                });
+            }
+        }
+
+        // 2. Game Mode Restrictions
+        if (args.game_mode === "party") {
+            if (!identity) {
+                throw new ConvexError("Please log in to play Party Mode.");
+            }
+            if (!isPro) {
+                throw new ConvexError("Party Mode is locked for Pro users only.");
+            }
+        }
+
+        // Note: Per-room round limits are enforced in updateRoom
+
+        return await ctx.db.insert("rooms", {
+            room_code: args.room_code.toUpperCase(),
+            creator_id: creatorId,
+            psychic_id: args.psychic_id,
+            guesser_id: args.guesser_id,
+            target_angle: args.target_angle ?? 90,
+            guess_angle: 90,
+            phase: args.phase,
+            current_card: args.current_card,
+            psychic_score: args.psychic_score ?? 0,
+            guesser_score: args.guesser_score ?? 0,
+            round_number: args.round_number ?? 1,
+            clue: undefined,
+            game_mode: args.game_mode,
+            player1_name: args.player1_name,
+            player1_avatar: args.player1_avatar,
+            player2_name: args.player2_name,
+            player2_avatar: args.player2_avatar,
+            card_count: args.card_count,
+            deck_type: args.deck_type,
+            updated_at: Date.now(),
+        });
+    },
+});
 
 // Get a single room by ID
 export const getRoom = query({
@@ -72,53 +167,7 @@ export const getLeaderboard = query({
 // MUTATIONS (Write Operations)
 // ============================================
 
-// Create a new room
-export const createRoom = mutation({
-    args: {
-        room_code: v.string(),
-        psychic_id: v.optional(v.string()),
-        guesser_id: v.optional(v.string()),
-        target_angle: v.optional(v.number()),
-        phase: v.string(),
-        current_card: v.optional(v.object({
-            left: v.string(),
-            right: v.string(),
-        })),
-        game_mode: v.optional(v.string()),
-        player1_name: v.optional(v.string()),
-        player1_avatar: v.optional(v.string()),
-        player2_name: v.optional(v.string()),
-        player2_avatar: v.optional(v.string()),
-        round_number: v.optional(v.number()),
-        psychic_score: v.optional(v.number()),
-        guesser_score: v.optional(v.number()),
-        card_count: v.optional(v.number()),
-        deck_type: v.optional(v.string()),
-    },
-    handler: async (ctx, args) => {
-        return await ctx.db.insert("rooms", {
-            room_code: args.room_code.toUpperCase(),
-            psychic_id: args.psychic_id,
-            guesser_id: args.guesser_id,
-            target_angle: args.target_angle ?? 90,
-            guess_angle: 90,
-            phase: args.phase,
-            current_card: args.current_card,
-            psychic_score: args.psychic_score ?? 0,
-            guesser_score: args.guesser_score ?? 0,
-            round_number: args.round_number ?? 1,
-            clue: undefined,
-            game_mode: args.game_mode,
-            player1_name: args.player1_name,
-            player1_avatar: args.player1_avatar,
-            player2_name: args.player2_name,
-            player2_avatar: args.player2_avatar,
-            card_count: args.card_count,
-            deck_type: args.deck_type,
-            updated_at: Date.now(),
-        });
-    },
-});
+
 
 // Join a room by code (atomic: find + join in one mutation)
 export const joinRoomByCode = mutation({
@@ -204,8 +253,62 @@ export const updateRoom = mutation({
             player2_choice: v.optional(v.union(v.string(), v.null())),
             deck_type: v.optional(v.string()),
         }),
+        ip_hash: v.optional(v.string()),
     },
     handler: async (ctx, args) => {
+        // Enforce Round Limits for Free Users
+        if (args.updates.round_number !== undefined) {
+            const room = await ctx.db.get(args.roomId);
+            const gameMode = room?.game_mode || "classic";
+            const currentRound = room?.round_number ?? 1;
+
+            // Determine the round limit for this game mode
+            let roundLimit = 3; // TESTING LIMIT (change to 10 for production)
+            if (gameMode === "mini_rapid_fire" || gameMode === "mini_flag_game") {
+                roundLimit = 20;
+            }
+
+            // Check if ANYONE in this room is Pro (creator or current user)
+            let isPro = false;
+
+            // Check room creator
+            if (room?.creator_id) {
+                const creator = await ctx.db
+                    .query("users")
+                    .withIndex("by_token", (q) => q.eq("tokenIdentifier", room.creator_id!))
+                    .unique();
+                if (creator?.isPro) isPro = true;
+            }
+
+            // Check current user
+            if (!isPro) {
+                const identity = await ctx.auth.getUserIdentity();
+                if (identity) {
+                    const user = await ctx.db
+                        .query("users")
+                        .withIndex("by_token", (q) => q.eq("tokenIdentifier", identity.tokenIdentifier))
+                        .unique();
+                    if (user?.isPro) isPro = true;
+                }
+            }
+
+            // Party Mode is Pro-only
+            if (!isPro && gameMode === "party") {
+                throw new ConvexError("Party Mode is locked for Pro users.");
+            }
+
+            // Enforce round limit: if current round >= limit, block the next round
+            if (!isPro && currentRound >= roundLimit) {
+                console.log("LIMIT REACHED! Round:", currentRound, ">=", roundLimit, "- ENDING GAME");
+                await ctx.db.patch(args.roomId, {
+                    phase: "ended",
+                    clue: "Daily Limit Reached! Upgrade to play more.",
+                    updated_at: Date.now()
+                });
+                return; // Do NOT apply the round update. Game is over.
+            }
+        }
+
         // Convex db.patch uses undefined to unset fields, not null
         // Transform null values to undefined for proper field clearing
         const patchData: Record<string, unknown> = {};
@@ -333,6 +436,21 @@ export const joinPartyRoomByCode = mutation({
             return { error: "This looks like a valid room, but it's not a Party Mode room!", roomId: null };
         }
 
+        // Check Pro status for Party Mode
+        const identity = await ctx.auth.getUserIdentity();
+        let isPro = false;
+        if (identity) {
+            const user = await ctx.db
+                .query("users")
+                .withIndex("by_token", (q) => q.eq("tokenIdentifier", identity.tokenIdentifier))
+                .unique();
+            if (user?.isPro) isPro = true;
+        }
+
+        if (!isPro) {
+            return { error: "Party Mode is locked for Pro users only.", roomId: null };
+        }
+
         // Check if already in the room
         const existingPlayer = await ctx.db
             .query("party_players")
@@ -357,5 +475,17 @@ export const joinPartyRoomByCode = mutation({
         });
 
         return { error: null, roomId: room._id, roundNumber: room.round_number };
+    },
+});
+
+export const getMyUser = query({
+    args: {},
+    handler: async (ctx) => {
+        const identity = await ctx.auth.getUserIdentity();
+        if (!identity) return null;
+        return await ctx.db
+            .query("users")
+            .withIndex("by_token", (q) => q.eq("tokenIdentifier", identity.tokenIdentifier))
+            .unique();
     },
 });

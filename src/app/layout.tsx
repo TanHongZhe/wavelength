@@ -4,6 +4,8 @@ import "./globals.css";
 import { Navbar } from "@/components/Navbar";
 import { Toaster } from "@/components/ui/toaster";
 import { ConvexClientProvider } from "@/lib/convex/ConvexClientProvider";
+import { ClerkProvider } from "@clerk/nextjs";
+import { dark } from "@clerk/themes";
 
 const siteUrl = process.env.NEXT_PUBLIC_APP_URL || "https://wavelength.lol";
 
@@ -16,7 +18,6 @@ export const metadata: Metadata = {
   description:
     "Play Wavelength Game Online free! The viral telepathic couple card game for long distance relationships & friends. No download required - instant browser play.",
   keywords: [
-    // Core Keywords
     "Wavelength Game Online",
     "Wavelength Online",
     "Play Wavelength Free",
@@ -24,20 +25,18 @@ export const metadata: Metadata = {
     "Social Guessing Game",
     "Telepathic Party Game",
     "Multiplayer Browser Game",
-    // LDR & Couples
     "Long distance relationship games",
     "LDR games online",
     "Couples bonding games",
     "Virtual date night ideas",
     "Online games for couples",
-    // Party & Friends
     "Free online party games",
     "Zoom party games",
     "Browser games with friends",
     "Best web games 2026",
   ],
-  authors: [{ name: "Hong Zhe", url: "https://wavelength.lol/about/" }],
-  creator: "Hong Zhe",
+  authors: [{ name: "Wavelength Online", url: "https://wavelength.lol/about/" }],
+  creator: "Wavelength Online",
   publisher: "Wavelength Online",
   alternates: {
     canonical: `${siteUrl}/`,
@@ -84,16 +83,13 @@ export const metadata: Metadata = {
   category: "Games",
 };
 
-// JSON-LD Schema - Multiple schemas for comprehensive SEO
 const organizationSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",
   name: "Wavelength Online",
   url: "https://wavelength.lol/",
   logo: "https://wavelength.lol/icon-512.png",
-  sameAs: [
-    "https://github.com/TanHongZhe/wavelength-vibe",
-  ],
+  sameAs: ["https://github.com/TanHongZhe/wavelength-vibe"],
   foundingDate: "2024-01-01",
   contactPoint: {
     "@type": "ContactPoint",
@@ -128,7 +124,7 @@ const videoGameSchema = {
   },
   author: {
     "@type": "Person",
-    name: "Hong Zhe",
+    name: "Wavelength Online",
   },
   publisher: {
     "@type": "Organization",
@@ -166,7 +162,6 @@ const webSiteSchema = {
   },
 };
 
-// Speakable schema for voice assistants
 const speakableSchema = {
   "@context": "https://schema.org",
   "@type": "WebPage",
@@ -182,7 +177,6 @@ const speakableSchema = {
   },
 };
 
-// ItemList schema for game modes
 const gameModesSchema = {
   "@context": "https://schema.org",
   "@type": "ItemList",
@@ -214,28 +208,19 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        {/* Performance optimizations */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="//convex.cloud" />
-
-        {/* Favicons and PWA */}
         <link rel="icon" href="/logo.png" sizes="any" />
         <link rel="icon" href="/logo.png" type="image/png" />
         <link rel="apple-touch-icon" href="/logo.png" />
         <link rel="manifest" href="/manifest.webmanifest" />
-
-        {/* AI/LLM content guide */}
         <link rel="author" href="/llms.txt" type="text/plain" />
-
-        {/* PWA meta tags */}
         <meta name="theme-color" content="#0f172a" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="Wavelength" />
-
-        {/* Structured Data */}
         {jsonLdArray.map((schema, index) => (
           <script
             key={index}
@@ -254,7 +239,6 @@ export default function RootLayout({
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-
             gtag('config', 'G-VH26VEY5X0');
           `}
         </Script>
@@ -267,16 +251,44 @@ export default function RootLayout({
             })(window, document, "clarity", "script", "vd4ou3bzy8");
           `}
         </Script>
-        <ConvexClientProvider>
-          <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-md">
-            Skip to main content
-          </a>
-          <Navbar />
-          <main id="main-content">
-            {children}
-          </main>
-          <Toaster />
-        </ConvexClientProvider>
+        {/* Stripe uses Payment Links — no client-side SDK needed */}
+        <ClerkProvider
+          appearance={{
+            baseTheme: dark,
+            variables: {
+              colorPrimary: '#ec4899', // pink-500
+              fontSize: '16px',
+              borderRadius: '0.75rem',
+              colorBackground: '#0f172a', // slate-900 override
+            },
+            elements: {
+              formButtonPrimary: 'bg-gradient-to-r from-pink-600 to-violet-600 hover:from-pink-500 hover:to-violet-500 border-0 shadow-lg shadow-pink-500/20 transition-all',
+              card: 'bg-slate-900/95 border border-slate-800 shadow-2xl backdrop-blur-xl',
+              headerTitle: 'text-slate-100',
+              headerSubtitle: 'text-slate-400',
+              socialButtonsBlockButton: 'text-slate-200 bg-slate-800 border-slate-700 hover:bg-slate-700 transition-colors',
+              socialButtonsBlockButtonText: 'text-slate-200 font-medium',
+              dividerLine: 'bg-slate-800',
+              dividerText: 'text-slate-500',
+              formFieldLabel: 'text-slate-300',
+              formFieldInput: 'bg-slate-800 border-slate-700 focus:border-pink-500 focus:ring-pink-500/20 transition-all',
+              footerActionLink: 'text-pink-400 hover:text-pink-300 transition-colors',
+              identityPreviewScaleBox: 'bg-slate-800 border-slate-700',
+              identityPreviewText: 'text-slate-200',
+            }
+          }}
+        >
+          <ConvexClientProvider>
+            <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-md">
+              Skip to main content
+            </a>
+            <Navbar />
+            <main id="main-content">
+              {children}
+            </main>
+            <Toaster />
+          </ConvexClientProvider>
+        </ClerkProvider>
       </body>
     </html>
   );

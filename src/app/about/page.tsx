@@ -40,7 +40,7 @@ const webPageSchema = {
     },
     author: {
         "@type": "Person",
-        name: "Hong Zhe",
+        name: "Wavelength Online",
     },
     speakable: {
         "@type": "SpeakableSpecification",

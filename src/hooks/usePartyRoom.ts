@@ -5,6 +5,7 @@ import { useQuery, useMutation } from "convex/react";
 import { api } from "convex/_generated/api";
 import { Id } from "convex/_generated/dataModel";
 import { generateRoomCode, generateRandomTarget, getRandomCard, calculatePoints, Card, DeckType } from "@/lib/gameData";
+import { useUser } from "@clerk/nextjs";
 
 export interface Room {
     id: string;
@@ -31,6 +32,7 @@ export interface PartyPlayer {
 }
 
 export function usePartyRoom() {
+    const { isSignedIn } = useUser();
     const [roomId, setRoomId] = useState<Id<"rooms"> | null>(null);
     const [playerId, setPlayerId] = useState<string>("");
     const [isLoading, setIsLoading] = useState(false);
@@ -139,6 +141,12 @@ export function usePartyRoom() {
     // CREATE PARTY ROOM
     const createPartyRoom = useCallback(async (name: string, avatar: string) => {
         if (!playerId) { setError("Please wait..."); return; }
+
+        if (!isSignedIn) {
+            setError("Please log in to create a party game.");
+            return;
+        }
+
         setIsLoading(true);
         setError(null);
         setIsGameFinished(false);
@@ -156,6 +164,7 @@ export function usePartyRoom() {
                 game_mode: "party",
                 psychic_id: playerId,
                 round_number: 1,
+                ip_hash: playerId,
             });
 
             setRoomId(newRoomId);
@@ -172,9 +181,10 @@ export function usePartyRoom() {
             });
 
             setIsLoading(false);
-        } catch (err) {
+        } catch (err: any) {
             console.error("Create error:", err);
-            setError("Failed to create party room");
+            const msg = err.data?.message || err.message || "Failed to create party room";
+            setError(msg);
             setIsLoading(false);
         }
     }, [playerId, createRoomMutation, addPartyPlayerMutation]);
@@ -307,27 +317,43 @@ export function usePartyRoom() {
     const nextRound = useCallback(async () => {
         if (!roomId || !players.length) return;
 
-        const sortedPlayers = [...players].sort((a, b) => a.id.localeCompare(b.id));
-        const currentPsychicIndex = sortedPlayers.findIndex(p => p.role === "psychic");
-        const safeIndex = currentPsychicIndex === -1 ? 0 : currentPsychicIndex;
-        const nextPsychicIndex = (safeIndex + 1) % sortedPlayers.length;
-        const nextPsychicId = sortedPlayers[nextPsychicIndex].player_id;
+        try {
+            // Find next psychic
+            const sortedPlayers = [...players].sort((a, b) => a.id.localeCompare(b.id)); // Using unique DB ID for deterministic sort
 
-        const targetAngle = generateRandomTarget();
-        const card = getRandomCard(currentDeck);
+            // Find current psychic index
+            // We use 'room.psychic_id' if available, otherwise just use roles
+            // Actually, we store psychic_id in room now
 
-        await updateRoomMutation({
-            roomId,
-            updates: {
-                target_angle: targetAngle,
-                current_card: card,
-                phase: "clue",
-                clue: null,
-                round_number: (room?.round_number ?? 0) + 1,
-                psychic_id: nextPsychicId,
-            },
-        });
-    }, [roomId, players, room?.round_number, currentDeck, updateRoomMutation]);
+            // Wait, previous implementation logic:
+            const currentPsychicId = room?.psychic_id;
+            const currentPsychicIndex = sortedPlayers.findIndex(p => p.player_id === currentPsychicId);
+
+            // Fallback if not found
+            const safeIndex = currentPsychicIndex === -1 ? 0 : currentPsychicIndex;
+            const nextPsychicIndex = (safeIndex + 1) % sortedPlayers.length;
+            const nextPsychicId = sortedPlayers[nextPsychicIndex].player_id;
+
+            const targetAngle = generateRandomTarget();
+            const card = getRandomCard(currentDeck);
+
+            await updateRoomMutation({
+                roomId,
+                updates: {
+                    target_angle: targetAngle,
+                    current_card: card,
+                    phase: "clue",
+                    clue: null,
+                    round_number: (room?.round_number ?? 0) + 1,
+                    psychic_id: nextPsychicId,
+                },
+                ip_hash: playerId,
+            });
+        } catch (err: any) {
+            const msg = err.data?.message || err.message || "Failed to start next round";
+            setError(msg);
+        }
+    }, [roomId, players, room?.round_number, room?.psychic_id, currentDeck, updateRoomMutation]);
 
     const setCustomCard = useCallback(async (left: string, right: string) => {
         if (!roomId) return;
@@ -363,6 +389,8 @@ export function usePartyRoom() {
         setIsGameFinished(false);
     }, [roomId, currentPlayer, playerId, removePartyPlayerMutation]);
 
+    const clearError = useCallback(() => setError(null), []);
+
     return {
         room,
         players,
@@ -386,5 +414,6 @@ export function usePartyRoom() {
         switchDeck,
         endGame,
         leavePartyRoom,
+        clearError,
     };
 }

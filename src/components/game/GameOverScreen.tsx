@@ -1,11 +1,16 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import confetti from "canvas-confetti";
-import { Trophy, Medal, Sparkles, Home } from "lucide-react";
+import { Trophy, Medal, Sparkles, Home, Crown, Star, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Room } from "@/hooks/useGameRoom";
+import { useUser, SignInButton } from "@clerk/nextjs";
+
+// Stripe Payment Link for monthly upgrade (same as PaywallModal)
+// Stripe Payment Link for monthly upgrade (PRODUCTION)
+const STRIPE_MONTHLY_LINK = "https://buy.stripe.com/bJe3cxgmr2kT8183KDfQI00";
 
 interface GameOverScreenProps {
     room: Room;
@@ -14,6 +19,7 @@ interface GameOverScreenProps {
 }
 
 export function GameOverScreen({ room, playerId, onLeave }: GameOverScreenProps) {
+    const { isSignedIn, user } = useUser();
     const player1Score = room.psychic_score;
     const player2Score = room.guesser_score;
     const player1Name = room.player1_name || "Player 1";
@@ -29,6 +35,17 @@ export function GameOverScreen({ room, playerId, onLeave }: GameOverScreenProps)
     // Am I the winner?
     const amIPlayer1 = room.psychic_id === playerId || (!room.guesser_id);
     const iWon = (amIPlayer1 && player1Wins) || (!amIPlayer1 && player2Wins);
+
+    const isLimitReached = room.clue?.includes("Daily Limit");
+
+    const handleUpgrade = () => {
+        if (!isSignedIn) return;
+        const email = user?.primaryEmailAddress?.emailAddress;
+        const url = email
+            ? `${STRIPE_MONTHLY_LINK}?prefilled_email=${encodeURIComponent(email)}`
+            : STRIPE_MONTHLY_LINK;
+        window.open(url, "_blank");
+    };
 
     // Trigger confetti on mount
     useEffect(() => {
@@ -94,7 +111,7 @@ export function GameOverScreen({ room, playerId, onLeave }: GameOverScreenProps)
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ type: "spring", stiffness: 200, damping: 20 }}
-                className="text-center z-10"
+                className="text-center z-10 w-full max-w-4xl"
             >
                 {/* Trophy icon */}
                 <motion.div
@@ -115,7 +132,7 @@ export function GameOverScreen({ room, playerId, onLeave }: GameOverScreenProps)
                     transition={{ delay: 0.3 }}
                     className="font-display text-4xl md:text-5xl font-bold text-primary mb-2"
                 >
-                    Game Over!
+                    {isLimitReached ? "Daily Limit Reached!" : "Game Over!"}
                 </motion.h1>
 
                 <motion.p
@@ -127,90 +144,163 @@ export function GameOverScreen({ room, playerId, onLeave }: GameOverScreenProps)
                     {room.round_number} rounds played
                 </motion.p>
 
-                {/* Leaderboard */}
-                <motion.div
-                    initial={{ y: 30, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{ delay: 0.5 }}
-                    className="game-card w-full max-w-md mx-auto mb-8"
-                >
-                    <h2 className="font-display text-xl font-semibold text-primary mb-4 flex items-center justify-center gap-2">
-                        <Sparkles className="w-5 h-5 text-wedge-yellow" />
-                        Final Scores
-                        <Sparkles className="w-5 h-5 text-wedge-yellow" />
-                    </h2>
-
-                    {/* Player 1 */}
+                <div className="flex flex-col md:flex-row gap-6 justify-center items-start">
+                    {/* Leaderboard */}
                     <motion.div
-                        initial={{ x: -20, opacity: 0 }}
-                        animate={{ x: 0, opacity: 1 }}
-                        transition={{ delay: 0.6 }}
-                        className={`flex items-center justify-between p-4 gap-4 rounded-xl mb-3 ${player1Wins ? "bg-wedge-teal/20 border-2 border-wedge-teal" : "bg-secondary"
-                            }`}
+                        initial={{ y: 30, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        transition={{ delay: 0.5 }}
+                        className="game-card w-full max-w-md mx-auto mb-8 flex-1"
                     >
-                        <div className="flex items-center gap-3 min-w-0">
-                            {player1Wins && <Medal className="w-6 h-6 text-wedge-teal flex-shrink-0" />}
-                            <span className="text-2xl flex-shrink-0">{player1Avatar}</span>
-                            <span className="font-display font-semibold text-primary truncate">
-                                {player1Name}
+                        <h2 className="font-display text-xl font-semibold text-primary mb-4 flex items-center justify-center gap-2">
+                            <Sparkles className="w-5 h-5 text-wedge-yellow" />
+                            Final Scores
+                            <Sparkles className="w-5 h-5 text-wedge-yellow" />
+                        </h2>
+
+                        {/* Player 1 */}
+                        <motion.div
+                            initial={{ x: -20, opacity: 0 }}
+                            animate={{ x: 0, opacity: 1 }}
+                            transition={{ delay: 0.6 }}
+                            className={`flex items-center justify-between p-4 gap-4 rounded-xl mb-3 ${player1Wins ? "bg-wedge-teal/20 border-2 border-wedge-teal" : "bg-secondary"
+                                }`}
+                        >
+                            <div className="flex items-center gap-3 min-w-0">
+                                {player1Wins && <Medal className="w-6 h-6 text-wedge-teal flex-shrink-0" />}
+                                <span className="text-2xl flex-shrink-0">{player1Avatar}</span>
+                                <span className="font-display font-semibold text-primary truncate">
+                                    {player1Name}
+                                </span>
+                            </div>
+                            <span className="font-display text-2xl font-bold text-primary flex-shrink-0">
+                                {player1Score}
                             </span>
-                        </div>
-                        <span className="font-display text-2xl font-bold text-primary flex-shrink-0">
-                            {player1Score}
-                        </span>
+                        </motion.div>
+
+                        {/* Player 2 */}
+                        <motion.div
+                            initial={{ x: 20, opacity: 0 }}
+                            animate={{ x: 0, opacity: 1 }}
+                            transition={{ delay: 0.7 }}
+                            className={`flex items-center justify-between p-4 gap-4 rounded-xl ${player2Wins ? "bg-wedge-teal/20 border-2 border-wedge-teal" : "bg-secondary"
+                                }`}
+                        >
+                            <div className="flex items-center gap-3 min-w-0">
+                                {player2Wins && <Medal className="w-6 h-6 text-wedge-teal flex-shrink-0" />}
+                                <span className="text-2xl flex-shrink-0">{player2Avatar}</span>
+                                <span className="font-display font-semibold text-primary truncate">
+                                    {player2Name}
+                                </span>
+                            </div>
+                            <span className="font-display text-2xl font-bold text-primary flex-shrink-0">
+                                {player2Score}
+                            </span>
+                        </motion.div>
+
+                        {/* Result message */}
+                        <motion.p
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 0.8 }}
+                            className="mt-4 text-center font-display font-semibold"
+                        >
+                            {isTie ? (
+                                <span className="text-wedge-orange">It&apos;s a tie! 🤝</span>
+                            ) : iWon ? (
+                                <span className="text-wedge-teal">You won! 🎉</span>
+                            ) : (
+                                <span className="text-muted-foreground">Better luck next time! 💪</span>
+                            )}
+                        </motion.p>
                     </motion.div>
 
-                    {/* Player 2 */}
+                    {/* Upsell Card (Only visible if limit reached) */}
+                    {isLimitReached && (
+                        <motion.div
+                            initial={{ scale: 0.9, opacity: 0, x: 20 }}
+                            animate={{ scale: 1, opacity: 1, x: 0 }}
+                            transition={{ delay: 0.6 }}
+                            className="game-card w-full max-w-md mx-auto mb-8 flex-1 bg-gradient-to-br from-amber-400/10 to-orange-500/10 border-orange-500/30"
+                        >
+                            <div className="p-4 bg-gradient-to-br from-amber-400 to-orange-500 rounded-xl text-white shadow-lg mb-6">
+                                <Crown className="w-10 h-10 text-white fill-white/20 mb-3" />
+                                <h3 className="text-2xl font-bold font-display mb-2">Unlock Unlimited Play</h3>
+                                <p className="text-white/90 text-sm">
+                                    You've hit the daily free limit. Upgrade to Pro to keep playing!
+                                </p>
+                            </div>
+
+                            <div className="space-y-3 mb-6 text-left">
+                                <div className="flex items-center gap-2">
+                                    <Star className="w-4 h-4 text-orange-500" />
+                                    <span className="text-sm">Unlimited Daily Games</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <Star className="w-4 h-4 text-orange-500" />
+                                    <span className="text-sm">Exclusive Party Mode</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <Star className="w-4 h-4 text-orange-500" />
+                                    <span className="text-sm">Full Mini-Games Access</span>
+                                </div>
+                            </div>
+
+                            {isSignedIn ? (
+                                <Button
+                                    onClick={handleUpgrade}
+                                    className="w-full h-12 text-lg font-bold bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-500 hover:to-orange-600 text-white shadow-lg"
+                                >
+                                    <Sparkles className="w-4 h-4 mr-2" />
+                                    Get Pro Access
+                                </Button>
+                            ) : (
+                                <SignInButton mode="modal">
+                                    <Button
+                                        className="w-full h-12 text-lg font-bold bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-500 hover:to-orange-600 text-white shadow-lg"
+                                    >
+                                        <LogIn className="w-4 h-4 mr-2" />
+                                        Log In to Upgrade
+                                    </Button>
+                                </SignInButton>
+                            )}
+                        </motion.div>
+                    )}
+                </div>
+
+                {/* Play again button (only if NOT limit reached, or make it behave differently?) */}
+                {!isLimitReached && (
                     <motion.div
-                        initial={{ x: 20, opacity: 0 }}
-                        animate={{ x: 0, opacity: 1 }}
-                        transition={{ delay: 0.7 }}
-                        className={`flex items-center justify-between p-4 gap-4 rounded-xl ${player2Wins ? "bg-wedge-teal/20 border-2 border-wedge-teal" : "bg-secondary"
-                            }`}
+                        initial={{ y: 20, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        transition={{ delay: 0.9 }}
                     >
-                        <div className="flex items-center gap-3 min-w-0">
-                            {player2Wins && <Medal className="w-6 h-6 text-wedge-teal flex-shrink-0" />}
-                            <span className="text-2xl flex-shrink-0">{player2Avatar}</span>
-                            <span className="font-display font-semibold text-primary truncate">
-                                {player2Name}
-                            </span>
-                        </div>
-                        <span className="font-display text-2xl font-bold text-primary flex-shrink-0">
-                            {player2Score}
-                        </span>
+                        <Button
+                            onClick={onLeave}
+                            className="btn-game gap-2 text-lg px-8 py-6"
+                        >
+                            <Home className="w-5 h-5" />
+                            Play Again
+                        </Button>
                     </motion.div>
+                )}
 
-                    {/* Result message */}
-                    <motion.p
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 0.8 }}
-                        className="mt-4 text-center font-display font-semibold"
+                {isLimitReached && (
+                    <motion.div
+                        initial={{ y: 20, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        transition={{ delay: 0.9 }}
                     >
-                        {isTie ? (
-                            <span className="text-wedge-orange">It&apos;s a tie! 🤝</span>
-                        ) : iWon ? (
-                            <span className="text-wedge-teal">You won! 🎉</span>
-                        ) : (
-                            <span className="text-muted-foreground">Better luck next time! 💪</span>
-                        )}
-                    </motion.p>
-                </motion.div>
-
-                {/* Play again button */}
-                <motion.div
-                    initial={{ y: 20, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{ delay: 0.9 }}
-                >
-                    <Button
-                        onClick={onLeave}
-                        className="btn-game gap-2 text-lg px-8 py-6"
-                    >
-                        <Home className="w-5 h-5" />
-                        Play Again
-                    </Button>
-                </motion.div>
+                        <Button
+                            variant="ghost"
+                            onClick={onLeave}
+                            className="text-muted-foreground hover:text-foreground"
+                        >
+                            <Home className="w-4 h-4 mr-2" />
+                            Return Home
+                        </Button>
+                    </motion.div>
+                )}
             </motion.div>
         </div>
     );

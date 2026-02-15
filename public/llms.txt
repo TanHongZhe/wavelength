@@ -116,7 +116,7 @@ avoid:
   - /api/
 
 ## Contact and attribution
-creator: Hong Zhe
+creator: Wavelength Online
 repository: https://github.com/TanHongZhe/wavelength-vibe
 license: Open Source
 

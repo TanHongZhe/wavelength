@@ -3,9 +3,12 @@
 import { useGameRoom } from "@/hooks/useGameRoom";
 import { WaitingRoom } from "./WaitingRoom";
 import { GameScreen } from "./GameScreen";
+import { GameErrorScreen } from "./GameErrorScreen";
 import { GameOverScreen } from "./GameOverScreen";
 import { useEffect, useState } from "react";
-import { Loader2 } from "lucide-react";
+import { Loader2, LogIn } from "lucide-react";
+import { PaywallModal } from "../PaywallModal";
+import { SignInButton } from "@clerk/nextjs";
 
 export function ClassicGameEngine({
     initialPlayerName,
@@ -20,6 +23,7 @@ export function ClassicGameEngine({
     isCreating: boolean,
     onLeave: () => void
 }) {
+    // ...
     const {
         room,
         playerId,
@@ -44,6 +48,7 @@ export function ClassicGameEngine({
         switchDeck,
         startGame,
         leaveRoom,
+        clearError,
     } = useGameRoom();
 
     const [hasInitialized, setHasInitialized] = useState(false);
@@ -64,18 +69,16 @@ export function ClassicGameEngine({
         onLeave();
     }
 
-    if (error) {
-        return (
-            <div className="flex flex-col items-center justify-center min-h-[50vh] gap-4">
-                <div className="text-destructive font-bold text-lg">{error}</div>
-                <button onClick={() => window.location.reload()} className="btn-game">
-                    Go Back
-                </button>
-            </div>
-        );
+    const isPaywallError = error && (error.toLowerCase().includes("subscribe") || error.toLowerCase().includes("limit"));
+
+    if (error && !isPaywallError) {
+        return <GameErrorScreen error={error} onLeave={onLeave} playerId={playerId} />;
     }
 
-    if (isLoading || !room) {
+    // Logic for loading state: 
+    // If loading, show loader.
+    // If not loading, and no room, and no error (or paywall error handled by modal overlay but we need background), show placeholder.
+    if (isLoading && !room) {
         return (
             <div className="flex items-center justify-center min-h-screen">
                 <Loader2 className="w-8 h-8 animate-spin text-primary" />
@@ -84,48 +87,51 @@ export function ClassicGameEngine({
         );
     }
 
-    // Game finished - show leaderboard
-    if (isGameFinished) {
-        return (
-            <GameOverScreen
-                room={room}
-                playerId={playerId}
-                onLeave={handleLeave}
-            />
-        );
-    }
-
-    // Waiting for opponent
-    if (room.phase === "waiting") {
-        return (
-            <WaitingRoom
-                roomCode={room.room_code}
-                isPsychic={isPsychic}
-                hasOpponent={!!room.guesser_id}
-                onLeave={handleLeave}
-                onStartGame={startGame}
-            />
-        );
-    }
-
-    // Game in progress
     return (
-        <GameScreen
-            room={room}
-            isPsychic={isPsychic}
-            isGuesser={isGuesser}
-            currentDeck={currentDeck}
-            onAngleChange={updateGuessAngle}
-            onSubmitClue={submitClue}
-            onSkipClue={skipClue}
-            onFinalizeGuess={finalizeGuess}
-            onNextRound={nextRound}
-            onUpdateScore={updateScore}
-            onSetCustomCard={setCustomCard}
-            onChangeCard={changeCard}
-            onSwitchDeck={switchDeck}
-            onEndGame={endGame}
-            onLeave={handleLeave}
-        />
+        <>
+            <PaywallModal isOpen={!!isPaywallError} onClose={clearError} message={error ?? undefined} />
+
+            {!room ? (
+                <div className="flex flex-col items-center justify-center min-h-[50vh] gap-4">
+                    <div className="text-muted-foreground font-medium">Please upgrade to continue or try again.</div>
+                    <button onClick={() => window.location.reload()} className="btn-game">
+                        Reload
+                    </button>
+                </div>
+            ) : isGameFinished ? (
+                <GameOverScreen
+                    room={room}
+                    playerId={playerId}
+                    onLeave={handleLeave}
+                />
+            ) : room.phase === "waiting" ? (
+                <WaitingRoom
+                    roomCode={room.room_code}
+                    isPsychic={isPsychic}
+                    hasOpponent={!!room.guesser_id}
+                    onLeave={handleLeave}
+                    onStartGame={startGame}
+                />
+            ) : (
+                <GameScreen
+                    room={room}
+                    playerId={playerId} // Added this prop likely needed in GameScreen
+                    isPsychic={isPsychic}
+                    isGuesser={isGuesser}
+                    currentDeck={currentDeck}
+                    onAngleChange={updateGuessAngle}
+                    onSubmitClue={submitClue}
+                    onSkipClue={skipClue}
+                    onFinalizeGuess={finalizeGuess}
+                    onNextRound={nextRound}
+                    onUpdateScore={updateScore}
+                    onSetCustomCard={setCustomCard}
+                    onChangeCard={changeCard}
+                    onSwitchDeck={switchDeck}
+                    onEndGame={endGame}
+                    onLeave={handleLeave}
+                />
+            )}
+        </>
     );
 }

@@ -2,10 +2,13 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { AudioWaveform, Users, Sparkles, ChevronDown, Gamepad2, PartyPopper, Dices } from "lucide-react";
+import { AudioWaveform, Users, Sparkles, ChevronDown, Gamepad2, PartyPopper, Dices, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { MiniGamesModal } from "@/components/minigames/MiniGamesModal";
+import { useUser } from "@clerk/nextjs";
+import { useQuery } from "convex/react";
+import { api } from "convex/_generated/api";
 
 interface LandingScreenProps {
     onCreateGame: (mode: "classic" | "party", name: string, avatar: string) => void;
@@ -19,6 +22,9 @@ const AVATARS = ["🐼", "🐯", "🐶", "🐱", "🐷", "🐰", "🦊", "🐻",
 const INITIAL_AVATAR_COUNT = 5;
 
 export function LandingScreen({ onCreateGame, onJoinGame, isLoading, error }: LandingScreenProps) {
+    const { isSignedIn } = useUser();
+    const myUser = useQuery(api.rooms.getMyUser);
+    const isPro = myUser?.isPro ?? false;
     const [roomCode, setRoomCode] = useState("");
     const [playerName, setPlayerName] = useState("");
     const [selectedAvatar, setSelectedAvatar] = useState(AVATARS[0]);
@@ -284,11 +290,17 @@ export function LandingScreen({ onCreateGame, onJoinGame, isLoading, error }: La
                             </Button>
 
                             <Button
-                                className="h-14 flex flex-col items-center justify-center gap-1 bg-gradient-to-br from-[#F43F5E] to-[#E11D48] hover:from-[#E11D48] hover:to-[#BE123C] text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300"
+                                className={`h-14 flex flex-col items-center justify-center gap-1 text-white border-0 shadow-lg transition-all duration-300 relative overflow-hidden ${isPro ? "bg-gradient-to-br from-[#F43F5E] to-[#E11D48] hover:from-[#E11D48] hover:to-[#BE123C] hover:shadow-xl" : "bg-gray-400 cursor-not-allowed opacity-70"}`}
                                 onClick={() => onCreateGame("party", playerName, selectedAvatar)}
-                                disabled={!playerName.trim() || isLoading}
+                                disabled={!playerName.trim() || isLoading || !isPro}
                             >
-                                <PartyPopper className="w-5 h-5" />
+                                {!isPro && (
+                                    <div className="absolute top-1 right-1 bg-black/30 backdrop-blur-md px-1.5 py-0.5 rounded text-[10px] font-bold flex items-center gap-1 border border-white/20">
+                                        <Lock className="w-2.5 h-2.5 text-yellow-400" />
+                                        <span className="text-yellow-400">PRO</span>
+                                    </div>
+                                )}
+                                <PartyPopper className="w-5 h-5 mt-1" />
                                 <span className="font-bold">Party (2-6P)</span>
                             </Button>
                         </div>
@@ -414,14 +426,8 @@ export function LandingScreen({ onCreateGame, onJoinGame, isLoading, error }: La
             </motion.div>
 
             {/* Footer */}
-            <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.5 }}
-                className="mt-12 text-sm text-muted-foreground"
-            >
-                Crafted with ❤️ by Hong Zhe
-            </motion.p>
+
+
 
             {/* Mini Games Modal */}
             <MiniGamesModal

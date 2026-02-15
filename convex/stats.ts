@@ -20,6 +20,7 @@ export const getDailyStats = query({
         const cutoff = Date.now() - days * 24 * 60 * 60 * 1000;
 
         // Fetch all rooms created in the time window
+        // Note: This fetches renamed "archived" rooms too, preserving stats!
         const allRooms = await ctx.db.query("rooms").collect();
         const rooms = allRooms.filter((r) => r._creationTime >= cutoff);
 

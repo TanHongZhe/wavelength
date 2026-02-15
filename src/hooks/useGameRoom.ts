@@ -1,5 +1,6 @@
 "use client";
 
+import { useUser } from "@clerk/nextjs";
 import { useState, useEffect, useCallback } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "convex/_generated/api";
@@ -26,6 +27,7 @@ export interface Room {
 }
 
 export function useGameRoom() {
+    const { user, isLoaded, isSignedIn } = useUser();
     const [roomId, setRoomId] = useState<Id<"rooms"> | null>(null);
     const [playerId, setPlayerId] = useState<string>("");
     const [playerName, setPlayerName] = useState<string>("");
@@ -64,19 +66,25 @@ export function useGameRoom() {
         player2_avatar: convexRoom.player2_avatar ?? "🐯",
     } : null;
 
-    // Initialize player ID (localStorage)
+    // Initialize player ID (Clerk or localStorage)
     useEffect(() => {
-        const storedId = localStorage.getItem("wavelength_player_id");
-        if (storedId) {
-            setPlayerId(storedId);
+        if (!isLoaded) return;
+
+        if (isSignedIn && user) {
+            setPlayerId(user.id);
             setAuthInitialized(true);
         } else {
-            const newId = `player_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-            localStorage.setItem("wavelength_player_id", newId);
-            setPlayerId(newId);
+            const storedId = localStorage.getItem("wavelength_player_id");
+            if (storedId) {
+                setPlayerId(storedId);
+            } else {
+                const newId = `player_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+                localStorage.setItem("wavelength_player_id", newId);
+                setPlayerId(newId);
+            }
             setAuthInitialized(true);
         }
-    }, []);
+    }, [isLoaded, isSignedIn, user]);
 
     // Sync game finished state
     useEffect(() => {
@@ -89,6 +97,8 @@ export function useGameRoom() {
     const createRoom = useCallback(async (name: string, avatar: string) => {
         if (!playerId) { setError("Please wait..."); return; }
         if (!name.trim()) { setError("Please enter your name"); return; }
+
+
 
         setIsLoading(true);
         setError(null);
@@ -111,11 +121,13 @@ export function useGameRoom() {
                 player1_name: trimmedName,
                 player1_avatar: avatar,
                 game_mode: "classic",
+                ip_hash: playerId,
             });
             setRoomId(newRoomId);
-        } catch (err) {
+        } catch (err: any) {
             console.error("Create error:", err);
-            setError("Failed to create room");
+            const msg = err.data?.message || err.message || "Failed to create room";
+            setError(msg);
         }
         setIsLoading(false);
     }, [playerId, createRoomMutation]);
@@ -178,23 +190,32 @@ export function useGameRoom() {
 
     const nextRound = useCallback(async () => {
         if (!roomId || !room) return;
-        const targetAngle = generateRandomTarget();
-        const card = getRandomCard(currentDeck);
 
-        await updateRoomMutation({
-            roomId,
-            updates: {
-                psychic_id: room.guesser_id ?? undefined,
-                guesser_id: room.psychic_id ?? undefined,
-                target_angle: targetAngle,
-                guess_angle: 90,
-                current_card: card,
-                phase: "clue",
-                clue: null,
-                round_number: room.round_number + 1,
-            },
-        });
-    }, [room, roomId, currentDeck, updateRoomMutation]);
+        try {
+            const targetAngle = generateRandomTarget();
+            const card = getRandomCard(currentDeck);
+
+            console.log("Calling nextRound, ID:", playerId);
+            await updateRoomMutation({
+                roomId,
+                updates: {
+                    psychic_id: room.guesser_id ?? undefined,
+                    guesser_id: room.psychic_id ?? undefined,
+                    target_angle: targetAngle,
+                    guess_angle: 90,
+                    current_card: card,
+                    phase: "clue",
+                    clue: null,
+                    round_number: room.round_number + 1,
+                },
+                ip_hash: playerId,
+            });
+        } catch (err: any) {
+            // Check for ConvexError data or message
+            const msg = err.data?.message || err.message || "Failed to start next round";
+            setError(msg);
+        }
+    }, [room, roomId, currentDeck, updateRoomMutation, playerId]);
 
     const updateScore = useCallback(async (points: number) => {
         if (!roomId || !room) return;
@@ -246,6 +267,8 @@ export function useGameRoom() {
         setIsGameFinished(false);
     }, [roomId, updateRoomMutation]);
 
+    const clearError = useCallback(() => setError(null), []);
+
     return {
         room,
         playerId,
@@ -271,5 +294,6 @@ export function useGameRoom() {
         switchDeck,
         startGame,
         leaveRoom,
+        clearError,
     };
 }

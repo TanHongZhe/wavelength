@@ -5,6 +5,7 @@ export default defineSchema({
     // Main rooms table - supports all game modes
     rooms: defineTable({
         room_code: v.string(),
+        creator_id: v.optional(v.string()), // Tracks who owns the room (for Pro features)
         psychic_id: v.optional(v.string()),
         guesser_id: v.optional(v.string()),
         target_angle: v.optional(v.number()),
@@ -57,4 +58,38 @@ export default defineSchema({
         rating: v.optional(v.number()),
         ip_hash: v.optional(v.string()),
     }),
+
+    // 1. Users Table (Synced with Clerk)
+    users: defineTable({
+        tokenIdentifier: v.string(),     // Clerk User ID (subject)
+        name: v.optional(v.string()),
+        email: v.optional(v.string()),
+        isPro: v.boolean(),              // The "Golden Ticket"
+        stripeCustomerId: v.optional(v.string()), // Stripe Customer ID
+        subscriptionId: v.optional(v.string()), // active subscription or checkout session ID
+        endsOn: v.optional(v.number()),  // Expiration timestamp
+    })
+        .index("by_token", ["tokenIdentifier"])
+        .index("by_email", ["email"])
+        .index("by_stripe_id", ["stripeCustomerId"]),
+
+    // 2. IP Limits Table (For Guest Users)
+    daily_usage: defineTable({
+        ip_hash: v.string(),             // SHA-256 of IP
+        date: v.string(),                // YYYY-MM-DD
+        games_created: v.number(),       // Track games (analytics)
+        rounds_played: v.number(),       // Limit: 10 per day
+    }).index("by_ip_date", ["ip_hash", "date"]),
+
+    // 3. Daily Stats Archive (for preserving history after room deletion)
+    daily_stats: defineTable({
+        date: v.string(), // YYYY-MM-DD
+        games_played: v.number(),
+        rooms_created: v.number(),
+        total_rounds: v.number(),
+        classic_rounds: v.number(),
+        party_rounds: v.number(),
+        green_flag_rounds: v.number(),
+        this_or_that_rounds: v.number(),
+    }).index("by_date", ["date"]),
 });
