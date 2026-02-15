@@ -1,4 +1,45 @@
-import { mutation, query } from "./_generated/server";
+
+// ... existing imports
+import { internalMutation, mutation, query } from "./_generated/server";
+
+// ... existing code ...
+
+/**
+ * upsertUser: Create or update a user (Called by Clerk Webhook)
+ */
+export const upsertUser = internalMutation({
+    args: {
+        tokenIdentifier: v.string(),
+        name: v.optional(v.string()),
+        email: v.optional(v.string()),
+        image: v.optional(v.string()),
+    },
+    handler: async (ctx, args) => {
+        const user = await ctx.db
+            .query("users")
+            .withIndex("by_token", (q) => q.eq("tokenIdentifier", args.tokenIdentifier))
+            .unique();
+
+        if (user) {
+            // Update existing user
+            await ctx.db.patch(user._id, {
+                name: args.name,
+                email: args.email,
+                // We could update image here if we stored it
+            });
+            return user._id;
+        }
+
+        // Create new user
+        return await ctx.db.insert("users", {
+            tokenIdentifier: args.tokenIdentifier,
+            name: args.name,
+            email: args.email,
+            isPro: false,
+        });
+    },
+});
+
 import { v } from "convex/values";
 
 /**
