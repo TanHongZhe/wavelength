@@ -7,8 +7,8 @@ import { useUser, SignInButton } from "@clerk/nextjs";
 
 // ============================================================
 // STRIPE PAYMENT LINKS (PRODUCTION)
-const STRIPE_MONTHLY_LINK = "https://buy.stripe.com/bJe3cxgmr2kT8183KDfQI00";
-const STRIPE_LIFETIME_LINK = "https://buy.stripe.com/5kQ8wR5HN4t1epwbd5fQI01";
+const STRIPE_MONTHLY_LINK = "https://buy.stripe.com/5kQ4gBeej9Nla9g0yrfQI02";
+const STRIPE_LIFETIME_LINK = "https://buy.stripe.com/4gMeVf2vB7Fda9g0yrfQI03";
 
 interface PaywallModalProps {
     isOpen: boolean;
