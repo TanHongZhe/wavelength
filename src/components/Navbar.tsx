@@ -4,7 +4,7 @@ import Link from "next/link";
 import { AudioWaveform } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
 import { motion } from "framer-motion";
-import { SignedIn, SignedOut, SignInButton, UserButton, SignOutButton } from "@clerk/nextjs";
+import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 import { useState } from "react";
 import { PaywallModal } from "./PaywallModal";
 import { Crown } from "lucide-react";
@@ -89,16 +89,7 @@ export function Navbar() {
                 </SignedOut>
 
                 <SignedIn>
-                    <div className="flex items-center gap-3">
-                        <UserButton afterSignOutUrl="/" />
-                        <div className="hidden sm:block">
-                            <SignOutButton redirectUrl="/">
-                                <button className="text-xs font-medium text-muted-foreground hover:text-red-400 transition-colors border border-border/50 px-2 py-1 rounded-md">
-                                    Sign Out
-                                </button>
-                            </SignOutButton>
-                        </div>
-                    </div>
+                    <UserButton afterSignOutUrl="/" />
                 </SignedIn>
 
                 <ThemeToggle />
