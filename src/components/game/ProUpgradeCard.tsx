@@ -80,28 +80,36 @@ export function ProUpgradeCard({ className }: ProUpgradeCardProps) {
                     </div>
                 </div>
 
-                <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto">
+                <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-lg mx-auto w-full">
                     {isSignedIn ? (
                         <>
                             <Button
                                 onClick={handleUpgrade}
-                                className="w-full bg-gradient-to-r from-pink-600 to-violet-600 hover:from-pink-500 hover:to-violet-500 text-white border-0 shadow-lg shadow-pink-500/20 py-6 text-lg transition-all hover:scale-[1.02]"
+                                className="w-full flex-1 bg-gradient-to-r from-pink-600 to-violet-600 hover:from-pink-500 hover:to-violet-500 text-white border-0 shadow-lg shadow-pink-500/20 py-6 text-base md:text-lg transition-all hover:scale-[1.02]"
                             >
-                                <span className="font-bold mr-2">Upgrade Monthly</span>
-                                <span className="text-xs opacity-90">($0.99/mo)</span>
+                                <div className="flex flex-col items-center">
+                                    <span className="font-bold">Upgrade Monthly</span>
+                                    <span className="text-xs opacity-90">$0.99 / month</span>
+                                </div>
                             </Button>
                             <Button
                                 onClick={handleLifetime}
                                 variant="outline"
-                                className="w-full border-slate-700 hover:bg-slate-800 hover:text-white py-6 text-lg bg-transparent text-slate-400 transition-all hover:scale-[1.02]"
+                                className="w-full flex-1 border-pink-500/30 hover:bg-pink-900/20 hover:text-pink-200 hover:border-pink-500/60 py-6 text-base md:text-lg bg-transparent text-pink-300 transition-all hover:scale-[1.02] relative overflow-hidden group"
                             >
-                                <span className="font-bold mr-2">Lifetime</span>
-                                <span className="text-xs opacity-90">($2.99)</span>
+                                <div className="absolute top-0 right-0 bg-gradient-to-l from-red-600 to-transparent px-8 py-1 text-[9px] font-bold uppercase tracking-wider text-white rotate-45 translate-x-[18px] -translate-y-0.5 shadow-md z-10">Limited Time</div>
+                                <div className="flex flex-col items-center relative z-0">
+                                    <span className="font-bold">Lifetime Access</span>
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-xs opacity-60 line-through text-slate-400">$9.99</span>
+                                        <span className="text-xs font-bold text-pink-200">$2.99 one-time</span>
+                                    </div>
+                                </div>
                             </Button>
                         </>
                     ) : (
                         <SignInButton mode="modal">
-                            <Button className="w-full bg-gradient-to-r from-pink-600 to-violet-600 hover:from-pink-500 hover:to-violet-500 text-white border-0 shadow-lg shadow-pink-500/20 py-6 text-lg transition-all hover:scale-[1.02]">
+                            <Button className="w-full max-w-sm mx-auto bg-gradient-to-r from-pink-600 to-violet-600 hover:from-pink-500 hover:to-violet-500 text-white border-0 shadow-lg shadow-pink-500/20 py-6 text-lg transition-all hover:scale-[1.02]">
                                 <LogIn className="w-5 h-5 mr-2" />
                                 Log In to Upgrade
                             </Button>

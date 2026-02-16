@@ -176,7 +176,7 @@ export function PaywallModal({ isOpen, onClose, message }: PaywallModalProps) {
                                     </div>
                                 </Button>
                                 <Button onClick={handleLifetime} variant="outline" className="w-full border-pink-500/30 hover:bg-pink-900/20 hover:text-pink-200 hover:border-pink-500/60 py-6 text-lg bg-transparent text-pink-300 transition-all hover:scale-[1.02] relative overflow-hidden group">
-                                    <div className="absolute top-0 right-0 bg-gradient-to-l from-red-600 to-transparent px-8 py-1 text-[10px] font-bold uppercase tracking-wider text-white rotate-45 translate-x-3 -translate-y-1 shadow-md">Limited Time</div>
+                                    <div className="absolute top-0 right-0 bg-gradient-to-l from-red-600 to-transparent px-8 py-1 text-[9px] font-bold uppercase tracking-wider text-white rotate-45 translate-x-[18px] -translate-y-0.5 shadow-md">Limited Time</div>
                                     <div className="flex flex-col items-center">
                                         <span className="font-bold">Lifetime Access</span>
                                         <div className="flex items-center gap-2">

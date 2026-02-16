@@ -76,9 +76,8 @@ export function ClassicGameEngine({
     }
 
     // Logic for loading state: 
-    // If loading, show loader.
-    // If not loading, and no room, and no error (or paywall error handled by modal overlay but we need background), show placeholder.
-    if (isLoading && !room) {
+    // If loading, OR if we are supposed to be creating/joining but haven't got a room yet, show loader.
+    if ((isLoading || isCreating || initialRoomCode) && !room && !error && !isPaywallError) {
         return (
             <div className="flex items-center justify-center min-h-screen">
                 <Loader2 className="w-8 h-8 animate-spin text-primary" />
