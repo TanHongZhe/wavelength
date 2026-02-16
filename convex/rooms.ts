@@ -195,6 +195,8 @@ export const joinRoomByCode = mutation({
                 party: "Party",
                 mini_flag_game: "Flags",
                 mini_rapid_fire: "Rapid Fire",
+                mini_whos_most_likely: "Who's Most Likely",
+                mini_fantasy_slider: "Fantasy Slider",
             };
             const actualMode = modeNames[room.game_mode] || room.game_mode;
             return { error: `This room is for ${actualMode}`, roomId: null, room: null };
@@ -252,6 +254,11 @@ export const updateRoom = mutation({
             player1_choice: v.optional(v.union(v.string(), v.null())),
             player2_choice: v.optional(v.union(v.string(), v.null())),
             deck_type: v.optional(v.string()),
+            current_question: v.optional(v.object({
+                question: v.string(),
+                options: v.array(v.string()),
+                answer: v.number(),
+            })),
         }),
         ip_hash: v.optional(v.string()),
     },
@@ -264,7 +271,7 @@ export const updateRoom = mutation({
 
             // Determine the round limit for this game mode
             let roundLimit = 3; // TESTING LIMIT (change to 10 for production)
-            if (gameMode === "mini_rapid_fire" || gameMode === "mini_flag_game") {
+            if (gameMode === "mini_rapid_fire" || gameMode === "mini_flag_game" || gameMode === "mini_whos_most_likely" || gameMode === "mini_fantasy_slider" || gameMode === "mini_general_knowledge") {
                 roundLimit = 20;
             }
 
@@ -347,6 +354,7 @@ export const addPartyPlayer = mutation({
         score: v.optional(v.number()),
         guess_angle: v.optional(v.number()),
         locked_in: v.optional(v.boolean()),
+        answer: v.optional(v.object({ round: v.number(), choice: v.number() })),
     },
     handler: async (ctx, args) => {
         return await ctx.db.insert("party_players", {
@@ -358,6 +366,7 @@ export const addPartyPlayer = mutation({
             score: args.score ?? 0,
             guess_angle: args.guess_angle,
             locked_in: args.locked_in ?? false,
+            answer: args.answer,
         });
     },
 });
@@ -372,6 +381,7 @@ export const updatePartyPlayer = mutation({
             score: v.optional(v.number()),
             guess_angle: v.optional(v.union(v.number(), v.null())),
             locked_in: v.optional(v.boolean()),
+            answer: v.optional(v.object({ round: v.number(), choice: v.number() })),
         }),
     },
     handler: async (ctx, args) => {
@@ -475,6 +485,57 @@ export const joinPartyRoomByCode = mutation({
         });
 
         return { error: null, roomId: room._id, roundNumber: room.round_number };
+    },
+});
+
+// Join General Knowledge room 
+export const joinGeneralKnowledgeRoom = mutation({
+    args: {
+        roomCode: v.string(),
+        playerId: v.string(),
+        playerName: v.string(),
+        playerAvatar: v.string(),
+    },
+    handler: async (ctx, args) => {
+        const room = await ctx.db
+            .query("rooms")
+            .withIndex("by_room_code", (q) => q.eq("room_code", args.roomCode.toUpperCase()))
+            .first();
+
+        if (!room) {
+            return { error: "Room not found", roomId: null };
+        }
+
+        if (room.game_mode !== "mini_general_knowledge") {
+            return { error: "This room is for General Knowledge!", roomId: null };
+        }
+
+        // No Pro check on join, as 20 round game is free.
+
+        // Check if already in the room
+        const existingPlayer = await ctx.db
+            .query("party_players")
+            .withIndex("by_room_and_player", (q) =>
+                q.eq("room_id", room._id).eq("player_id", args.playerId)
+            )
+            .first();
+
+        if (existingPlayer) {
+            return { error: null, roomId: room._id };
+        }
+
+        // Add as new player
+        await ctx.db.insert("party_players", {
+            room_id: room._id,
+            player_id: args.playerId,
+            name: args.playerName,
+            avatar: args.playerAvatar,
+            role: "player",
+            score: 0,
+            locked_in: false,
+        });
+
+        return { error: null, roomId: room._id };
     },
 });
 

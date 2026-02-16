@@ -93,7 +93,7 @@ const faqSchema = {
             name: "Is Wavelength free to play online?",
             acceptedAnswer: {
                 "@type": "Answer",
-                text: "Yes! Wavelength Online is 100% free to play. No downloads, no registration, no hidden fees. Just open your browser and start playing with your partner instantly.",
+                text: "Yes! Wavelength Online is free to start playing. No downloads required - just open your browser and start playing with your partner instantly.",
             },
         },
     ],

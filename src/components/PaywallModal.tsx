@@ -59,19 +59,21 @@ export function PaywallModal({ isOpen, onClose, message }: PaywallModalProps) {
                     {/* Bento Grid Benefits */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
                         {/* Box 1: Unlimited */}
-                        <div className="group relative p-6 rounded-2xl bg-slate-900/50 border border-slate-800 hover:border-pink-500/50 transition-all duration-300 hover:shadow-[0_0_20px_rgba(236,72,153,0.15)]">
+                        <div className="group relative p-6 rounded-2xl bg-slate-900/50 border border-slate-800 hover:border-pink-500/50 transition-all duration-300 hover:shadow-[0_0_20px_rgba(236,72,153,0.15)] flex flex-col justify-between">
                             <div className="absolute inset-0 bg-gradient-to-br from-pink-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl" />
                             <div className="relative">
                                 <div className="w-10 h-10 rounded-full bg-pink-500/20 flex items-center justify-center mb-4 text-pink-400">
                                     <InfinityIcon className="w-5 h-5" />
                                 </div>
                                 <h3 className="text-xl font-bold mb-2">Unlimited Access</h3>
-                                <p className="text-slate-400">Create unlimited games. <span className="text-pink-200 font-medium">Your pro status unlocks unlimited rounds for everyone in your party.</span></p>
+                                <div className="text-slate-400">
+                                    <p className="mb-1">Create unlimited games. <span className="text-pink-200 font-medium">Your pro status<br />unlocks unlimited rounds for everyone in<br />your party.</span></p>
+                                </div>
                             </div>
                         </div>
 
                         {/* Box 2: Wavelength Content */}
-                        <div className="group relative p-6 rounded-2xl bg-slate-900/50 border border-slate-800 hover:border-violet-500/50 transition-all duration-300 hover:shadow-[0_0_20px_rgba(139,92,246,0.15)]">
+                        <div className="group relative p-6 rounded-2xl bg-slate-900/50 border border-slate-800 hover:border-violet-500/50 transition-all duration-300 hover:shadow-[0_0_20px_rgba(139,92,246,0.15)] flex flex-col justify-between">
                             <div className="absolute inset-0 bg-gradient-to-br from-violet-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl" />
                             <div className="relative">
                                 <div className="w-10 h-10 rounded-full bg-violet-500/20 flex items-center justify-center mb-4 text-violet-400">
@@ -86,29 +88,31 @@ export function PaywallModal({ isOpen, onClose, message }: PaywallModalProps) {
                         </div>
 
                         {/* Box 3: Minigames Content */}
-                        <div className="group relative p-6 rounded-2xl bg-slate-900/50 border border-slate-800 hover:border-blue-500/50 transition-all duration-300 hover:shadow-[0_0_20px_rgba(59,130,246,0.15)]">
+                        <div className="group relative p-6 rounded-2xl bg-slate-900/50 border border-slate-800 hover:border-blue-500/50 transition-all duration-300 hover:shadow-[0_0_20px_rgba(59,130,246,0.15)] flex flex-col justify-between">
                             <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl" />
                             <div className="relative">
                                 <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center mb-4 text-blue-400">
                                     <Gamepad2 className="w-5 h-5" />
                                 </div>
-                                <h3 className="text-xl font-bold mb-2">Rapid Fire Content</h3>
+                                <h3 className="text-xl font-bold mb-2">Mini Game Content</h3>
                                 <div className="text-slate-400">
-                                    <p className="mb-1"><span className="text-white font-semibold">7 Exclusive Decks</span> included</p>
-                                    <p>Unlock <span className="text-white font-semibold">500+ new prompts</span> shared with all players.</p>
+                                    <p className="mb-1"><span className="text-white font-semibold">5 mini games</span> included</p>
+                                    <p>Unlock <span className="text-white font-semibold">2000+ cards</span> for never ending fun.</p>
                                 </div>
                             </div>
                         </div>
 
                         {/* Box 4: Support */}
-                        <div className="group relative p-6 rounded-2xl bg-slate-900/50 border border-slate-800 hover:border-green-500/50 transition-all duration-300 hover:shadow-[0_0_20px_rgba(34,197,94,0.15)]">
+                        <div className="group relative p-6 rounded-2xl bg-slate-900/50 border border-slate-800 hover:border-green-500/50 transition-all duration-300 hover:shadow-[0_0_20px_rgba(34,197,94,0.15)] flex flex-col justify-between">
                             <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl" />
                             <div className="relative">
                                 <div className="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center mb-4 text-green-400">
                                     <Heart className="w-5 h-5" />
                                 </div>
                                 <h3 className="text-xl font-bold mb-2">Support Indie</h3>
-                                <p className="text-slate-400">Your support directly helps us keep the servers running and build new features.</p>
+                                <div className="text-slate-400">
+                                    <p>Your support directly helps us keep the servers running and build new features.</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -145,10 +149,18 @@ export function PaywallModal({ isOpen, onClose, message }: PaywallModalProps) {
                                     <td className="py-3 px-4 text-center text-slate-500">1 (Fun)</td>
                                     <td className="py-3 px-4 text-center text-white">All 7 Decks</td>
                                 </tr>
+                                <tr className="border-b border-slate-800/50">
+                                    <td className="py-3 px-4 text-slate-300">
+                                        <div>Mini Games</div>
+                                        <div className="text-xs text-slate-500 font-normal">Over 14 Decks Included</div>
+                                    </td>
+                                    <td className="py-3 px-4 text-center text-slate-500">Normal Decks</td>
+                                    <td className="py-3 px-4 text-center text-white">Unlock All Decks</td>
+                                </tr>
                                 <tr>
-                                    <td className="py-3 px-4 text-slate-300">Rapid Fire Decks</td>
-                                    <td className="py-3 px-4 text-center text-slate-500">1 (Random)</td>
-                                    <td className="py-3 px-4 text-center text-white">All 8 Decks</td>
+                                    <td className="py-3 px-4 text-slate-300">Total Cards</td>
+                                    <td className="py-3 px-4 text-center text-slate-500">100+ Cards</td>
+                                    <td className="py-3 px-4 text-center text-white font-bold">2000+ Cards Available</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -163,10 +175,14 @@ export function PaywallModal({ isOpen, onClose, message }: PaywallModalProps) {
                                         <span className="text-xs opacity-90">$0.99 / month</span>
                                     </div>
                                 </Button>
-                                <Button onClick={handleLifetime} variant="outline" className="w-full border-slate-700 hover:bg-slate-800 hover:text-white py-6 text-lg bg-transparent text-slate-400 transition-all hover:scale-[1.02]">
+                                <Button onClick={handleLifetime} variant="outline" className="w-full border-pink-500/30 hover:bg-pink-900/20 hover:text-pink-200 hover:border-pink-500/60 py-6 text-lg bg-transparent text-pink-300 transition-all hover:scale-[1.02] relative overflow-hidden group">
+                                    <div className="absolute top-0 right-0 bg-gradient-to-l from-red-600 to-transparent px-8 py-1 text-[10px] font-bold uppercase tracking-wider text-white rotate-45 translate-x-3 -translate-y-1 shadow-md">Limited Time</div>
                                     <div className="flex flex-col items-center">
                                         <span className="font-bold">Lifetime Access</span>
-                                        <span className="text-xs opacity-90">$2.99 one-time</span>
+                                        <div className="flex items-center gap-2">
+                                            <span className="text-xs opacity-60 line-through text-slate-400">$9.99</span>
+                                            <span className="text-xs font-bold text-pink-200">$2.99 one-time</span>
+                                        </div>
                                     </div>
                                 </Button>
                             </>

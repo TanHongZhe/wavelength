@@ -95,7 +95,7 @@ const faqSchema = {
             name: "Are there free Valentine's Day games online?",
             acceptedAnswer: {
                 "@type": "Answer",
-                text: "Yes! Wavelength Online is 100% free to play. No downloads, no registration, no hidden fees. Just open your browser, share a room code with your partner, and start playing together instantly. Perfect for a fun Valentine's Day activity!",
+                text: "Yes! Wavelength Online is free to start playing. No downloads, no registration required. Just open your browser, share a room code with your partner, and start playing together instantly. Perfect for a fun Valentine's Day activity!",
             },
         },
     ],
@@ -177,9 +177,9 @@ export default function ValentinesGamesPage() {
                         </div>
                         <div className="bg-gradient-to-br from-pink-500/10 to-red-500/10 backdrop-blur-sm border border-pink-500/20 rounded-xl p-6">
                             <div className="text-3xl mb-3">🎁</div>
-                            <h3 className="font-semibold mb-2">100% Free Gift</h3>
+                            <h3 className="font-semibold mb-2">Perfect Digital Gift</h3>
                             <p className="text-sm text-muted-foreground">
-                                No cost, no downloads, no signup. The perfect free activity to share with your special someone.
+                                Instant access, no downloads, no signup. The perfect activity to share with your special someone.
                             </p>
                         </div>
                     </div>

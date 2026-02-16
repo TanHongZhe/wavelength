@@ -25,6 +25,8 @@ interface MiniGameSetupProps {
     isLoading?: boolean;
     /** Error message to display */
     error?: string | null;
+    /** Optional initial mode to start in */
+    initialMode?: "initial" | "create" | "join";
 }
 
 export function MiniGameSetup({
@@ -34,9 +36,10 @@ export function MiniGameSetup({
     onClose,
     createGameOptions,
     isLoading,
-    error
+    error,
+    initialMode = "initial"
 }: MiniGameSetupProps) {
-    const [mode, setMode] = useState<"initial" | "create" | "join">("initial");
+    const [mode, setMode] = useState<"initial" | "create" | "join">(initialMode);
     const [playerName, setPlayerName] = useState("");
     const [selectedAvatar, setSelectedAvatar] = useState(AVATARS[0]);
     const [isAvatarExpanded, setIsAvatarExpanded] = useState(false);

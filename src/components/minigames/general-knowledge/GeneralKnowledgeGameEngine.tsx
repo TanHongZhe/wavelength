@@ -4,10 +4,11 @@ import { useState } from "react";
 import { Lock } from "lucide-react";
 import { useQuery } from "convex/react";
 import { api } from "convex/_generated/api";
-import { DeckType, DECKS } from "./cards";
-import { MiniGameSetup, MiniGameWaitingRoom } from "../shared";
-import { RapidFireGameScreen } from "./RapidFireGameScreen";
-import { useRapidFireRoom } from "./useRapidFireRoom";
+import { DeckType, GENERAL_KNOWLEDGE_DECKS } from "./cards";
+import { MiniGameSetup } from "../shared";
+import { GeneralKnowledgeWaitingRoom } from "./GeneralKnowledgeWaitingRoom";
+import { GeneralKnowledgeGameScreen } from "./GeneralKnowledgeGameScreen";
+import { useGeneralKnowledgeRoom } from "./useGeneralKnowledgeRoom";
 
 export interface GameConfig {
     playerName: string;
@@ -17,14 +18,14 @@ export interface GameConfig {
     roomCode?: string;
 }
 
-interface RapidFireGameEngineProps {
+interface GeneralKnowledgeGameEngineProps {
     onClose: () => void;
     initialMode?: "initial" | "create" | "join";
 }
 
-export function RapidFireGameEngine({ onClose, initialMode = "initial" }: RapidFireGameEngineProps) {
+export function GeneralKnowledgeGameEngine({ onClose, initialMode = "initial" }: GeneralKnowledgeGameEngineProps) {
     const [gameConfig, setGameConfig] = useState<GameConfig | null>(null);
-    const [selectedDeck, setSelectedDeck] = useState<DeckType>("random");
+    const [selectedDeck, setSelectedDeck] = useState<DeckType>("classic");
     const [selectedCardCount, setSelectedCardCount] = useState(20);
 
     const user = useQuery(api.rooms.getMyUser);
@@ -32,19 +33,21 @@ export function RapidFireGameEngine({ onClose, initialMode = "initial" }: RapidF
 
     const {
         room,
-        roomId,
-        convexRoom,
-        playerId,
-        isPlayer1,
-        hasOpponent,
+        players,
+        currentPlayer,
+        isHost,
         isLoading,
         error,
         authInitialized,
         createRoom,
         joinRoom,
         startGame,
+        nextRound,
+        submitAnswer,
+        revealAnswer,
+        calculateScores,
         leaveRoom,
-    } = useRapidFireRoom();
+    } = useGeneralKnowledgeRoom();
 
     // Handle game creation
     const handleCreateGame = async (playerName: string, avatar: string) => {
@@ -54,7 +57,7 @@ export function RapidFireGameEngine({ onClose, initialMode = "initial" }: RapidF
 
     // Handle joining a game
     const handleJoinGame = async (playerName: string, avatar: string, roomCode: string) => {
-        setGameConfig({ playerName, playerAvatar: avatar, deckType: "couples", cardCount: 20, roomCode });
+        setGameConfig({ playerName, playerAvatar: avatar, deckType: "classic", cardCount: 20, roomCode });
         await joinRoom(playerName, avatar, roomCode);
     };
 
@@ -67,7 +70,7 @@ export function RapidFireGameEngine({ onClose, initialMode = "initial" }: RapidF
 
     // Handle start game
     const handleStartGame = async () => {
-        await startGame();
+        await startGame(room?.deck_type || selectedDeck);
     };
 
     // Game-specific options for the setup screen (deck picker)
@@ -79,14 +82,11 @@ export function RapidFireGameEngine({ onClose, initialMode = "initial" }: RapidF
                     Choose a Deck
                 </label>
                 <div className="grid grid-cols-2 gap-2">
-                    {(Object.keys(DECKS) as DeckType[])
-                        .sort((a, b) => {
-                            if (a === "random") return -1;
-                            if (b === "random") return 1;
-                            return 0;
-                        })
+                    {(Object.keys(GENERAL_KNOWLEDGE_DECKS) as DeckType[])
+                        // Sort so 'classic' is first? iterating object keys is not guaranteed order, but typically insertion order.
+                        // Let's rely on map order being mostly okay or sort manually if needed.
                         .map((deckKey) => {
-                            const isLocked = !isPro && deckKey !== "random";
+                            const isLocked = !isPro && deckKey !== "classic";
                             return (
                                 <button
                                     key={deckKey}
@@ -100,11 +100,11 @@ export function RapidFireGameEngine({ onClose, initialMode = "initial" }: RapidF
                                         }`}
                                 >
                                     <div className="flex justify-between items-start mb-1">
-                                        <div className="text-2xl">{DECKS[deckKey].emoji}</div>
+                                        <div className="text-2xl">{GENERAL_KNOWLEDGE_DECKS[deckKey].emoji}</div>
                                         {isLocked && <Lock className="w-4 h-4 text-orange-500" />}
                                     </div>
                                     <div className="text-sm font-medium">
-                                        {DECKS[deckKey].name.replace(DECKS[deckKey].emoji, '').trim()}
+                                        {GENERAL_KNOWLEDGE_DECKS[deckKey].name}
                                     </div>
                                 </button>
                             );
@@ -157,18 +157,18 @@ export function RapidFireGameEngine({ onClose, initialMode = "initial" }: RapidF
         );
     }
 
-    // No room yet - show setup
+    // No room yet - show setup (skip initial screen, go directly to create/join)
     if (!room) {
         return (
             <MiniGameSetup
-                title="Rapid Fire: This or That"
+                title="Rapid Fire: General Knowledge"
                 onCreateGame={handleCreateGame}
                 onJoinGame={handleJoinGame}
                 onClose={onClose}
                 createGameOptions={DeckPickerOptions}
                 isLoading={isLoading}
                 error={error}
-                initialMode={initialMode}
+                initialMode={initialMode === "initial" ? "create" : initialMode}
             />
         );
     }
@@ -176,54 +176,35 @@ export function RapidFireGameEngine({ onClose, initialMode = "initial" }: RapidF
     // In waiting phase - show waiting room
     if (room.phase === "waiting") {
         return (
-            <MiniGameWaitingRoom
+            <GeneralKnowledgeWaitingRoom
                 roomCode={room.room_code}
-                playerName={gameConfig?.playerName || "Player"}
-                playerAvatar={gameConfig?.playerAvatar || "🐼"}
-                isHost={isPlayer1}
-                hasOpponent={hasOpponent}
-                opponentName={isPlayer1 ? room.player2_name : room.player1_name}
-                opponentAvatar={isPlayer1 ? room.player2_avatar : room.player1_avatar}
-                onLeave={handleLeave}
+                players={players}
+                playerId={currentPlayer?.player_id || ""}
+                isHost={isHost}
                 onStartGame={handleStartGame}
-            />
-        );
-    }
-
-    // Playing - show game screen (including ended state so we can show leaderboard)
-    if (room.phase === "playing" || room.phase === "reveal" || room.phase === "results" || room.phase === "ended") {
-        return (
-            <RapidFireGameScreen
-                config={{
-                    playerName: gameConfig?.playerName || "Player",
-                    playerAvatar: gameConfig?.playerAvatar || "🐼",
-                    deckType: room.deck_type,
-                    cardCount: room.card_count,
-                    roomCode: room.room_code,
-                }}
-                roomId={roomId || room.id}
-                isPlayer1={isPlayer1}
-                opponentName={isPlayer1 ? room.player2_name : room.player1_name}
-                opponentAvatar={isPlayer1 ? room.player2_avatar : room.player1_avatar}
                 onLeave={handleLeave}
-                convexRoom={convexRoom as Record<string, unknown> | null | undefined}
             />
         );
     }
 
-    // Game ended
-    return (
-        <div className="fixed inset-0 bg-background z-50 flex items-center justify-center p-6">
-            <div className="game-card max-w-md w-full text-center">
-                <h2 className="text-2xl font-display font-bold mb-4">Game Ended</h2>
-                <p className="text-muted-foreground mb-6">Thanks for playing!</p>
-                <button
-                    onClick={handleLeave}
-                    className="btn-game w-full"
-                >
-                    Back to Home
-                </button>
-            </div>
-        </div>
-    );
+    // Playing - show game screen
+    // Note: ended phase also handled by GameScreen
+    if (room.phase === "playing" || room.phase === "revealed" || room.phase === "ended") {
+        return (
+            <GeneralKnowledgeGameScreen
+                room={room}
+                players={players}
+                currentPlayer={currentPlayer}
+                isHost={isHost}
+                deckType={room.deck_type || selectedDeck}
+                onSubmitAnswer={submitAnswer}
+                onReveal={revealAnswer}
+                onNextRound={() => nextRound(room.deck_type || selectedDeck)}
+                onCalculateScores={calculateScores}
+                onLeave={handleLeave}
+            />
+        );
+    }
+
+    return null;
 }

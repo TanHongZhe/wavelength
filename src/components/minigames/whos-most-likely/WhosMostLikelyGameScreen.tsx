@@ -2,23 +2,17 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { GameConfig } from "./types";
 import { Button } from "@/components/ui/button";
-import { getFlagCards, FlagCard } from "./flagCards";
+import { getDeckCards, WhosMostLikelyCard, DeckType } from "./cards";
 import { useMutation } from "convex/react";
 import { api } from "convex/_generated/api";
 import { Id } from "convex/_generated/dataModel";
-import { ArrowRight, MessageCircle } from "lucide-react";
+import { ArrowRight, Check, X } from "lucide-react";
 import { ProUpgradeCard } from "@/components/game/ProUpgradeCard";
 
-interface FlagGameConfig {
-    playerName: string;
-    playerAvatar: string;
-    roomCode: string;
-    cardCount: number;
-}
-
-interface FlagGameScreenProps {
-    config: FlagGameConfig;
+interface WhosMostLikelyGameScreenProps {
+    config: GameConfig;
     roomId: string;
     isPlayer1: boolean;
     opponentName: string;
@@ -29,16 +23,7 @@ interface FlagGameScreenProps {
 
 const ROUND_TIME_SECONDS = 10;
 
-// Beige flags based on game length
-function getBeigeFlags(cardCount: number): number {
-    if (cardCount >= 100) return 15;
-    if (cardCount >= 50) return 7;
-    return 3;
-}
-
-type FlagChoice = "RED" | "GREEN" | "BEIGE" | "__TIMEOUT__" | null;
-
-export function FlagGameScreen({
+export function WhosMostLikelyGameScreen({
     config,
     roomId,
     isPlayer1,
@@ -46,29 +31,28 @@ export function FlagGameScreen({
     opponentAvatar,
     onLeave,
     convexRoom,
-}: FlagGameScreenProps) {
-    const [cards] = useState<FlagCard[]>(() => {
-        const seed = config.roomCode?.split('').reduce((a, b) => a + b.charCodeAt(0), 0) || 0;
-        return getFlagCards(config.cardCount, seed);
+}: WhosMostLikelyGameScreenProps) {
+    const [cards] = useState<WhosMostLikelyCard[]>(() => {
+        // Simple distinct seeding based on room code characters
+        const seed = config.roomCode?.split('').reduce((a: number, b: string) => a + b.charCodeAt(0), 0) || 0;
+        return getDeckCards(config.deckType as DeckType, config.cardCount, seed);
     });
 
     const [currentRound, setCurrentRound] = useState(1);
-    const [myChoice, setMyChoice] = useState<FlagChoice>(null);
-    const [opponentChoice, setOpponentChoice] = useState<FlagChoice>(null);
+    const [myChoice, setMyChoice] = useState<string | null>(null);
+    const [opponentChoice, setOpponentChoice] = useState<string | null>(null);
     const [teamScore, setTeamScore] = useState(0);
-    const [phase, setPhase] = useState<"rules" | "choosing" | "reveal">("rules");
+    const [phase, setPhase] = useState<"choosing" | "reveal">("choosing");
     const [gameOver, setGameOver] = useState(false);
+    const [showUpgradeOverlay, setShowUpgradeOverlay] = useState(true);
     const [timeLeft, setTimeLeft] = useState(ROUND_TIME_SECONDS);
     const [timedOut, setTimedOut] = useState(false);
-    const [showUpgradeOverlay, setShowUpgradeOverlay] = useState(true);
-    const [beigeRemaining, setBeigeRemaining] = useState(() => getBeigeFlags(config.cardCount));
-    const [showDebatePrompt, setShowDebatePrompt] = useState(false);
     const timerRef = useRef<NodeJS.Timeout | null>(null);
     const hasSubmittedTimeout = useRef(false);
 
     const currentCard = cards[currentRound - 1];
 
-    // Convex mutation (room data comes from parent via props to avoid duplicate subscriptions)
+    // Convex mutation
     const convexRoomId = roomId as Id<"rooms">;
     const updateRoomMutation = useMutation(api.rooms.updateRoom);
 
@@ -90,9 +74,9 @@ export function FlagGameScreen({
         });
     }, [isPlayer1, convexRoomId, updateRoomMutation]);
 
-    // Timer countdown - keeps running even after choice, stops on reveal
+    // Timer countdown
     useEffect(() => {
-        if (phase !== "choosing") {
+        if (phase === "reveal") {
             if (timerRef.current) {
                 clearInterval(timerRef.current);
                 timerRef.current = null;
@@ -125,39 +109,28 @@ export function FlagGameScreen({
         setTimeLeft(ROUND_TIME_SECONDS);
         setTimedOut(false);
         hasSubmittedTimeout.current = false;
-        setShowDebatePrompt(false);
     }, [currentRound]);
 
-    // Reactive room state updates (replaces Supabase polling)
+    // Reactive room state updates
     useEffect(() => {
         if (!convexRoom) return;
 
         const roomData = convexRoom as Record<string, unknown>;
-        const serverPhase = roomData.phase as string;
         const roundNum = (roomData.round_number as number) || 1;
-        const p1Choice = roomData.player1_choice as FlagChoice;
-        const p2Choice = roomData.player2_choice as FlagChoice;
+        const p1Choice = roomData.player1_choice as string | null;
+        const p2Choice = roomData.player2_choice as string | null;
         const serverTeamScore = (roomData.psychic_score as number) || 0;
 
-        // Rules phase sync: if room phase is "clue" (playing), start the game
-        if (phase === "rules" && serverPhase === "clue") {
-            setPhase("choosing");
-            return;
-        }
-
-        // Update team score
         setTeamScore(serverTeamScore);
 
         // Get choices based on player role
         const theirChoice = isPlayer1 ? p2Choice : p1Choice;
         const serverMyChoice = isPlayer1 ? p1Choice : p2Choice;
 
-        // Update opponent choice
         if (theirChoice) {
             setOpponentChoice(theirChoice);
         }
 
-        // Sync my choice from server if we don't have it locally
         if (serverMyChoice && !myChoice) {
             setMyChoice(serverMyChoice);
             if (serverMyChoice === "__TIMEOUT__") {
@@ -165,12 +138,12 @@ export function FlagGameScreen({
             }
         }
 
-        // CRITICAL: Check if both players have made choices - go to reveal
+        // CRITICAL: Check if both players have made choices
         if (p1Choice && p2Choice && phase === "choosing") {
             setPhase("reveal");
         }
 
-        // If round changed from server, sync it
+        // Sync round from server
         if (roundNum > currentRound) {
             setCurrentRound(roundNum);
             setMyChoice(null);
@@ -181,21 +154,16 @@ export function FlagGameScreen({
             hasSubmittedTimeout.current = false;
         }
 
-        // Check for game end from server
-        if (serverPhase === "ended" && !gameOver) {
+        // Check for game end
+        if (roomData.phase === "ended" && !gameOver) {
             setTimeout(() => {
                 setGameOver(true);
             }, 2000);
         }
     }, [convexRoom, isPlayer1, currentRound, phase, myChoice, gameOver]);
 
-    const handleChoice = async (choice: FlagChoice) => {
-        if (myChoice || timedOut || !choice) return;
-
-        if (choice === "BEIGE") {
-            if (beigeRemaining <= 0) return;
-            setBeigeRemaining(prev => prev - 1);
-        }
+    const handleChoice = async (choice: "PLAYER_1" | "PLAYER_2") => {
+        if (myChoice || timedOut) return;
 
         setMyChoice(choice);
 
@@ -209,27 +177,12 @@ export function FlagGameScreen({
         });
     };
 
-    const handleStartGame = async () => {
-        if (!isPlayer1) return; // Only host can start
-
-        // Update room phase to start the game for both players
-        await updateRoomMutation({
-            roomId: convexRoomId,
-            updates: { phase: "clue" },
-        });
-
-        setPhase("choosing");
-    };
-
     const handleNextRound = async () => {
         if (!isPlayer1) return;
 
         const myActualChoice = myChoice || "__TIMEOUT__";
         const opponentActualChoice = opponentChoice || "__TIMEOUT__";
-
-        // Both picked the same non-timeout flag = match (including BEIGE)
-        const matched = myActualChoice === opponentActualChoice &&
-            myActualChoice !== "__TIMEOUT__";
+        const matched = myActualChoice === opponentActualChoice && myActualChoice !== "__TIMEOUT__";
 
         const newTeamScore = matched ? teamScore + 1 : teamScore;
 
@@ -243,8 +196,6 @@ export function FlagGameScreen({
                     player2_choice: null,
                 },
             });
-
-            // Add delay
             setTimeout(() => {
                 setGameOver(true);
             }, 2000);
@@ -269,7 +220,7 @@ export function FlagGameScreen({
         }
     };
 
-    if (!currentCard && phase !== "rules") {
+    if (!currentCard) {
         return (
             <div className="fixed inset-0 bg-background z-50 flex items-center justify-center">
                 <p>Loading cards...</p>
@@ -277,87 +228,6 @@ export function FlagGameScreen({
         );
     }
 
-    // Rules Modal
-    if (phase === "rules") {
-        return (
-            <div className="fixed inset-0 bg-background z-50 flex items-center justify-center p-6">
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="game-card max-w-md w-full text-center"
-                >
-                    <h2 className="font-display text-3xl font-bold text-primary mb-4">
-                        🚩 Red, Green, Beige 🟩
-                    </h2>
-
-                    <div className="space-y-4 text-left mb-6">
-                        <div className="bg-secondary/50 rounded-xl p-4">
-                            <p className="text-sm text-muted-foreground mb-3">
-                                You&apos;ll see different dating behaviors. Rate each one:
-                            </p>
-                            <div className="space-y-2">
-                                <div className="flex items-center gap-3">
-                                    <span className="text-2xl">🚩</span>
-                                    <span className="font-semibold text-red-500">Red Flag</span>
-                                    <span className="text-muted-foreground text-sm">- Dealbreaker!</span>
-                                </div>
-                                <div className="flex items-center gap-3">
-                                    <span className="text-2xl">🟩</span>
-                                    <span className="font-semibold text-green-500">Green Flag</span>
-                                    <span className="text-muted-foreground text-sm">- Love it!</span>
-                                </div>
-                                <div className="flex items-center gap-3">
-                                    <span className="text-2xl">🟨</span>
-                                    <span className="font-semibold text-yellow-500">Beige Flag</span>
-                                    <span className="text-muted-foreground text-sm">- Meh, whatever</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="bg-wedge-orange/10 border border-wedge-orange/30 rounded-xl p-4">
-                            <p className="font-display font-bold text-wedge-orange mb-1">
-                                ⚠️ Limited Beige Flags!
-                            </p>
-                            <p className="text-sm text-muted-foreground">
-                                You only get <strong className="text-primary">{getBeigeFlags(config.cardCount)} Beige Flags</strong> for the entire game!
-                                Use them wisely - you&apos;ll have to make hard choices for most scenarios.
-                            </p>
-                        </div>
-
-                        <div className="bg-secondary/50 rounded-xl p-4">
-                            <p className="text-sm text-muted-foreground">
-                                <strong>Scoring:</strong> You get a point when you both pick the same flag!
-                            </p>
-                        </div>
-                    </div>
-
-                    {isPlayer1 ? (
-                        <Button onClick={handleStartGame} className="w-full h-12 btn-game">
-                            Let&apos;s Go! 🎉
-                        </Button>
-                    ) : (
-                        <div className="text-center">
-                            <p className="text-muted-foreground mb-3">Waiting for host to start...</p>
-                            <div className="flex justify-center gap-1">
-                                {[0, 1, 2].map((i) => (
-                                    <motion.div
-                                        key={i}
-                                        className="w-2 h-2 rounded-full bg-wedge-orange"
-                                        animate={{ scale: [1, 1.3, 1], opacity: [0.5, 1, 0.5] }}
-                                        transition={{ duration: 1, repeat: Infinity, delay: i * 0.2 }}
-                                    />
-                                ))}
-                            </div>
-                        </div>
-                    )}
-                </motion.div>
-            </div>
-        );
-    }
-
-
-
-    // Game Over Screen
     if (gameOver) {
         return (
             <>
@@ -381,10 +251,10 @@ export function FlagGameScreen({
 
                         <p className="text-muted-foreground mb-6">
                             {teamScore >= config.cardCount * 0.8
-                                ? "🔥 Perfect match! You think alike!"
+                                ? "🔥 Mind Readers! You know each other perfectly!"
                                 : teamScore >= config.cardCount * 0.5
-                                    ? "✨ Pretty in sync!"
-                                    : "💭 Opposites attract?"}
+                                    ? "✨ Pretty good! Solid connection."
+                                    : "💭 Still getting to know each other?"}
                         </p>
 
                         <Button onClick={onLeave} className="w-full h-12 btn-game mt-6">
@@ -415,35 +285,38 @@ export function FlagGameScreen({
 
     const timerPercent = (timeLeft / ROUND_TIME_SECONDS) * 100;
 
-    const getFlagEmoji = (choice: FlagChoice) => {
-        if (choice === "RED") return "🚩";
-        if (choice === "GREEN") return "🟩";
-        if (choice === "BEIGE") return "🟨";
-        if (choice === "__TIMEOUT__") return "🐌";
-        return "❓";
-    };
-
-    const getFlagLabel = (choice: FlagChoice) => {
-        if (choice === "RED") return "Red Flag";
-        if (choice === "GREEN") return "Green Flag";
-        if (choice === "BEIGE") return "Beige Flag";
-        if (choice === "__TIMEOUT__") return "Too Slow!";
-        return "Unknown";
-    };
-
     const didITimeout = myChoice === "__TIMEOUT__" || timedOut;
     const didOpponentTimeout = opponentChoice === "__TIMEOUT__";
-
-    // Check if it's a "RED ALERT" (one red, one green)
-    const isRedAlert = (myChoice === "RED" && opponentChoice === "GREEN") ||
-        (myChoice === "GREEN" && opponentChoice === "RED");
-
-    // Check if matched (both red, both green, or both beige)
-    const isMatch = (myChoice === "RED" && opponentChoice === "RED") ||
-        (myChoice === "GREEN" && opponentChoice === "GREEN") ||
-        (myChoice === "BEIGE" && opponentChoice === "BEIGE");
-
     const waitingForOpponent = myChoice && !opponentChoice && phase === "choosing";
+
+    // Helper to render choices in reveal
+    const renderRevealChoice = (choice: string | null) => {
+        if (!choice || choice === "__TIMEOUT__") return "🐌 Too Slow!";
+        if (choice === "PLAYER_1") return `${config.playerAvatar} ${config.playerName}`; // Wait, this assumes I am Player 1? No.
+        // We need to know who is Player 1 and Player 2 relative to ME to display correctly.
+        // To fix this: display logic depends on `isPlayer1` prop.
+        // Actually choice is "PLAYER_1" or "PLAYER_2".
+        // Player 1's name is always `config.playerName` IF `isPlayer1` is true.
+        // Let's pass `p1Name` and `p2Name` properly.
+        // Wait, `config` has `playerName`. `opponentName` is passed in.
+        // If `isPlayer1` is true: P1 = config.playerName, P2 = opponentName.
+        // If `isPlayer1` is false: P1 = opponentName, P2 = config.playerName.
+
+        const p1Name = isPlayer1 ? config.playerName : opponentName;
+        const p1Avatar = isPlayer1 ? config.playerAvatar : opponentAvatar;
+
+        const p2Name = isPlayer1 ? opponentName : config.playerName;
+        const p2Avatar = isPlayer1 ? opponentAvatar : config.playerAvatar;
+
+        if (choice === "PLAYER_1") return `${p1Avatar} ${p1Name}`;
+        if (choice === "PLAYER_2") return `${p2Avatar} ${p2Name}`;
+        return choice;
+    };
+
+    const p1Name = isPlayer1 ? config.playerName : opponentName;
+    const p1Avatar = isPlayer1 ? config.playerAvatar : opponentAvatar;
+    const p2Name = isPlayer1 ? opponentName : config.playerName;
+    const p2Avatar = isPlayer1 ? opponentAvatar : config.playerAvatar;
 
     return (
         <div className="fixed inset-0 bg-background z-50 flex flex-col">
@@ -471,18 +344,13 @@ export function FlagGameScreen({
                             <p className="font-display font-bold text-xl text-primary">{teamScore}</p>
                         </div>
                     </div>
-
-                    <div className="flex items-center gap-1 pl-2 border-l border-border">
-                        <span className="text-lg">🟨</span>
-                        <span className="font-display font-bold text-primary">{beigeRemaining}</span>
-                    </div>
                 </div>
             </motion.div>
 
             {/* Main Content */}
             <div className="flex-1 flex flex-col items-center justify-center p-6 pt-24">
                 <AnimatePresence mode="wait">
-                    {phase === "choosing" && currentCard && (
+                    {phase === "choosing" && (
                         <motion.div
                             key={`choosing-${currentRound}`}
                             initial={{ opacity: 0, y: 20 }}
@@ -490,17 +358,16 @@ export function FlagGameScreen({
                             exit={{ opacity: 0, y: -20 }}
                             className="w-full max-w-lg"
                         >
-                            {/* Timer Bar */}
+                            {/* Orange Countdown Bar */}
                             <div className="mb-6">
                                 <div className="relative h-8 bg-secondary rounded-full overflow-hidden border border-border">
                                     <motion.div
-                                        className="absolute inset-y-0 left-0 bg-gradient-to-r from-wedge-orange to-wedge-yellow"
+                                        className="absolute inset-y-0 left-0 bg-gradient-to-r from-purple-500 to-pink-500"
                                         animate={{ width: `${timerPercent}%` }}
                                         transition={{ duration: 0.3 }}
                                     />
                                     <div className="absolute inset-0 flex items-center justify-center">
-                                        <span className={`font-display font-bold text-lg ${timeLeft <= 3 ? "text-white" : "text-primary"
-                                            }`}>
+                                        <span className={`font-display font-bold text-lg ${timeLeft <= 3 ? "text-white" : "text-primary"}`}>
                                             {timeLeft > 0 ? `${timeLeft}s` : "⏰"}
                                         </span>
                                     </div>
@@ -514,70 +381,79 @@ export function FlagGameScreen({
                                     animate={{ opacity: 1, scale: 1 }}
                                     className="text-center mb-6"
                                 >
-                                    <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-wedge-orange/20 text-wedge-orange font-display font-bold text-xl">
+                                    <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-red-500/20 text-red-500 font-display font-bold text-xl">
                                         🐌 Too Slow!
                                     </div>
                                 </motion.div>
                             )}
 
-                            {/* Scenario Card */}
-                            <div className="game-card p-8 mb-6">
-                                <p className="font-display text-xl md:text-2xl font-semibold text-center text-primary leading-relaxed">
-                                    &quot;{currentCard.scenario}&quot;
-                                </p>
+                            {/* QUESTION CARD */}
+                            <div className="bg-card border-2 border-primary/20 p-6 rounded-2xl shadow-sm mb-8 text-center min-h-[160px] flex flex-col justify-center">
+                                <h2 className="font-display text-2xl md:text-3xl font-bold text-primary">
+                                    {currentCard.question}
+                                </h2>
                             </div>
 
-                            {/* Flag Buttons */}
-                            <div className="grid grid-cols-3 gap-3">
+                            {/* Player Choices */}
+                            <div className="grid grid-cols-2 gap-4">
                                 <motion.button
-                                    onClick={() => handleChoice("RED")}
+                                    onClick={() => handleChoice("PLAYER_1")}
                                     disabled={!!myChoice || timedOut}
-                                    className={`relative overflow-hidden rounded-2xl p-4 text-center transition-all border-2 min-h-[100px] flex flex-col items-center justify-center gap-2 ${myChoice === "RED"
-                                        ? "border-red-500 bg-red-500/20 shadow-lg"
+                                    className={`relative overflow-hidden rounded-2xl p-6 text-center transition-all border-2 min-h-[140px] flex flex-col items-center justify-center gap-2 ${myChoice === "PLAYER_1"
+                                        ? "border-purple-500 bg-purple-500/10 shadow-lg"
                                         : myChoice || timedOut
                                             ? "opacity-50 border-border bg-card"
-                                            : "border-border bg-card hover:border-red-500 hover:shadow-xl cursor-pointer"
+                                            : "border-border bg-card hover:border-purple-500/50 hover:shadow-xl cursor-pointer"
                                         }`}
                                     whileHover={!myChoice && !timedOut ? { scale: 1.02 } : {}}
                                     whileTap={!myChoice && !timedOut ? { scale: 0.98 } : {}}
                                 >
-                                    <span className="text-3xl">🚩</span>
-                                    <span className="font-display font-semibold text-red-500">Red</span>
+                                    <span className="text-4xl">{p1Avatar}</span>
+                                    <span className="font-display text-lg font-bold text-primary px-2">
+                                        {p1Name}
+                                    </span>
+
+                                    {myChoice === "PLAYER_1" && (
+                                        <motion.div
+                                            initial={{ scale: 0 }}
+                                            animate={{ scale: 1 }}
+                                            className="absolute top-2 right-2"
+                                        >
+                                            <div className="w-6 h-6 rounded-full bg-purple-500 flex items-center justify-center">
+                                                <Check className="w-4 h-4 text-white" />
+                                            </div>
+                                        </motion.div>
+                                    )}
                                 </motion.button>
 
                                 <motion.button
-                                    onClick={() => handleChoice("GREEN")}
+                                    onClick={() => handleChoice("PLAYER_2")}
                                     disabled={!!myChoice || timedOut}
-                                    className={`relative overflow-hidden rounded-2xl p-4 text-center transition-all border-2 min-h-[100px] flex flex-col items-center justify-center gap-2 ${myChoice === "GREEN"
-                                        ? "border-green-500 bg-green-500/20 shadow-lg"
+                                    className={`relative overflow-hidden rounded-2xl p-6 text-center transition-all border-2 min-h-[140px] flex flex-col items-center justify-center gap-2 ${myChoice === "PLAYER_2"
+                                        ? "border-pink-500 bg-pink-500/10 shadow-lg"
                                         : myChoice || timedOut
                                             ? "opacity-50 border-border bg-card"
-                                            : "border-border bg-card hover:border-green-500 hover:shadow-xl cursor-pointer"
+                                            : "border-border bg-card hover:border-pink-500/50 hover:shadow-xl cursor-pointer"
                                         }`}
                                     whileHover={!myChoice && !timedOut ? { scale: 1.02 } : {}}
                                     whileTap={!myChoice && !timedOut ? { scale: 0.98 } : {}}
                                 >
-                                    <span className="text-3xl">🟩</span>
-                                    <span className="font-display font-semibold text-green-500">Green</span>
-                                </motion.button>
+                                    <span className="text-4xl">{p2Avatar}</span>
+                                    <span className="font-display text-lg font-bold text-primary px-2">
+                                        {p2Name}
+                                    </span>
 
-                                <motion.button
-                                    onClick={() => handleChoice("BEIGE")}
-                                    disabled={!!myChoice || timedOut || beigeRemaining <= 0}
-                                    className={`relative overflow-hidden rounded-2xl p-4 text-center transition-all border-2 min-h-[100px] flex flex-col items-center justify-center gap-2 ${myChoice === "BEIGE"
-                                        ? "border-yellow-500 bg-yellow-500/20 shadow-lg"
-                                        : myChoice || timedOut
-                                            ? "opacity-50 border-border bg-card"
-                                            : beigeRemaining <= 0
-                                                ? "opacity-30 border-border bg-card cursor-not-allowed"
-                                                : "border-border bg-card hover:border-yellow-500 hover:shadow-xl cursor-pointer"
-                                        }`}
-                                    whileHover={!myChoice && !timedOut && beigeRemaining > 0 ? { scale: 1.02 } : {}}
-                                    whileTap={!myChoice && !timedOut && beigeRemaining > 0 ? { scale: 0.98 } : {}}
-                                >
-                                    <span className="text-3xl">🟨</span>
-                                    <span className="font-display font-semibold text-yellow-600">Beige</span>
-                                    <span className="text-xs text-muted-foreground">({beigeRemaining} left)</span>
+                                    {myChoice === "PLAYER_2" && (
+                                        <motion.div
+                                            initial={{ scale: 0 }}
+                                            animate={{ scale: 1 }}
+                                            className="absolute top-2 right-2"
+                                        >
+                                            <div className="w-6 h-6 rounded-full bg-pink-500 flex items-center justify-center">
+                                                <Check className="w-4 h-4 text-white" />
+                                            </div>
+                                        </motion.div>
+                                    )}
                                 </motion.button>
                             </div>
 
@@ -593,7 +469,7 @@ export function FlagGameScreen({
                                         {[0, 1, 2].map((i) => (
                                             <motion.div
                                                 key={i}
-                                                className="w-2 h-2 rounded-full bg-wedge-orange"
+                                                className="w-2 h-2 rounded-full bg-primary"
                                                 animate={{ scale: [1, 1.3, 1], opacity: [0.5, 1, 0.5] }}
                                                 transition={{ duration: 1, repeat: Infinity, delay: i * 0.2 }}
                                             />
@@ -612,81 +488,49 @@ export function FlagGameScreen({
                             exit={{ opacity: 0, scale: 0.9 }}
                             className="w-full max-w-lg text-center"
                         >
-                            {/* Result Message */}
-                            <h2 className="font-display text-2xl font-bold text-primary mb-4">
-                                {isRedAlert
-                                    ? "🚨 RED ALERT! 🚨"
-                                    : isMatch
-                                        ? "💕 Relationship Goals!"
-                                        : didITimeout || didOpponentTimeout
-                                            ? "⏰ Time ran out!"
-                                            : "Different vibes!"}
+                            <h2 className="font-display text-2xl font-bold text-primary mb-8">
+                                {!didITimeout && !didOpponentTimeout && myChoice === opponentChoice
+                                    ? "🎉 It's a Match!"
+                                    : didITimeout || didOpponentTimeout
+                                        ? "⏰ Time ran out!"
+                                        : "Different answers!"}
                             </h2>
 
-                            {/* Scenario reminder */}
-                            {currentCard && (
-                                <div className="bg-secondary/50 rounded-xl p-4 mb-6">
-                                    <p className="text-sm text-muted-foreground italic">
-                                        &quot;{currentCard.scenario}&quot;
-                                    </p>
-                                </div>
-                            )}
-
-                            {/* Choices side by side */}
-                            <div className="grid grid-cols-2 gap-6 mb-6">
-                                <div className={`game-card p-6 border-2 ${myChoice === "RED" ? "border-red-500/50" :
-                                    myChoice === "GREEN" ? "border-green-500/50" :
-                                        myChoice === "BEIGE" ? "border-yellow-500/50" :
-                                            "border-wedge-orange/50"
-                                    }`}>
+                            <div className="grid grid-cols-2 gap-6 mb-8">
+                                <div className={`game-card p-6 border-2 ${didITimeout ? "border-red-500/50" : "border-primary/20"}`}>
                                     <div className="text-4xl mb-2">{config.playerAvatar}</div>
                                     <p className="font-display font-semibold text-sm mb-3 text-muted-foreground">{config.playerName}</p>
-                                    <div className="text-4xl mb-2">{getFlagEmoji(myChoice)}</div>
-                                    <p className={`font-semibold text-sm ${myChoice === "RED" ? "text-red-500" :
-                                        myChoice === "GREEN" ? "text-green-500" :
-                                            myChoice === "BEIGE" ? "text-yellow-600" :
-                                                "text-wedge-orange"
+                                    <div className={`inline-block px-4 py-2 rounded-xl font-semibold text-sm ${didITimeout
+                                        ? "bg-red-500/20 text-red-500 border border-red-500/30"
+                                        : myChoice === opponentChoice
+                                            ? "bg-green-500/20 text-green-600 border border-green-500/30"
+                                            : "bg-secondary border border-border"
                                         }`}>
-                                        {getFlagLabel(myChoice)}
-                                    </p>
+                                        {renderRevealChoice(myChoice)}
+                                    </div>
                                 </div>
 
-                                <div className={`game-card p-6 border-2 ${opponentChoice === "RED" ? "border-red-500/50" :
-                                    opponentChoice === "GREEN" ? "border-green-500/50" :
-                                        opponentChoice === "BEIGE" ? "border-yellow-500/50" :
-                                            "border-wedge-orange/50"
-                                    }`}>
+                                <div className={`game-card p-6 border-2 ${didOpponentTimeout ? "border-red-500/50" : "border-primary/20"}`}>
                                     <div className="text-4xl mb-2">{opponentAvatar}</div>
                                     <p className="font-display font-semibold text-sm mb-3 text-muted-foreground">{opponentName}</p>
-                                    <div className="text-4xl mb-2">{getFlagEmoji(opponentChoice)}</div>
-                                    <p className={`font-semibold text-sm ${opponentChoice === "RED" ? "text-red-500" :
-                                        opponentChoice === "GREEN" ? "text-green-500" :
-                                            opponentChoice === "BEIGE" ? "text-yellow-600" :
-                                                "text-wedge-orange"
+                                    <div className={`inline-block px-4 py-2 rounded-xl font-semibold text-sm ${didOpponentTimeout
+                                        ? "bg-red-500/20 text-red-500 border border-red-500/30"
+                                        : myChoice === opponentChoice
+                                            ? "bg-green-500/20 text-green-600 border border-green-500/30"
+                                            : "bg-secondary border border-border"
                                         }`}>
-                                        {getFlagLabel(opponentChoice)}
-                                    </p>
+                                        {renderRevealChoice(opponentChoice)}
+                                    </div>
                                 </div>
                             </div>
 
-                            {/* Score indicator */}
-                            {isMatch ? (
+                            {!didITimeout && !didOpponentTimeout && myChoice === opponentChoice ? (
                                 <motion.div
                                     initial={{ scale: 0 }}
                                     animate={{ scale: 1 }}
-                                    className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-wedge-teal/20 text-wedge-teal font-display font-bold mb-6 border border-wedge-teal/30"
+                                    className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-green-500/20 text-green-600 font-display font-bold mb-6 border border-green-500/30"
                                 >
-                                    ✓ +1 Point!
-                                </motion.div>
-                            ) : isRedAlert ? (
-                                <motion.div
-                                    initial={{ scale: 0 }}
-                                    animate={{ scale: 1 }}
-                                    className="space-y-3 mb-6"
-                                >
-                                    <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-red-500/20 text-red-500 font-display font-bold border border-red-500/30">
-                                        ✗ No points - you disagree!
-                                    </div>
+                                    <Check className="w-5 h-5" /> +1 Point Each!
                                 </motion.div>
                             ) : (
                                 <motion.div
@@ -694,11 +538,10 @@ export function FlagGameScreen({
                                     animate={{ scale: 1 }}
                                     className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-secondary text-muted-foreground font-display font-bold mb-6 border border-border"
                                 >
-                                    No points
+                                    <X className="w-5 h-5" /> No points
                                 </motion.div>
                             )}
 
-                            {/* Next Round Button */}
                             <div>
                                 {isPlayer1 ? (
                                     <Button onClick={handleNextRound} className="btn-game gap-2">
@@ -712,7 +555,7 @@ export function FlagGameScreen({
                                             {[0, 1, 2].map((i) => (
                                                 <motion.div
                                                     key={i}
-                                                    className="w-2 h-2 rounded-full bg-wedge-orange"
+                                                    className="w-2 h-2 rounded-full bg-primary"
                                                     animate={{ scale: [1, 1.3, 1], opacity: [0.5, 1, 0.5] }}
                                                     transition={{ duration: 1, repeat: Infinity, delay: i * 0.2 }}
                                                 />

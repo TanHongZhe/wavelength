@@ -1,10 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Zap, Flag } from "lucide-react";
-import { RapidFireGameEngine } from "./rapid-fire/RapidFireGameEngine";
-import { FlagGameEngine } from "./flag-game/FlagGameEngine";
+import { X, Zap, Flag, Users, SlidersVertical, GraduationCap } from "lucide-react";
 
 interface MiniGamesModalProps {
     isOpen: boolean;
@@ -12,30 +10,12 @@ interface MiniGamesModalProps {
 }
 
 export function MiniGamesModal({ isOpen, onClose }: MiniGamesModalProps) {
-    const [selectedGame, setSelectedGame] = useState<string | null>(null);
+    const router = useRouter();
 
-    // If a game is selected, show that game's engine
-    if (selectedGame === "rapid-fire") {
-        return (
-            <RapidFireGameEngine
-                onClose={() => {
-                    setSelectedGame(null);
-                    onClose();
-                }}
-            />
-        );
-    }
-
-    if (selectedGame === "flag-game") {
-        return (
-            <FlagGameEngine
-                onClose={() => {
-                    setSelectedGame(null);
-                    onClose();
-                }}
-            />
-        );
-    }
+    const handleNavigate = (path: string) => {
+        router.push(path);
+        onClose();
+    };
 
     return (
         <AnimatePresence>
@@ -77,10 +57,74 @@ export function MiniGamesModal({ isOpen, onClose }: MiniGamesModalProps) {
 
                         {/* Games Grid */}
                         <div className="space-y-3 md:space-y-4">
+                            {/* Fantasy Slider Game Card */}
+                            <motion.button
+                                className="game-card border border-white/10 w-full text-left group hover:scale-[1.02] transition-transform"
+                                onClick={() => handleNavigate("/games/fantasy-slider")}
+                                whileTap={{ scale: 0.98 }}
+                            >
+                                <div className="flex items-start gap-3 md:gap-4">
+                                    <div className="p-3 md:p-4 rounded-xl bg-gradient-to-br from-blue-400/20 to-cyan-400/20 text-cyan-500 group-hover:from-blue-400 group-hover:to-cyan-400 group-hover:text-white transition-all">
+                                        <SlidersVertical className="w-6 h-6 md:w-8 md:h-8" />
+                                    </div>
+                                    <div className="flex-1">
+                                        <h3 className="font-display text-lg md:text-xl font-semibold text-primary mb-1">
+                                            🎚️ Fantasy Slider
+                                        </h3>
+                                        <p className="text-xs md:text-sm text-muted-foreground mb-2">
+                                            Rate your interest in various fantasies on a scale of 0-10. See how well matched you are!
+                                        </p>
+                                        <div className="flex gap-2 flex-wrap">
+                                            <span className="px-2 py-1 rounded-md bg-secondary text-xs font-medium">
+                                                2 Players
+                                            </span>
+                                            <span className="px-2 py-1 rounded-md bg-secondary text-xs font-medium">
+                                                Untimed
+                                            </span>
+                                            <span className="px-2 py-1 rounded-md bg-green-500/20 text-green-600 dark:text-green-400 text-xs font-medium">
+                                                NEW ✨
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </motion.button>
+
+                            {/* Who's Most Likely Game Card */}
+                            <motion.button
+                                className="game-card border border-white/10 w-full text-left group hover:scale-[1.02] transition-transform"
+                                onClick={() => handleNavigate("/games/whos-most-likely")}
+                                whileTap={{ scale: 0.98 }}
+                            >
+                                <div className="flex items-start gap-3 md:gap-4">
+                                    <div className="p-3 md:p-4 rounded-xl bg-gradient-to-br from-purple-400/20 to-pink-400/20 text-pink-500 group-hover:from-purple-400 group-hover:to-pink-400 group-hover:text-white transition-all">
+                                        <Users className="w-6 h-6 md:w-8 md:h-8" />
+                                    </div>
+                                    <div className="flex-1">
+                                        <h3 className="font-display text-lg md:text-xl font-semibold text-primary mb-1">
+                                            👈 Rapid Fire: Who's Most Likely?
+                                        </h3>
+                                        <p className="text-xs md:text-sm text-muted-foreground mb-2">
+                                            Point fingers! Who is most likely to do what? 10 seconds to decide.
+                                        </p>
+                                        <div className="flex gap-2 flex-wrap">
+                                            <span className="px-2 py-1 rounded-md bg-secondary text-xs font-medium">
+                                                2 Players
+                                            </span>
+                                            <span className="px-2 py-1 rounded-md bg-secondary text-xs font-medium">
+                                                3 Decks
+                                            </span>
+                                            <span className="px-2 py-1 rounded-md bg-green-500/20 text-green-600 dark:text-green-400 text-xs font-medium">
+                                                NEW ✨
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </motion.button>
+
                             {/* Rapid Fire Game Card */}
                             <motion.button
                                 className="game-card border border-white/10 w-full text-left group hover:scale-[1.02] transition-transform"
-                                onClick={() => setSelectedGame("rapid-fire")}
+                                onClick={() => handleNavigate("/games/this-or-that")}
                                 whileTap={{ scale: 0.98 }}
                             >
                                 <div className="flex items-start gap-3 md:gap-4">
@@ -109,7 +153,7 @@ export function MiniGamesModal({ isOpen, onClose }: MiniGamesModalProps) {
                             {/* Flag Game Card */}
                             <motion.button
                                 className="game-card border border-white/10 w-full text-left group hover:scale-[1.02] transition-transform"
-                                onClick={() => setSelectedGame("flag-game")}
+                                onClick={() => handleNavigate("/games/flag-game")}
                                 whileTap={{ scale: 0.98 }}
                             >
                                 <div className="flex items-start gap-3 md:gap-4">
@@ -121,7 +165,7 @@ export function MiniGamesModal({ isOpen, onClose }: MiniGamesModalProps) {
                                             🚩 Rapid Fire: Red, Green, Beige
                                         </h3>
                                         <p className="text-xs md:text-sm text-muted-foreground mb-2">
-                                            Rate dating behaviors as red flags, green flags, or beige flags! Limited beige flags forces hard choices.
+                                            Rate dating behaviors as red, green, or beige flags.
                                         </p>
                                         <div className="flex gap-2 flex-wrap">
                                             <span className="px-2 py-1 rounded-md bg-secondary text-xs font-medium">
@@ -130,6 +174,35 @@ export function MiniGamesModal({ isOpen, onClose }: MiniGamesModalProps) {
                                             <span className="px-2 py-1 rounded-md bg-secondary text-xs font-medium">
                                                 20-100 rounds
                                             </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </motion.button>
+
+                            {/* General Knowledge Game Card */}
+                            <motion.button
+                                className="game-card border border-white/10 w-full text-left group hover:scale-[1.02] transition-transform"
+                                onClick={() => handleNavigate("/games/general-knowledge")}
+                                whileTap={{ scale: 0.98 }}
+                            >
+                                <div className="flex items-start gap-3 md:gap-4">
+                                    <div className="p-3 md:p-4 rounded-xl bg-gradient-to-br from-blue-400/20 to-indigo-400/20 text-indigo-500 group-hover:from-blue-400 group-hover:to-indigo-400 group-hover:text-white transition-all">
+                                        <GraduationCap className="w-6 h-6 md:w-8 md:h-8" />
+                                    </div>
+                                    <div className="flex-1">
+                                        <h3 className="font-display text-lg md:text-xl font-semibold text-primary mb-1">
+                                            🎓 Rapid Fire: General Knowledge Quiz
+                                        </h3>
+                                        <p className="text-xs md:text-sm text-muted-foreground mb-2">
+                                            10 seconds to answer! Test your smarts across 8 topics.
+                                        </p>
+                                        <div className="flex gap-2 flex-wrap">
+                                            <span className="px-2 py-1 rounded-md bg-secondary text-xs font-medium">
+                                                2-6 Players
+                                            </span>
+                                            <span className="px-2 py-1 rounded-md bg-secondary text-xs font-medium">
+                                                Timed
+                                            </span>
                                             <span className="px-2 py-1 rounded-md bg-green-500/20 text-green-600 dark:text-green-400 text-xs font-medium">
                                                 NEW ✨
                                             </span>
@@ -137,23 +210,6 @@ export function MiniGamesModal({ isOpen, onClose }: MiniGamesModalProps) {
                                     </div>
                                 </div>
                             </motion.button>
-
-                            {/* Placeholder for future games - only show 1 on mobile */}
-                            <div className="hidden md:grid md:grid-cols-2 gap-3">
-                                {[1, 2].map((i) => (
-                                    <div
-                                        key={i}
-                                        className="game-card border border-white/5 opacity-50 cursor-not-allowed"
-                                    >
-                                        <div className="text-center py-6">
-                                            <div className="text-3xl mb-2">🎮</div>
-                                            <p className="text-sm font-semibold text-muted-foreground">
-                                                Coming Soon
-                                            </p>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
                         </div>
 
                         {/* Footer - hidden on mobile */}
@@ -165,6 +221,6 @@ export function MiniGamesModal({ isOpen, onClose }: MiniGamesModalProps) {
                     </motion.div>
                 </>
             )}
-        </AnimatePresence>
+        </AnimatePresence >
     );
 }

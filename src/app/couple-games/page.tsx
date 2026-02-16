@@ -98,7 +98,7 @@ const faqSchema = {
             name: "Can you play couple games online for free?",
             acceptedAnswer: {
                 "@type": "Answer",
-                text: "Yes! All games on Wavelength are 100% free with no downloads or registration required. Just share a room code with your partner and start playing instantly in your browser.",
+                text: "Yes! Wavelength games are free to start playing with no downloads required. Just share a room code with your partner and play instantly in your browser.",
             },
         },
         {
@@ -172,8 +172,8 @@ export default function CoupleGamesPage() {
                         <div className="flex gap-4">
                             <span className="text-2xl">🆓</span>
                             <div>
-                                <h3 className="font-semibold">100% Free</h3>
-                                <p className="text-sm text-muted-foreground">No downloads, no registration, no hidden fees.</p>
+                                <h3 className="font-semibold">Free to Play</h3>
+                                <p className="text-sm text-muted-foreground">No downloads required, play instantly in browser.</p>
                             </div>
                         </div>
                         <div className="flex gap-4">

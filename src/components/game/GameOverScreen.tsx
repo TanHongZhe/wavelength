@@ -7,6 +7,7 @@ import { Trophy, Medal, Sparkles, Home, Crown, Star, LogIn } from "lucide-react"
 import { Button } from "@/components/ui/button";
 import { Room } from "@/hooks/useGameRoom";
 import { useUser, SignInButton } from "@clerk/nextjs";
+import { ProUpgradeCard } from "./ProUpgradeCard";
 
 // Stripe Payment Link for monthly upgrade (same as PaywallModal)
 // Stripe Payment Link for monthly upgrade (PRODUCTION)
@@ -31,6 +32,8 @@ export function GameOverScreen({ room, playerId, onLeave }: GameOverScreenProps)
     const player1Wins = player1Score > player2Score;
     const player2Wins = player2Score > player1Score;
     const isTie = player1Score === player2Score;
+
+    const [showUpgradeOverlay, setShowUpgradeOverlay] = useState(true);
 
     // Am I the winner?
     const amIPlayer1 = room.psychic_id === playerId || (!room.guesser_id);
@@ -85,26 +88,29 @@ export function GameOverScreen({ room, playerId, onLeave }: GameOverScreenProps)
     }, []);
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center p-6">
-            {/* Background decoration */}
-            <div className="fixed inset-0 overflow-hidden pointer-events-none">
-                <motion.div
-                    className="absolute top-1/4 left-1/4 w-64 h-64 rounded-full bg-wedge-teal/20 blur-3xl"
-                    animate={{
-                        scale: [1, 1.3, 1],
-                        opacity: [0.3, 0.5, 0.3],
-                    }}
-                    transition={{ duration: 3, repeat: Infinity }}
-                />
-                <motion.div
-                    className="absolute bottom-1/4 right-1/4 w-64 h-64 rounded-full bg-wedge-orange/20 blur-3xl"
-                    animate={{
-                        scale: [1.3, 1, 1.3],
-                        opacity: [0.3, 0.5, 0.3],
-                    }}
-                    transition={{ duration: 3, repeat: Infinity }}
-                />
-            </div>
+        <div className="min-h-screen flex flex-col items-center justify-center p-6 relative">
+            {/* Background decoration - only show if overlay is closed */}
+            {!showUpgradeOverlay && (
+                <div className="fixed inset-0 overflow-hidden pointer-events-none">
+                    <motion.div
+                        className="absolute top-1/4 left-1/4 w-64 h-64 rounded-full bg-wedge-teal/20 blur-3xl"
+                        animate={{
+                            scale: [1, 1.3, 1],
+                            opacity: [0.3, 0.5, 0.3],
+                        }}
+                        transition={{ duration: 3, repeat: Infinity }}
+                    />
+                    <motion.div
+                        className="absolute bottom-1/4 right-1/4 w-64 h-64 rounded-full bg-wedge-orange/20 blur-3xl"
+                        animate={{
+                            scale: [1.3, 1, 1.3],
+                            opacity: [0.3, 0.5, 0.3],
+                        }}
+                        transition={{ duration: 3, repeat: Infinity }}
+                    />
+                </div>
+            )}
+
 
             {/* Main content */}
             <motion.div
@@ -301,7 +307,26 @@ export function GameOverScreen({ room, playerId, onLeave }: GameOverScreenProps)
                         </Button>
                     </motion.div>
                 )}
+
             </motion.div>
-        </div>
+
+            {/* Overlay Component */}
+            {showUpgradeOverlay && (
+                <div
+                    className="fixed inset-0 z-[60] flex items-center justify-center p-4"
+                    style={{ backgroundColor: "rgba(0,0,0,0.85)" }}
+                >
+                    <div className="relative w-full max-w-4xl">
+                        <button
+                            onClick={() => setShowUpgradeOverlay(false)}
+                            className="absolute -top-3 -right-3 z-[70] bg-white text-black rounded-full w-10 h-10 flex items-center justify-center shadow-xl text-xl font-bold hover:bg-gray-200 transition-colors border-2 border-gray-300"
+                        >
+                            ✕
+                        </button>
+                        <ProUpgradeCard className="mt-0" />
+                    </div>
+                </div>
+            )}
+        </div >
     );
 }

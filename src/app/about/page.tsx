@@ -5,11 +5,10 @@ import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
     title: "About Wavelength Online - The Project",
-    description: "About the Wavelength Online project. A free, open-source web adaptation of the popular social guessing game. Learn about the technology and team behind it.",
+    description: "About the Wavelength Online project. A web adaptation of the popular social guessing game. Learn about the technology and team behind it.",
     keywords: [
         "wavelength online about",
         "wavelength game creator",
-        "wavelength open source",
         "wavelength web app",
     ],
     alternates: {
@@ -112,11 +111,7 @@ export default function AboutPage() {
                             No app downloads tailored for any specific platform—just share a link and play.
                         </p>
 
-                        <h2 className="font-display font-bold text-primary mt-12 mb-6 text-2xl">Open Source</h2>
-                        <p>
-                            This project is open source and built with love. We believe in the power of games to bring people together.
-                            If you&apos;re a developer interested in how this was built, or want to contribute, check out the repository.
-                        </p>
+
                     </div>
 
                     {/* Social Proof / Credits */}

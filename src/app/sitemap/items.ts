@@ -59,5 +59,47 @@ export function getSitemapItems(): MetadataRoute.Sitemap {
             changeFrequency: 'weekly',
             priority: 0.95,
         },
+        {
+            url: `${baseUrl}/games/fantasy-slider/`,
+            lastModified: currentDate,
+            changeFrequency: 'weekly',
+            priority: 0.9,
+        },
+        {
+            url: `${baseUrl}/games/whos-most-likely/`,
+            lastModified: currentDate,
+            changeFrequency: 'weekly',
+            priority: 0.9,
+        },
+        {
+            url: `${baseUrl}/games/flag-game/`,
+            lastModified: currentDate,
+            changeFrequency: 'weekly',
+            priority: 0.9,
+        },
+        {
+            url: `${baseUrl}/games/this-or-that/`,
+            lastModified: currentDate,
+            changeFrequency: 'weekly',
+            priority: 0.9,
+        },
+        {
+            url: `${baseUrl}/games/general-knowledge/`,
+            lastModified: currentDate,
+            changeFrequency: 'weekly',
+            priority: 0.9,
+        },
+        {
+            url: `${baseUrl}/terms/`,
+            lastModified: currentDate,
+            changeFrequency: 'monthly',
+            priority: 0.6,
+        },
+        {
+            url: `${baseUrl}/refund-policy/`,
+            lastModified: currentDate,
+            changeFrequency: 'monthly',
+            priority: 0.6,
+        },
     ]
 }

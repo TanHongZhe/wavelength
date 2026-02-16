@@ -8,7 +8,8 @@ import { getDeckCards, RapidFireCard, DeckType } from "./cards";
 import { useMutation } from "convex/react";
 import { api } from "convex/_generated/api";
 import { Id } from "convex/_generated/dataModel";
-import { ArrowRight, Check, X } from "lucide-react";
+import { ArrowRight, Check, X, Zap } from "lucide-react";
+import { ProUpgradeCard } from "@/components/game/ProUpgradeCard";
 
 interface RapidFireGameScreenProps {
     config: GameConfig;
@@ -45,6 +46,7 @@ export function RapidFireGameScreen({
     const [gameOver, setGameOver] = useState(false);
     const [timeLeft, setTimeLeft] = useState(ROUND_TIME_SECONDS);
     const [timedOut, setTimedOut] = useState(false);
+    const [showUpgradeOverlay, setShowUpgradeOverlay] = useState(true);
     const timerRef = useRef<NodeJS.Timeout | null>(null);
     const hasSubmittedTimeout = useRef(false);
 
@@ -241,37 +243,56 @@ export function RapidFireGameScreen({
     // Game Over Screen
     if (gameOver) {
         return (
-            <div className="fixed inset-0 bg-background z-50 flex items-center justify-center p-6 overflow-y-auto">
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="game-card max-w-md w-full text-center my-auto"
-                >
-                    <h2 className="font-display text-3xl font-bold text-primary mb-4">🎉 Final Score</h2>
+            <>
+                <div className="fixed inset-0 bg-background z-50 flex items-center justify-center p-6 overflow-y-auto">
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="game-card max-w-md w-full text-center my-auto"
+                    >
+                        <h2 className="font-display text-3xl font-bold text-primary mb-4">🎉 Final Score</h2>
 
-                    <div className="flex items-center justify-center gap-3 mb-4">
-                        <span className="text-4xl">{config.playerAvatar}</span>
-                        <span className="text-4xl">{opponentAvatar}</span>
+                        <div className="flex items-center justify-center gap-3 mb-4">
+                            <span className="text-4xl">{config.playerAvatar}</span>
+                            <span className="text-4xl">{opponentAvatar}</span>
+                        </div>
+
+                        <div className="text-6xl font-display font-bold text-primary mb-2">
+                            {teamScore} / {config.cardCount}
+                        </div>
+                        <p className="text-lg text-muted-foreground mb-4">Team Score</p>
+
+                        <p className="text-muted-foreground mb-6">
+                            {teamScore >= config.cardCount * 0.8
+                                ? "🔥 Amazing! You're totally in sync!"
+                                : teamScore >= config.cardCount * 0.5
+                                    ? "✨ Great minds think alike!"
+                                    : "💭 Opposites attract?"}
+                        </p>
+
+                        <Button onClick={onLeave} className="w-full h-12 btn-game mt-6">
+                            Play Again
+                        </Button>
+                    </motion.div>
+                </div>
+
+                {showUpgradeOverlay && (
+                    <div
+                        className="fixed inset-0 z-[60] flex items-center justify-center p-4"
+                        style={{ backgroundColor: "rgba(0,0,0,0.85)" }}
+                    >
+                        <div className="relative w-full max-w-4xl">
+                            <button
+                                onClick={() => setShowUpgradeOverlay(false)}
+                                className="absolute -top-3 -right-3 z-[70] bg-white text-black rounded-full w-10 h-10 flex items-center justify-center shadow-xl text-xl font-bold hover:bg-gray-200 transition-colors border-2 border-gray-300"
+                            >
+                                ✕
+                            </button>
+                            <ProUpgradeCard className="mt-0" />
+                        </div>
                     </div>
-
-                    <div className="text-6xl font-display font-bold text-primary mb-2">
-                        {teamScore} / {config.cardCount}
-                    </div>
-                    <p className="text-lg text-muted-foreground mb-4">Team Score</p>
-
-                    <p className="text-muted-foreground mb-6">
-                        {teamScore >= config.cardCount * 0.8
-                            ? "🔥 Amazing! You're totally in sync!"
-                            : teamScore >= config.cardCount * 0.5
-                                ? "✨ Great minds think alike!"
-                                : "💭 Opposites attract?"}
-                    </p>
-
-                    <Button onClick={onLeave} className="w-full h-12 btn-game mt-6">
-                        Play Again
-                    </Button>
-                </motion.div>
-            </div>
+                )}
+            </>
         );
     }
 

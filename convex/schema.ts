@@ -29,6 +29,11 @@ export default defineSchema({
         deck_type: v.optional(v.string()),
         card_count: v.optional(v.number()),
         updated_at: v.optional(v.number()), // timestamp (ms) — set on create & every update
+        current_question: v.optional(v.object({
+            question: v.string(),
+            options: v.array(v.string()),
+            answer: v.number(),
+        })),
     })
         .index("by_room_code", ["room_code"])
         .index("by_game_mode", ["game_mode"])
@@ -40,10 +45,11 @@ export default defineSchema({
         player_id: v.string(),
         name: v.string(),
         avatar: v.string(),
-        role: v.string(), // "psychic" | "guesser"
+        role: v.string(), // "psychic" | "guesser" | "host" | "player"
         score: v.number(),
-        guess_angle: v.optional(v.number()),
+        guess_angle: v.optional(v.number()), // Reused for generic numeric data if needed
         locked_in: v.boolean(),
+        answer: v.optional(v.object({ round: v.number(), choice: v.number() })), // round-specific answer
     })
         .index("by_room", ["room_id"])
         .index("by_player", ["player_id"])

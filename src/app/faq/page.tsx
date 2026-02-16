@@ -38,7 +38,7 @@ const faqItems = [
     },
     {
         question: "Is Wavelength Online free to play?",
-        answer: "Yes! Wavelength Online is completely free to play. There are no downloads required, no registration needed, and no in-app purchases. Simply share a link with your friends and start playing instantly in your web browser.",
+        answer: "Yes! Wavelength Online is free to start playing. There are no downloads required and no registration needed. Simply share a link with your friends and start playing instantly in your web browser. Optional premium features are available.",
     },
     {
         question: "How does scoring work in Wavelength?",
@@ -71,10 +71,6 @@ const faqItems = [
     {
         question: "Is this the official Wavelength game?",
         answer: "No, Wavelength Online is a fan-made digital adaptation. It's inspired by the award-winning physical board game Wavelength designed by Wolfgang Warsch, Alex Hague, and Justin Vickers. We encourage everyone to support the original creators by purchasing the physical board game!",
-    },
-    {
-        question: "Is Wavelength Online open source?",
-        answer: "Yes! Wavelength Online is an open-source project. You can view the source code, contribute, or learn how it was built by visiting our GitHub repository. The game is built with modern web technologies including Next.js, React, and Convex for real-time multiplayer.",
     },
 ];
 
