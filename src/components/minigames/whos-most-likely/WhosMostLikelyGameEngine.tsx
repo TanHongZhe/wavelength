@@ -19,7 +19,7 @@ interface WhosMostLikelyGameEngineProps {
 export function WhosMostLikelyGameEngine({ onClose, initialMode = "initial" }: WhosMostLikelyGameEngineProps) {
     const [gameConfig, setGameConfig] = useState<GameConfig | null>(null);
     const [selectedDeck, setSelectedDeck] = useState<DeckType>("normal");
-    const [selectedCardCount, setSelectedCardCount] = useState(20);
+    const [selectedCardCount, setSelectedCardCount] = useState(5);
 
     const user = useQuery(api.rooms.getMyUser);
     const isPro = user?.isPro ?? false;
@@ -109,29 +109,33 @@ export function WhosMostLikelyGameEngine({ onClose, initialMode = "initial" }: W
                 <label className="text-sm font-medium text-muted-foreground mb-2 block">
                     Number of Rounds
                 </label>
-                <div className="grid grid-cols-3 gap-2">
-                    {[20, 50, 100].map((count) => {
-                        const isLocked = !isPro && count > 20;
-                        return (
-                            <button
-                                key={count}
-                                disabled={isLocked}
-                                onClick={() => !isLocked && setSelectedCardCount(count)}
-                                className={`p-3 rounded-lg border-2 transition-all cursor-pointer relative ${selectedCardCount === count
-                                    ? "border-primary bg-primary/20"
-                                    : isLocked
-                                        ? "border-border/50 bg-muted/20 opacity-60 cursor-not-allowed"
-                                        : "border-border hover:border-primary/50 bg-card hover:bg-secondary"
-                                    }`}
-                            >
-                                <div className="text-lg font-bold flex items-center justify-center gap-1">
-                                    {count}
-                                    {isLocked && <Lock className="w-3 h-3 text-orange-400" />}
-                                </div>
-                                <div className="text-xs text-muted-foreground">rounds</div>
-                            </button>
-                        );
-                    })}
+                <div className="space-y-2">
+                    {[[5, 10, 20], [50, 100]].map((counts, i) => (
+                        <div key={i} className={`grid gap-2 ${i === 0 ? "grid-cols-3" : "grid-cols-2"}`}>
+                            {counts.map((count) => {
+                                const isLocked = !isPro && count > 5;
+                                return (
+                                    <button
+                                        key={count}
+                                        disabled={isLocked}
+                                        onClick={() => !isLocked && setSelectedCardCount(count)}
+                                        className={`p-3 rounded-lg border-2 transition-all cursor-pointer relative ${selectedCardCount === count
+                                            ? "border-primary bg-primary/20"
+                                            : isLocked
+                                                ? "border-border/50 bg-muted/20 opacity-60 cursor-not-allowed"
+                                                : "border-border hover:border-primary/50 bg-card hover:bg-secondary"
+                                            }`}
+                                    >
+                                        <div className="text-lg font-bold flex items-center justify-center gap-1">
+                                            {count}
+                                            {isLocked && <Lock className="w-3 h-3 text-orange-400" />}
+                                        </div>
+                                        <div className="text-xs text-muted-foreground">rounds</div>
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    ))}
                 </div>
             </div>
         </div>

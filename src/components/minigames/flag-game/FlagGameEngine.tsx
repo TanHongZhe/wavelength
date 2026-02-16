@@ -22,7 +22,7 @@ interface FlagGameEngineProps {
 
 export function FlagGameEngine({ onClose, initialMode = "initial" }: FlagGameEngineProps) {
     const [gameConfig, setGameConfig] = useState<FlagGameConfig | null>(null);
-    const [selectedCardCount, setSelectedCardCount] = useState(20);
+    const [selectedCardCount, setSelectedCardCount] = useState(5);
 
     const user = useQuery(api.rooms.getMyUser);
     const isPro = user?.isPro ?? false;
@@ -75,31 +75,35 @@ export function FlagGameEngine({ onClose, initialMode = "initial" }: FlagGameEng
                 <label className="text-sm font-medium text-muted-foreground mb-2 block">
                     Number of Scenarios
                 </label>
-                <div className="grid grid-cols-3 gap-2">
-                    {[20, 50, 100].map((count) => {
-                        const isLocked = !isPro && count > 20;
-                        return (
-                            <button
-                                key={count}
-                                disabled={isLocked}
-                                onClick={() => !isLocked && setSelectedCardCount(count)}
-                                className={`p-3 rounded-lg border-2 transition-all cursor-pointer relative ${selectedCardCount === count
-                                    ? "border-primary bg-primary/10"
-                                    : isLocked
-                                        ? "border-white/5 bg-white/5 opacity-50 cursor-not-allowed"
-                                        : "border-primary/20 hover:border-primary/40 bg-secondary"
-                                    }`}
-                            >
-                                <div className="text-lg font-bold flex items-center justify-center gap-1">
-                                    {count}
-                                    {isLocked && <Lock className="w-3 h-3 text-orange-400" />}
-                                </div>
-                                <div className="text-xs text-muted-foreground">
-                                    {count === 20 ? "Quick" : count === 50 ? "Standard" : "Marathon"}
-                                </div>
-                            </button>
-                        );
-                    })}
+                <div className="space-y-2">
+                    {[[5, 10, 20], [50, 100]].map((counts, i) => (
+                        <div key={i} className={`grid gap-2 ${i === 0 ? "grid-cols-3" : "grid-cols-2"}`}>
+                            {counts.map((count) => {
+                                const isLocked = !isPro && count > 5;
+                                return (
+                                    <button
+                                        key={count}
+                                        disabled={isLocked}
+                                        onClick={() => !isLocked && setSelectedCardCount(count)}
+                                        className={`p-3 rounded-lg border-2 transition-all cursor-pointer relative ${selectedCardCount === count
+                                            ? "border-primary bg-primary/10"
+                                            : isLocked
+                                                ? "border-white/5 bg-white/5 opacity-50 cursor-not-allowed"
+                                                : "border-primary/20 hover:border-primary/40 bg-secondary"
+                                            }`}
+                                    >
+                                        <div className="text-lg font-bold flex items-center justify-center gap-1">
+                                            {count}
+                                            {isLocked && <Lock className="w-3 h-3 text-orange-400" />}
+                                        </div>
+                                        <div className="text-xs text-muted-foreground">
+                                            rounds
+                                        </div>
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    ))}
                 </div>
             </div>
         </div>
