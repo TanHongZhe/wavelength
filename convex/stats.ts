@@ -51,10 +51,16 @@ export const getDailyStats = query({
             party_pct: number;
             green_flag_pct: number;
             this_or_that_pct: number;
+            fantasy_slider_pct: number;
+            whos_most_likely_pct: number;
+            general_knowledge_pct: number;
             classic_rounds: number;
             party_rounds: number;
             green_flag_rounds: number;
             this_or_that_rounds: number;
+            fantasy_slider_rounds: number;
+            whos_most_likely_rounds: number;
+            general_knowledge_rounds: number;
         }>();
 
         for (const [date, { rooms: dayRooms }] of Object.entries(byDate)) {
@@ -89,6 +95,15 @@ export const getDailyStats = query({
             const thisOrThatRounds = dayRooms
                 .filter((r) => r.game_mode === "mini_rapid_fire")
                 .reduce((sum, r) => sum + (r.round_number ?? 0), 0);
+            const fantasySliderRounds = dayRooms
+                .filter((r) => r.game_mode === "mini_fantasy_slider")
+                .reduce((sum, r) => sum + (r.round_number ?? 0), 0);
+            const whosMostLikelyRounds = dayRooms
+                .filter((r) => r.game_mode === "mini_whos_most_likely")
+                .reduce((sum, r) => sum + (r.round_number ?? 0), 0);
+            const generalKnowledgeRounds = dayRooms
+                .filter((r) => r.game_mode === "mini_general_knowledge")
+                .reduce((sum, r) => sum + (r.round_number ?? 0), 0);
 
             const pct = (n: number) =>
                 totalRounds > 0
@@ -105,10 +120,16 @@ export const getDailyStats = query({
                 party_pct: pct(partyRounds),
                 green_flag_pct: pct(greenFlagRounds),
                 this_or_that_pct: pct(thisOrThatRounds),
+                fantasy_slider_pct: pct(fantasySliderRounds),
+                whos_most_likely_pct: pct(whosMostLikelyRounds),
+                general_knowledge_pct: pct(generalKnowledgeRounds),
                 classic_rounds: classicRounds,
                 party_rounds: partyRounds,
                 green_flag_rounds: greenFlagRounds,
                 this_or_that_rounds: thisOrThatRounds,
+                fantasy_slider_rounds: fantasySliderRounds,
+                whos_most_likely_rounds: whosMostLikelyRounds,
+                general_knowledge_rounds: generalKnowledgeRounds,
             });
         }
 
@@ -128,10 +149,16 @@ export const getDailyStats = query({
                     party_pct: 0,
                     green_flag_pct: 0,
                     this_or_that_pct: 0,
+                    fantasy_slider_pct: 0,
+                    whos_most_likely_pct: 0,
+                    general_knowledge_pct: 0,
                     classic_rounds: 0,
                     party_rounds: 0,
                     green_flag_rounds: 0,
                     this_or_that_rounds: 0,
+                    fantasy_slider_rounds: 0,
+                    whos_most_likely_rounds: 0,
+                    general_knowledge_rounds: 0,
                 }
             );
         }

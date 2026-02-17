@@ -76,6 +76,9 @@ export default function StatsPage() {
             party_rounds: acc.party_rounds + row.party_rounds,
             green_flag_rounds: acc.green_flag_rounds + row.green_flag_rounds,
             this_or_that_rounds: acc.this_or_that_rounds + row.this_or_that_rounds,
+            fantasy_slider_rounds: acc.fantasy_slider_rounds + row.fantasy_slider_rounds,
+            whos_most_likely_rounds: acc.whos_most_likely_rounds + row.whos_most_likely_rounds,
+            general_knowledge_rounds: acc.general_knowledge_rounds + row.general_knowledge_rounds,
         }),
         {
             games_played: 0,
@@ -85,6 +88,9 @@ export default function StatsPage() {
             party_rounds: 0,
             green_flag_rounds: 0,
             this_or_that_rounds: 0,
+            fantasy_slider_rounds: 0,
+            whos_most_likely_rounds: 0,
+            general_knowledge_rounds: 0,
         }
     );
 
@@ -202,6 +208,18 @@ export default function StatsPage() {
                                             <span className="hidden sm:inline">Rapid</span>
                                             <span className="sm:hidden">⚡</span>
                                         </th>
+                                        <th className="text-right px-4 py-3 font-display font-bold text-blue-400">
+                                            <span className="hidden sm:inline">Fantasy</span>
+                                            <span className="sm:hidden">🧚</span>
+                                        </th>
+                                        <th className="text-right px-4 py-3 font-display font-bold text-pink-400">
+                                            <span className="hidden sm:inline">Likely</span>
+                                            <span className="sm:hidden">🤔</span>
+                                        </th>
+                                        <th className="text-right px-4 py-3 font-display font-bold text-yellow-500">
+                                            <span className="hidden sm:inline">Trivia</span>
+                                            <span className="sm:hidden">💡</span>
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -289,6 +307,42 @@ export default function StatsPage() {
                                                         <span className="text-muted-foreground">—</span>
                                                     )}
                                                 </td>
+                                                <td className="text-right px-4 py-3 font-mono text-blue-400">
+                                                    {hasData ? (
+                                                        <span>
+                                                            {row.fantasy_slider_rounds}
+                                                            <span className="text-xs text-muted-foreground ml-1">
+                                                                ({row.fantasy_slider_pct}%)
+                                                            </span>
+                                                        </span>
+                                                    ) : (
+                                                        <span className="text-muted-foreground">—</span>
+                                                    )}
+                                                </td>
+                                                <td className="text-right px-4 py-3 font-mono text-pink-400">
+                                                    {hasData ? (
+                                                        <span>
+                                                            {row.whos_most_likely_rounds}
+                                                            <span className="text-xs text-muted-foreground ml-1">
+                                                                ({row.whos_most_likely_pct}%)
+                                                            </span>
+                                                        </span>
+                                                    ) : (
+                                                        <span className="text-muted-foreground">—</span>
+                                                    )}
+                                                </td>
+                                                <td className="text-right px-4 py-3 font-mono text-yellow-500">
+                                                    {hasData ? (
+                                                        <span>
+                                                            {row.general_knowledge_rounds}
+                                                            <span className="text-xs text-muted-foreground ml-1">
+                                                                ({row.general_knowledge_pct}%)
+                                                            </span>
+                                                        </span>
+                                                    ) : (
+                                                        <span className="text-muted-foreground">—</span>
+                                                    )}
+                                                </td>
                                             </tr>
                                         );
                                     })}
@@ -308,6 +362,9 @@ export default function StatsPage() {
                                             <td className="text-right px-4 py-3 font-mono text-wedge-orange">{totals.party_rounds}</td>
                                             <td className="text-right px-4 py-3 font-mono text-green-500">{totals.green_flag_rounds}</td>
                                             <td className="text-right px-4 py-3 font-mono text-purple-400">{totals.this_or_that_rounds}</td>
+                                            <td className="text-right px-4 py-3 font-mono text-blue-400">{totals.fantasy_slider_rounds}</td>
+                                            <td className="text-right px-4 py-3 font-mono text-pink-400">{totals.whos_most_likely_rounds}</td>
+                                            <td className="text-right px-4 py-3 font-mono text-yellow-500">{totals.general_knowledge_rounds}</td>
                                         </tr>
                                     </tfoot>
                                 )}
