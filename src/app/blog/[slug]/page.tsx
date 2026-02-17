@@ -37,7 +37,7 @@ export default function BlogPost({ params }: BlogPostProps) {
 
     return (
         <div className="flex flex-col min-h-screen">
-            <main className="flex-1 container mx-auto px-4 py-16 max-w-3xl">
+            <main className="flex-1 container mx-auto px-4 pt-36 pb-20 max-w-3xl">
                 <Link href="/blog" className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-primary mb-8 transition-colors">
                     ← Back to Blog
                 </Link>

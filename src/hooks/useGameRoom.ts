@@ -24,6 +24,7 @@ export interface Room {
     player2_name: string;
     player1_avatar: string;
     player2_avatar: string;
+    deck_type?: DeckType;
 }
 
 export function useGameRoom() {
@@ -64,6 +65,7 @@ export function useGameRoom() {
         player2_name: convexRoom.player2_name ?? "Player 2",
         player1_avatar: convexRoom.player1_avatar ?? "🐼",
         player2_avatar: convexRoom.player2_avatar ?? "🐯",
+        deck_type: convexRoom.deck_type as DeckType | undefined,
     } : null;
 
     // Initialize player ID (Clerk or localStorage)
@@ -92,6 +94,13 @@ export function useGameRoom() {
             setIsGameFinished(true);
         }
     }, [room?.phase, isGameFinished]);
+
+    // Sync local deck with room deck from backend
+    useEffect(() => {
+        if (room?.deck_type && room.deck_type !== currentDeck) {
+            setCurrentDeck(room.deck_type);
+        }
+    }, [room?.deck_type, currentDeck]);
 
     // CREATE ROOM
     const createRoom = useCallback(async (name: string, avatar: string, deckType: DeckType = "fun") => {
@@ -195,7 +204,8 @@ export function useGameRoom() {
 
         try {
             const targetAngle = generateRandomTarget();
-            const card = getRandomCard(currentDeck);
+            const deckToUse = room.deck_type || currentDeck;
+            const card = getRandomCard(deckToUse);
 
             console.log("Calling nextRound, ID:", playerId);
             await updateRoomMutation({
@@ -243,7 +253,8 @@ export function useGameRoom() {
 
     const changeCard = useCallback(async () => {
         if (!roomId) return;
-        const newCard = getRandomCard(currentDeck);
+        const deckToUse = room?.deck_type || currentDeck;
+        const newCard = getRandomCard(deckToUse);
         await updateRoomMutation({ roomId, updates: { current_card: newCard } });
     }, [roomId, currentDeck, updateRoomMutation]);
 
