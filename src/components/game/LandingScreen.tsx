@@ -460,7 +460,7 @@ export function LandingScreen({ onCreateGame, onJoinGame, isLoading, error }: La
                                                 <span className="text-lg">{info.emoji}</span>
                                                 {isLocked && <Lock className="w-3 h-3 text-orange-500" />}
                                             </div>
-                                            <div className="font-semibold text-xs truncate">{info.name}</div>
+                                            <div className="font-semibold text-xs truncate">{info.name} <span className="text-muted-foreground font-normal">({Math.floor(info.count / 10) * 10}+)</span></div>
                                         </button>
                                     );
                                 })}
@@ -487,11 +487,7 @@ export function LandingScreen({ onCreateGame, onJoinGame, isLoading, error }: La
                                 onClick={() => onCreateGame("party", playerName, selectedAvatar, selectedDeck)}
                                 disabled={!playerName.trim() || isLoading}
                             >
-                                {!isPro && (
-                                    <div className="absolute top-1 right-1 bg-black/30 backdrop-blur-md px-1.5 py-0.5 rounded text-[10px] font-bold flex items-center gap-1 border border-white/20">
-                                        <span className="text-white">3 Rounds Free</span>
-                                    </div>
-                                )}
+
                                 <PartyPopper className="w-5 h-5 mt-1" />
                                 <span className="font-bold">Party (2-6P)</span>
                             </Button>

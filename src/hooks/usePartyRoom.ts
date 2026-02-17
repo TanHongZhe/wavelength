@@ -280,18 +280,48 @@ export function usePartyRoom() {
 
         // Need to read current player data from the latest convexPlayers snapshot
         const myPlayer = convexPlayers?.find((p: any) => p.player_id === playerId);
-        if (!myPlayer || myPlayer.role !== "guesser" || myPlayer.guess_angle == null) return;
 
-        scoredRoundsRef.current.add(roundKey);
+        // Safety check if myPlayer exists
+        if (!myPlayer) return;
 
-        const points = calculatePoints(room.target_angle, myPlayer.guess_angle);
-        const newScore = (myPlayer.score ?? 0) + points;
+        // 1. GUESSER LOGIC: Calculate point based on my guess angle
+        if (myPlayer.role === "guesser" && myPlayer.guess_angle != null) {
+            scoredRoundsRef.current.add(roundKey);
+            const points = calculatePoints(room.target_angle, myPlayer.guess_angle);
+            const newScore = (myPlayer.score ?? 0) + points;
 
-        updatePartyPlayerMutation({
-            room_id: roomId,
-            player_id: playerId,
-            updates: { score: newScore },
-        }).catch(err => console.error("Failed to update own score:", err));
+            updatePartyPlayerMutation({
+                room_id: roomId,
+                player_id: playerId,
+                updates: { score: newScore },
+            }).catch(err => console.error("Failed to update own score:", err));
+        }
+
+        // 2. PSYCHIC LOGIC: Calculate points based on AVERAGE of all valid guessers
+        if (myPlayer.role === "psychic") {
+            scoredRoundsRef.current.add(roundKey);
+
+            // Get all guessers who made a valid guess
+            const validGuessers = (convexPlayers || []).filter((p: any) => p.role === "guesser" && p.guess_angle != null);
+
+            if (validGuessers.length > 0) {
+                let totalPoints = 0;
+                validGuessers.forEach((p: any) => {
+                    totalPoints += calculatePoints(room.target_angle, p.guess_angle);
+                });
+
+                // Average rounded to nearest integer
+                const avgPoints = Math.round(totalPoints / validGuessers.length);
+                const newScore = (myPlayer.score ?? 0) + avgPoints;
+
+                updatePartyPlayerMutation({
+                    room_id: roomId,
+                    player_id: playerId,
+                    updates: { score: newScore },
+                }).catch(err => console.error("Failed to update psychic score:", err));
+            }
+        }
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [room?.phase, room?.round_number, room?.target_angle, roomId, playerId, updatePartyPlayerMutation]);
 

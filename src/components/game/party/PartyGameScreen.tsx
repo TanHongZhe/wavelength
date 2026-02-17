@@ -212,7 +212,7 @@ export function PartyGameScreen({
                                                 {isLocked && <Lock className="w-4 h-4 text-orange-500" />}
                                             </div>
                                             <div className="font-display font-bold text-sm text-left">{deck.name}</div>
-                                            <div className="text-xs text-muted-foreground text-left">{deck.count} cards</div>
+                                            <div className="text-xs text-muted-foreground text-left">{Math.floor(deck.count / 10) * 10}+ cards</div>
                                         </button>
                                     );
                                 })}
