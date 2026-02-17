@@ -2,6 +2,8 @@ import { Metadata } from "next";
 import { GameWrapper } from "./GameWrapper";
 import { MoreGamesSidebar } from "@/components/minigames/MoreGamesSidebar";
 
+export const runtime = 'edge';
+
 export const metadata: Metadata = {
     title: "Red Flag or Green Flag Game - Rate Dating Scenarios | Wavelength",
     description: "Use Red, Green, and Beige flags to rate dating behaviors. The viral TikTok trend made into a multiplayer game. Play now with friends or partners.",

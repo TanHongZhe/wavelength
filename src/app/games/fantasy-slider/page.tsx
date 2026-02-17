@@ -2,6 +2,8 @@ import { Metadata } from "next";
 import { GameWrapper } from "./GameWrapper";
 import { MoreGamesSidebar } from "@/components/minigames/MoreGamesSidebar";
 
+export const runtime = 'edge';
+
 export const metadata: Metadata = {
     title: "Fantasy Slider: The Ultimate Couples Lust & Romance Game | Wavelength",
     description: "Rate your spicy fantasies from 0-10 and see if you match! The perfect lust mini-game for couples to explore desires. Play for free online.",

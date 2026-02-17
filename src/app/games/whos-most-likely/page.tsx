@@ -2,6 +2,8 @@ import { Metadata } from "next";
 import { GameWrapper } from "./GameWrapper";
 import { MoreGamesSidebar } from "@/components/minigames/MoreGamesSidebar";
 
+export const runtime = 'edge';
+
 export const metadata: Metadata = {
     title: "Who's Most Likely? - The Couples & Friends Party Game | Wavelength",
     description: "Point fingers in this rapid-fire 'Who is most likely to' game. Perfect for couples, friends, and parties. Play online for free.",

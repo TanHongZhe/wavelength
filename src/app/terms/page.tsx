@@ -2,6 +2,8 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
+export const runtime = 'edge';
+
 export const metadata: Metadata = {
     title: "Terms of Service | Wavelength Game Online",
     description: "Terms of Service for Wavelength Game Online.",

@@ -3,6 +3,8 @@ import Link from "next/link";
 import { ArrowRight, Github, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
+export const runtime = 'edge';
+
 export const metadata: Metadata = {
     title: "About Wavelength Online - The Project",
     description: "About the Wavelength Online project. A web adaptation of the popular social guessing game. Learn about the technology and team behind it.",

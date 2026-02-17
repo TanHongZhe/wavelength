@@ -7,6 +7,8 @@ import { Loader2, BarChart3, TrendingUp, Gamepad2, Users, Lock, ArrowRight, Refr
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
+export const runtime = 'edge';
+
 export default function StatsPage() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [password, setPassword] = useState("");

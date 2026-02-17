@@ -2,6 +2,8 @@ import { Metadata } from "next";
 import { GameWrapper } from "./GameWrapper";
 import { MoreGamesSidebar } from "@/components/minigames/MoreGamesSidebar";
 
+export const runtime = 'edge';
+
 export const metadata: Metadata = {
     title: "General Knowledge Quiz Game - Play Online Trivia for Free | Wavelength",
     description: "Challenge your friends in this fast-paced General Knowledge Quiz! 10 seconds per question across 8 topics like History, Science & Pop Culture. Play free online now.",

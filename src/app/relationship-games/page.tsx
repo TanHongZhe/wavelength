@@ -3,6 +3,8 @@ import { GameLoader } from "../../components/game/GameLoader";
 import Link from "next/link";
 import { LandingOverlay } from "../../components/LandingOverlay";
 
+export const runtime = 'edge';
+
 export const metadata: Metadata = {
     title: {
         absolute: "Relationship Games | Wavelength Game Online",

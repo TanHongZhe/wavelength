@@ -2,6 +2,8 @@ import { Metadata } from "next";
 import { GameLoader } from "../../components/game/GameLoader";
 import { LandingOverlay } from "../../components/LandingOverlay";
 
+export const runtime = 'edge';
+
 export const metadata: Metadata = {
     title: {
         absolute: "Couple Games Online | Free Top Mini Games",

@@ -2,6 +2,8 @@ import { Metadata } from "next";
 import { GameWrapper } from "./GameWrapper";
 import { MoreGamesSidebar } from "@/components/minigames/MoreGamesSidebar";
 
+export const runtime = 'edge';
+
 export const metadata: Metadata = {
     title: "This or That: Rapid Fire Couples Game | Wavelength",
     description: "The ultimate 'This or That' rapid fire game for couples. Choose between two options in 10 seconds and see if you match!",
