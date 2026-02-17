@@ -181,6 +181,7 @@ export const joinRoomByCode = mutation({
         const rooms = await ctx.db
             .query("rooms")
             .withIndex("by_room_code", (q) => q.eq("room_code", args.roomCode.toUpperCase()))
+            .filter((q) => q.neq(q.field("phase"), "ended"))
             .collect();
 
         // Pick newest room
@@ -220,14 +221,36 @@ export const joinRoomByCode = mutation({
             return { error: null, roomId: room._id, room, isCreator: false };
         }
 
-        // Room is full
-        if (room.guesser_id && room.guesser_id !== args.playerId) {
-            return { error: "Room is full", roomId: null, room: null };
+        // Check if the caller is actually the guesser via Auth (handling ID mismatch/reloads)
+        const identity = await ctx.auth.getUserIdentity();
+        let isActuallyGuesser = false;
+        if (identity && room.guesser_id) {
+            // Check against tokenIdentifier
+            if (room.guesser_id === identity.tokenIdentifier) isActuallyGuesser = true;
+            // Check against subject (User ID) - typically the part after |
+            const userId = identity.tokenIdentifier.split('|')[1];
+            if (room.guesser_id === userId) isActuallyGuesser = true;
         }
 
-        // Join as Player 2
+        // Room is full
+        // RELAXED RULE: If the game is still in "waiting" phase, allow new player to overwrite/claim the seat.
+        // This fixes 'stale' ghost players blocking the room. 
+        // If phase is NOT waiting (game in progress), strictly enforce ID match to prevent disrupting active game.
+        const isWaiting = room.phase === "waiting";
+
+        if (room.guesser_id && room.guesser_id !== args.playerId && !isActuallyGuesser && !isWaiting) {
+            console.log(`Join Failed: Full. Guesser=${room.guesser_id}, Req=${args.playerId}, AuthUser=${identity?.tokenIdentifier}`);
+            return { error: `Room is full (G: ${room.guesser_id.slice(-4)}, You: ${args.playerId.slice(-4)})`, roomId: null, room: null };
+        }
+
+        // If verified via Auth but ID mismatch, we update ID to match args? 
+        // OR we just proceed. If we proceed without updating, client might be confused if it expects playerId to match.
+        // But client state 'playerId' is args.playerId.
+        // If we let them in, they become Player 2.
+
+        // Join as Player 2 (Upsert/Update)
         await ctx.db.patch(room._id, {
-            guesser_id: args.playerId,
+            guesser_id: args.playerId, // Always update to current session ID to fix mismatches
             player2_name: args.playerName,
             player2_avatar: args.playerAvatar,
             updated_at: Date.now(),
@@ -503,6 +526,7 @@ export const joinPartyRoomByCode = mutation({
         const rooms = await ctx.db
             .query("rooms")
             .withIndex("by_room_code", (q) => q.eq("room_code", args.roomCode.toUpperCase()))
+            .filter((q) => q.neq(q.field("phase"), "ended")) // Filter out ended rooms
             .collect();
 
         // Pick newest room

@@ -17,6 +17,7 @@ export interface Room {
     clue: string | null;
     game_mode: "classic" | "party";
     psychic_id?: string;
+    deck_type?: DeckType;
 }
 
 export interface PartyPlayer {
@@ -68,6 +69,7 @@ export function usePartyRoom() {
         clue: convexRoom.clue ?? null,
         game_mode: (convexRoom.game_mode as "classic" | "party") || "classic",
         psychic_id: convexRoom.psychic_id,
+        deck_type: convexRoom.deck_type as DeckType,
     } : null;
 
     const players: PartyPlayer[] = convexPlayers ? convexPlayers.map((p: any) => ({
@@ -345,6 +347,14 @@ export function usePartyRoom() {
         }
     }, [roomId, players, room?.round_number, room?.psychic_id, room, currentDeck, updateRoomMutation]);
 
+    // Sync currentDeck with room.deck_type from backend
+    // This ensures that when the host changes the deck, all other players see the update
+    useEffect(() => {
+        if (room?.deck_type && room.deck_type !== currentDeck) {
+            setCurrentDeck(room.deck_type);
+        }
+    }, [room?.deck_type, currentDeck]);
+
     const setCustomCard = useCallback(async (left: string, right: string) => {
         if (!roomId) return;
         await updateRoomMutation({
@@ -355,9 +365,11 @@ export function usePartyRoom() {
 
     const changeCard = useCallback(async () => {
         if (!roomId) return;
-        const newCard = getRandomCard(currentDeck);
+        // Use the deck stored in room state if available to ensure consistency
+        const deckToUse = room?.deck_type || currentDeck;
+        const newCard = getRandomCard(deckToUse);
         await updateRoomMutation({ roomId, updates: { current_card: newCard } });
-    }, [roomId, currentDeck, updateRoomMutation]);
+    }, [roomId, currentDeck, room?.deck_type, updateRoomMutation]);
 
     const switchDeck = useCallback(async (deck: DeckType) => {
         setCurrentDeck(deck);

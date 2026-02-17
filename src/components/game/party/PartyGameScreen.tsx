@@ -67,7 +67,6 @@ export function PartyGameScreen({
     onLeave,
 }: PartyGameScreenProps) {
     const [clue, setClue] = useState("");
-    const [showDeckPicker, setShowDeckPicker] = useState(false);
     const [showUpgradeOverlay, setShowUpgradeOverlay] = useState(true);
 
     // Check Pro status
@@ -139,92 +138,7 @@ export function PartyGameScreen({
                 </div>
             </motion.div>
 
-            {/* Deck Picker Button - Fixed Bottom Right */}
-            <motion.button
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                onClick={() => setShowDeckPicker(true)}
-                className="fixed right-6 bottom-6 z-40 bg-card/95 backdrop-blur-md border border-border rounded-2xl p-4 shadow-xl hover:bg-card hover:scale-105 hover:shadow-2xl transition-all cursor-pointer group"
-                title="Switch Deck"
-            >
-                <div className="flex items-center gap-3">
-                    <div className="text-3xl">{DECK_INFO[currentDeck].emoji}</div>
-                    <div className="text-left">
-                        <div className="font-display font-bold text-sm">{DECK_INFO[currentDeck].name}</div>
-                        <div className="text-xs text-muted-foreground flex items-center gap-1">
-                            <Layers className="w-3 h-3" /> Change Deck
-                        </div>
-                    </div>
-                </div>
-            </motion.button>
 
-            {/* Deck Picker Modal */}
-            <AnimatePresence>
-                {showDeckPicker && (
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4"
-                        onClick={() => setShowDeckPicker(false)}
-                    >
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.9, y: 20 }}
-                            animate={{ opacity: 1, scale: 1, y: 0 }}
-                            exit={{ opacity: 0, scale: 0.9, y: 20 }}
-                            onClick={(e) => e.stopPropagation()}
-                            className="bg-card border border-border rounded-2xl p-6 w-full max-w-md shadow-2xl"
-                        >
-                            <div className="flex items-center justify-between mb-6">
-                                <h3 className="font-display text-xl font-bold">Switch Card Deck</h3>
-                                <button
-                                    onClick={() => setShowDeckPicker(false)}
-                                    className="p-1 hover:bg-secondary rounded-lg transition-colors"
-                                >
-                                    <X className="w-5 h-5" />
-                                </button>
-                            </div>
-
-                            <div className="grid grid-cols-2 gap-3">
-                                {(Object.keys(DECK_INFO) as DeckType[]).map((deckKey) => {
-                                    const deck = DECK_INFO[deckKey];
-                                    const isSelected = currentDeck === deckKey;
-                                    const isLocked = !isPro && deckKey !== FREE_DECK;
-
-                                    return (
-                                        <button
-                                            key={deckKey}
-                                            onClick={() => {
-                                                if (isLocked) return;
-                                                onSwitchDeck(deckKey);
-                                                setShowDeckPicker(false);
-                                            }}
-                                            disabled={isLocked}
-                                            className={`p-4 rounded-xl border-2 transition-all relative overflow-hidden ${isSelected
-                                                ? "border-primary bg-primary/20"
-                                                : isLocked
-                                                    ? "border-border/50 bg-muted/20 opacity-60 cursor-not-allowed"
-                                                    : "border-border hover:border-primary/50 bg-card hover:bg-secondary cursor-pointer"
-                                                }`}
-                                        >
-                                            <div className="flex justify-between items-start">
-                                                <div className="text-2xl mb-2">{deck.emoji}</div>
-                                                {isLocked && <Lock className="w-4 h-4 text-orange-500" />}
-                                            </div>
-                                            <div className="font-display font-bold text-sm text-left">{deck.name}</div>
-                                            <div className="text-xs text-muted-foreground text-left">{Math.floor(deck.count / 10) * 10}+ cards</div>
-                                        </button>
-                                    );
-                                })}
-                            </div>
-
-                            <p className="text-xs text-muted-foreground text-center mt-4">
-                                Switching decks will change the current card
-                            </p>
-                        </motion.div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
 
 
             <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-3 gap-8">
