@@ -41,7 +41,6 @@ interface GameScreenProps {
     onUpdateScore: (points: number) => void;
     onSetCustomCard: (left: string, right: string) => void;
     onChangeCard: () => void;
-    onChangeCard: () => void;
     onEndGame: () => void;
     onLeave: () => void;
 }
@@ -59,7 +58,6 @@ export function GameScreen({
     onNextRound,
     onUpdateScore,
     onSetCustomCard,
-    onChangeCard,
     onChangeCard,
     onEndGame,
     onLeave,
