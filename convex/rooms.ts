@@ -112,10 +112,12 @@ export const getRoom = query({
 export const getRoomByCode = query({
     args: { roomCode: v.string() },
     handler: async (ctx, args) => {
-        return await ctx.db
+        const rooms = await ctx.db
             .query("rooms")
             .withIndex("by_room_code", (q) => q.eq("room_code", args.roomCode.toUpperCase()))
-            .first();
+            .collect();
+        // Return newest room first
+        return rooms.sort((a, b) => b._creationTime - a._creationTime)[0] || null;
     },
 });
 
@@ -179,10 +181,13 @@ export const joinRoomByCode = mutation({
         expectedGameMode: v.optional(v.string()),
     },
     handler: async (ctx, args) => {
-        const room = await ctx.db
+        const rooms = await ctx.db
             .query("rooms")
             .withIndex("by_room_code", (q) => q.eq("room_code", args.roomCode.toUpperCase()))
-            .first();
+            .collect();
+
+        // Pick newest room
+        const room = rooms.sort((a, b) => b._creationTime - a._creationTime)[0];
 
         if (!room) {
             return { error: "Room not found", roomId: null, room: null };
@@ -212,8 +217,9 @@ export const joinRoomByCode = mutation({
             return { error: null, roomId: room._id, room, isCreator: false };
         }
 
-        // Bypass strict 2-player limit for Party Mode and Minigames
-        if (room.game_mode && (room.game_mode === "party" || room.game_mode.startsWith("mini_"))) {
+        // Bypass strict 2-player limit for Party Mode ONLY
+        // Minigames (Fantasy, Rapid Fire, etc) are 2-player and require guesser_id update
+        if (room.game_mode === "party") {
             return { error: null, roomId: room._id, room, isCreator: false };
         }
 
@@ -438,17 +444,20 @@ export const joinPartyRoomByCode = mutation({
         playerAvatar: v.string(),
     },
     handler: async (ctx, args) => {
-        const room = await ctx.db
+        const rooms = await ctx.db
             .query("rooms")
             .withIndex("by_room_code", (q) => q.eq("room_code", args.roomCode.toUpperCase()))
-            .first();
+            .collect();
+
+        // Pick newest room
+        const room = rooms.sort((a, b) => b._creationTime - a._creationTime)[0];
 
         if (!room) {
-            return { error: "Room not found", roomId: null };
+            return { error: "Room not found", roomId: null, roundNumber: null };
         }
 
         if (room.game_mode !== "party") {
-            return { error: "This looks like a valid room, but it's not a Party Mode room!", roomId: null };
+            return { error: "This looks like a valid room, but it's not a Party Mode room!", roomId: null, roundNumber: null };
         }
 
         // Pro restriction removed for joiners
@@ -489,10 +498,13 @@ export const joinGeneralKnowledgeRoom = mutation({
         playerAvatar: v.string(),
     },
     handler: async (ctx, args) => {
-        const room = await ctx.db
+        const rooms = await ctx.db
             .query("rooms")
             .withIndex("by_room_code", (q) => q.eq("room_code", args.roomCode.toUpperCase()))
-            .first();
+            .collect();
+
+        // Pick newest room
+        const room = rooms.sort((a, b) => b._creationTime - a._creationTime)[0];
 
         if (!room) {
             return { error: "Room not found", roomId: null };

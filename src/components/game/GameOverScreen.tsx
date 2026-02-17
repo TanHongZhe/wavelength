@@ -14,6 +14,9 @@ import { ProUpgradeCard } from "./ProUpgradeCard";
 // Stripe Payment Link for monthly upgrade (PRODUCTION)
 import { STRIPE_MONTHLY_LINK } from "@/lib/stripe";
 
+import { useQuery } from "convex/react";
+import { api } from "../../../convex/_generated/api";
+
 interface GameOverScreenProps {
     room: Room;
     playerId: string;
@@ -22,6 +25,11 @@ interface GameOverScreenProps {
 
 export function GameOverScreen({ room, playerId, onLeave }: GameOverScreenProps) {
     const { isSignedIn, user } = useUser();
+
+    // Check Pro status to prevent showing overlay
+    const userProfile = useQuery(api.users.current);
+    const isPro = userProfile?.isPro;
+
     const player1Score = room.psychic_score;
     const player2Score = room.guesser_score;
     const player1Name = room.player1_name || "Player 1";
@@ -308,7 +316,7 @@ export function GameOverScreen({ room, playerId, onLeave }: GameOverScreenProps)
             </motion.div>
 
             {/* Overlay Component */}
-            {showUpgradeOverlay && (
+            {showUpgradeOverlay && !isPro && (
                 <div
                     className="fixed inset-0 z-[60] flex items-center justify-center p-4"
                     style={{ backgroundColor: "rgba(0,0,0,0.85)" }}

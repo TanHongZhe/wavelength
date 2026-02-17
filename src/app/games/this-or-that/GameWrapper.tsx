@@ -1,16 +1,32 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import { RapidFireGameEngine } from "@/components/minigames/rapid-fire/RapidFireGameEngine";
 import { Button } from "@/components/ui/button";
 import { Sparkles, Users, Zap } from "lucide-react";
 import { motion } from "framer-motion";
 
 export function GameWrapper() {
+    return (
+        <Suspense fallback={<div className="min-h-screen bg-background" />}>
+            <GameWrapperContent />
+        </Suspense>
+    );
+}
+
+function GameWrapperContent() {
+    const searchParams = useSearchParams();
     const [gameState, setGameState] = useState<{ isPlaying: boolean; initialMode: "create" | "join" | "initial" }>({
         isPlaying: false,
         initialMode: "initial"
     });
+
+    useEffect(() => {
+        if (searchParams.get("code")) {
+            setGameState({ isPlaying: true, initialMode: "join" });
+        }
+    }, [searchParams]);
 
     if (gameState.isPlaying) {
         return (
