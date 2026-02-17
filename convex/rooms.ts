@@ -446,20 +446,7 @@ export const joinPartyRoomByCode = mutation({
             return { error: "This looks like a valid room, but it's not a Party Mode room!", roomId: null };
         }
 
-        // Check Pro status for Party Mode
-        const identity = await ctx.auth.getUserIdentity();
-        let isPro = false;
-        if (identity) {
-            const user = await ctx.db
-                .query("users")
-                .withIndex("by_token", (q) => q.eq("tokenIdentifier", identity.tokenIdentifier))
-                .unique();
-            if (user?.isPro) isPro = true;
-        }
-
-        if (!isPro) {
-            return { error: "Party Mode is locked for Pro users only.", roomId: null };
-        }
+        // Pro restriction removed for joiners
 
         // Check if already in the room
         const existingPlayer = await ctx.db
