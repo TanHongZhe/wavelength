@@ -33,7 +33,9 @@ const ROUND_TIME_SECONDS = 10;
 function getBeigeFlags(cardCount: number): number {
     if (cardCount >= 100) return 15;
     if (cardCount >= 50) return 7;
-    return 3;
+    if (cardCount >= 20) return 3;
+    if (cardCount >= 10) return 2;
+    return 1;
 }
 
 type FlagChoice = "RED" | "GREEN" | "BEIGE" | "__TIMEOUT__" | null;
