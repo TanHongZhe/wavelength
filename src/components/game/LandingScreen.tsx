@@ -35,7 +35,10 @@ const GAMES = [
         isMultiplayer: true,
         isTwoPlayer: true,
         action: "mode",
-        path: ""
+        path: "",
+        tags: [
+            { label: "18+ Mode Available", emoji: "🔞", style: "bg-rose-500/10 text-rose-600 border-rose-500/20 shadow-sm" }
+        ]
     },
     {
         id: "fantasy-slider",
@@ -48,7 +51,11 @@ const GAMES = [
         isMultiplayer: false,
         isTwoPlayer: true,
         action: "navigate",
-        path: "/games/fantasy-slider"
+        path: "/games/fantasy-slider",
+        tags: [
+            { label: "New", emoji: "✨", style: "bg-blue-500/10 text-blue-600 border-blue-500/20 shadow-sm" },
+            { label: "18+ Mode Available", emoji: "🔞", style: "bg-rose-500/10 text-rose-600 border-rose-500/20 shadow-sm" }
+        ]
     },
     {
         id: "whos-most-likely",
@@ -61,7 +68,12 @@ const GAMES = [
         isMultiplayer: false,
         isTwoPlayer: true,
         action: "navigate",
-        path: "/games/whos-most-likely"
+        path: "/games/whos-most-likely",
+        tags: [
+            { label: "New", emoji: "✨", style: "bg-blue-500/10 text-blue-600 border-blue-500/20 shadow-sm" },
+            { label: "Rapid Fire", emoji: "🔥", style: "bg-orange-500/10 text-orange-600 border-orange-500/20 shadow-sm" },
+            { label: "18+ Mode Available", emoji: "🔞", style: "bg-rose-500/10 text-rose-600 border-rose-500/20 shadow-sm" }
+        ]
     },
     {
         id: "this-or-that",
@@ -74,7 +86,11 @@ const GAMES = [
         isMultiplayer: false,
         isTwoPlayer: true,
         action: "navigate",
-        path: "/games/this-or-that"
+        path: "/games/this-or-that",
+        tags: [
+            { label: "Rapid Fire", emoji: "🔥", style: "bg-orange-500/10 text-orange-600 border-orange-500/20 shadow-sm" },
+            { label: "18+ Mode Available", emoji: "🔞", style: "bg-rose-500/10 text-rose-600 border-rose-500/20 shadow-sm" }
+        ]
     },
     {
         id: "flag-game",
@@ -87,7 +103,10 @@ const GAMES = [
         isMultiplayer: false,
         isTwoPlayer: true,
         action: "navigate",
-        path: "/games/flag-game"
+        path: "/games/flag-game",
+        tags: [
+            { label: "Rapid Fire", emoji: "🔥", style: "bg-orange-500/10 text-orange-600 border-orange-500/20 shadow-sm" }
+        ]
     },
     {
         id: "general-knowledge",
@@ -97,10 +116,13 @@ const GAMES = [
         icon: GraduationCap,
         style: "bg-gradient-to-br from-blue-400/20 to-indigo-400/20 text-indigo-500 group-hover:from-blue-400 group-hover:to-indigo-400 group-hover:text-white",
         iconStyle: "",
-        isMultiplayer: true, // As per user request, this shows in multiplayer
+        isMultiplayer: true,
         isTwoPlayer: true,
         action: "navigate",
-        path: "/games/general-knowledge"
+        path: "/games/general-knowledge",
+        tags: [
+            { label: "Rapid Fire", emoji: "🔥", style: "bg-orange-500/10 text-orange-600 border-orange-500/20 shadow-sm" }
+        ]
     }
 ];
 
@@ -241,10 +263,16 @@ export function LandingScreen({ onCreateGame, onJoinGame, isLoading, error }: La
                                                 <h3 className="font-display text-lg font-semibold text-primary mb-1">
                                                     {game.name}
                                                 </h3>
-                                                <div className="flex items-center gap-2 mb-1">
+                                                <div className="flex items-center flex-wrap gap-2 mb-1">
                                                     <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-secondary text-primary border border-border">
                                                         {game.players}
                                                     </span>
+                                                    {game.tags?.map((tag, i) => (
+                                                        <span key={i} className={`text-[10px] font-bold px-2 py-0.5 rounded-full border flex items-center gap-1 ${tag.style}`}>
+                                                            <span>{tag.emoji}</span>
+                                                            <span>{tag.label}</span>
+                                                        </span>
+                                                    ))}
                                                 </div>
                                                 <p className="text-sm text-muted-foreground leading-snug">
                                                     {game.description}
