@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { AudioWaveform, Users, Sparkles, ChevronDown, Gamepad2, PartyPopper, Dices, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -33,6 +33,20 @@ export function LandingScreen({ onCreateGame, onJoinGame, isLoading, error }: La
     const [mode, setMode] = useState<"initial" | "wavelength" | "create" | "join">("initial");
     const [isAvatarExpanded, setIsAvatarExpanded] = useState(false);
     const [showMiniGames, setShowMiniGames] = useState(false);
+
+    // Auto-fill room code from URL
+    // Re-implemented with safety checks for client-side execution
+    useEffect(() => {
+        if (typeof window !== "undefined") {
+            const params = new URLSearchParams(window.location.search);
+            const codeParam = params.get("code");
+            if (codeParam && codeParam !== roomCode) {
+                setRoomCode(codeParam);
+                setMode("join");
+                // We purposefully avoid window.history.replaceState here to prevent conflicts with Clerk/Next router
+            }
+        }
+    }, []); // Run once on mount
 
     return (
         <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-background text-foreground transition-colors duration-300">

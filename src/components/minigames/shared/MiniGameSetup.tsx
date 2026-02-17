@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, ReactNode } from "react";
+import { useState, useEffect, ReactNode, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ChevronDown, Sparkles, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -29,7 +30,15 @@ interface MiniGameSetupProps {
     initialMode?: "initial" | "create" | "join";
 }
 
-export function MiniGameSetup({
+export function MiniGameSetup(props: MiniGameSetupProps) {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <MiniGameSetupContent {...props} />
+        </Suspense>
+    );
+}
+
+function MiniGameSetupContent({
     title,
     onCreateGame,
     onJoinGame,
@@ -39,11 +48,22 @@ export function MiniGameSetup({
     error,
     initialMode = "initial"
 }: MiniGameSetupProps) {
+    const searchParams = useSearchParams();
     const [mode, setMode] = useState<"initial" | "create" | "join">(initialMode);
     const [playerName, setPlayerName] = useState("");
     const [selectedAvatar, setSelectedAvatar] = useState(AVATARS[0]);
     const [isAvatarExpanded, setIsAvatarExpanded] = useState(false);
     const [roomCode, setRoomCode] = useState("");
+
+    // Auto-fill room code from URL for Mini Games
+    useEffect(() => {
+        const code = searchParams.get("code");
+        console.log("MiniGameSetup: URL Code check:", code); // Debug log
+        if (code) {
+            setRoomCode(code);
+            setMode("join");
+        }
+    }, [searchParams]);
 
     const handleCreateGame = () => {
         if (!playerName.trim()) return;

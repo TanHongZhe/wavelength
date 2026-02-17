@@ -29,6 +29,12 @@ export function PartyWaitingRoom({
         toast.success("Room code copied!");
     };
 
+    const copyLink = () => {
+        const url = `${window.location.origin}/?code=${roomCode}`;
+        navigator.clipboard.writeText(url);
+        toast.success("Invite link copied!");
+    };
+
     return (
         <div className="min-h-screen flex items-center justify-center p-4">
             <motion.div
@@ -56,6 +62,14 @@ export function PartyWaitingRoom({
                         className="text-muted-foreground hover:text-foreground"
                     >
                         <Copy className="w-4 h-4 mr-2" /> Copy Code
+                    </Button>
+                    <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={copyLink}
+                        className="text-muted-foreground hover:text-foreground mt-1"
+                    >
+                        <Copy className="w-4 h-4 mr-2" /> Copy Invite Link
                     </Button>
                 </div>
 

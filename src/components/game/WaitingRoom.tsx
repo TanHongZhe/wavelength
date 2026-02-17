@@ -22,6 +22,14 @@ export function WaitingRoom({ roomCode, isPsychic, hasOpponent, onLeave, onStart
         setTimeout(() => setCopied(false), 2000);
     };
 
+    // URL copy logic
+    const copyLink = () => {
+        const url = `${window.location.origin}/?code=${roomCode}`;
+        navigator.clipboard.writeText(url);
+        setCopied(true); // Re-use copied state for simplicity
+        setTimeout(() => setCopied(false), 2000);
+    };
+
     return (
         <div className="min-h-screen flex flex-col items-center justify-center p-6">
             <motion.div
@@ -48,6 +56,18 @@ export function WaitingRoom({ roomCode, isPsychic, hasOpponent, onLeave, onStart
                         <Copy className="w-5 h-5" />
                     )}
                 </motion.button>
+
+                {/* Copy Link Button */}
+                <div className="mb-6">
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={copyLink}
+                        className="text-muted-foreground hover:text-foreground gap-2 border-primary/20 hover:bg-primary/5"
+                    >
+                        <Copy className="w-4 h-4" /> Copy Direct Invite Link
+                    </Button>
+                </div>
 
                 {/* Status */}
                 <div className="space-y-4">
