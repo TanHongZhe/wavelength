@@ -72,6 +72,10 @@ export function FlagGameScreen({
     const convexRoomId = roomId as Id<"rooms">;
     const updateRoomMutation = useMutation(api.rooms.updateRoom);
 
+    // Check user pro status
+    const user = useQuery(api.rooms.getMyUser);
+    const isPro = user?.isPro ?? false;
+
     // Submit timeout choice to Convex
     const submitTimeout = useCallback(async () => {
         if (hasSubmittedTimeout.current) return;
@@ -357,9 +361,9 @@ export function FlagGameScreen({
 
 
 
-    // Check user pro status
-    const user = useQuery(api.rooms.getMyUser);
-    const isPro = user?.isPro ?? false;
+
+
+    // Game Over Screen
 
     // Game Over Screen
     if (gameOver) {
