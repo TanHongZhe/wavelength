@@ -184,7 +184,7 @@ export function useRapidFireRoom() {
         playerId,
         isPlayer1: room?.player1_id === playerId,
         isPlayer2: room?.player2_id === playerId,
-        hasOpponent: Boolean(room?.player2_id),
+        hasOpponent: Boolean(room?.player2_id) || Boolean(convexRoom?.guesser_id),
         isLoading,
         error,
         authInitialized,

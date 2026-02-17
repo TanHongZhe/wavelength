@@ -1,19 +1,16 @@
 "use client";
 
-import { useState } from "react";
 import { motion } from "framer-motion";
+import { Copy, Check, Users } from "lucide-react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Copy, Users } from "lucide-react";
 import { toast } from "sonner";
 
 interface MiniGameWaitingRoomProps {
     roomCode: string;
-    playerName: string;
-    playerAvatar: string;
     isHost: boolean;
     hasOpponent: boolean;
-    opponentName?: string;
-    opponentAvatar?: string;
+    playerName: string;
     onLeave: () => void;
     onStartGame?: () => void;
 }
@@ -22,6 +19,7 @@ export function MiniGameWaitingRoom({
     roomCode,
     isHost,
     hasOpponent,
+    playerName,
     onLeave,
     onStartGame
 }: MiniGameWaitingRoomProps) {
@@ -29,9 +27,9 @@ export function MiniGameWaitingRoom({
 
     const copyCode = () => {
         navigator.clipboard.writeText(roomCode);
-        setCopied(true);
-        toast.success("Room code copied!");
+        setCopied(true); // Re-use copied state for simplicity
         setTimeout(() => setCopied(false), 2000);
+        toast.success("Room code copied!");
     };
 
     // URL copy logic
@@ -45,43 +43,42 @@ export function MiniGameWaitingRoom({
     };
 
     return (
-        <div className="fixed inset-0 z-50 bg-background flex items-center justify-center p-4">
+        <div className="min-h-screen flex flex-col items-center justify-center p-6">
             <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="max-w-md w-full game-card text-center"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="game-card max-w-md w-full text-center"
             >
-                <div className="mb-6">
-                    <h2 className="text-2xl font-bold font-display mb-2 text-primary">Waiting Room</h2>
-                    <p className="text-muted-foreground">Share the code to invite your opponent</p>
-                </div>
+                {/* Room Code Display */}
+                <h2 className="font-display text-lg text-muted-foreground mb-2">
+                    Room Code
+                </h2>
 
-                <div className="bg-secondary/30 rounded-xl p-6 mb-8 border border-border/50">
-                    <div
-                        onClick={copyCode}
-                        className="text-6xl font-black font-display tracking-widest text-primary hover:scale-105 transition-transform cursor-pointer active:scale-95 mb-4 select-all"
-                    >
+                <motion.button
+                    className="inline-flex items-center gap-3 px-6 py-3 rounded-xl bg-primary text-primary-foreground mb-6 hover:scale-105 transition-transform"
+                    onClick={copyCode}
+                    whileTap={{ scale: 0.95 }}
+                >
+                    <span className="font-display text-3xl font-bold tracking-[0.3em]">
                         {roomCode}
-                    </div>
+                    </span>
+                    {copied ? (
+                        <Check className="w-5 h-5" />
+                    ) : (
+                        <Copy className="w-5 h-5" />
+                    )}
+                </motion.button>
 
-                    <div className="flex flex-col gap-2">
-                        <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={copyCode}
-                            className="text-muted-foreground hover:text-foreground"
-                        >
-                            {copied ? <span className="text-green-500 font-bold">Copied!</span> : <><Copy className="w-4 h-4 mr-2" /> Copy Code</>}
-                        </Button>
-                        <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={copyLink}
-                            className="text-muted-foreground hover:text-foreground"
-                        >
-                            <Copy className="w-4 h-4 mr-2" /> Copy Invite Link
-                        </Button>
-                    </div>
+                {/* Copy Link Button */}
+                <div className="mb-6">
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={copyLink}
+                        className="text-muted-foreground hover:text-foreground gap-2 border-primary/20 hover:bg-primary/5"
+                    >
+                        <Copy className="w-4 h-4" /> Copy Direct Invite Link
+                    </Button>
                 </div>
 
                 {/* Status */}
@@ -90,7 +87,7 @@ export function MiniGameWaitingRoom({
                         <Users className="w-5 h-5" />
                         <span>
                             {hasOpponent
-                                ? `Opponent joined! ${onStartGame ? "Ready to start." : "Waiting for host..."}`
+                                ? (isHost ? "Player 2 joined! Ready to start." : "Connected! Waiting for host to start...")
                                 : "Waiting for opponent to join..."}
                         </span>
                     </div>
@@ -120,9 +117,18 @@ export function MiniGameWaitingRoom({
                     )}
 
                     <p className="text-sm text-muted-foreground">
-                        You are <strong className="text-primary">{isHost ? "Player 1 (Host)" : "Player 2"}</strong>
+                        You are <strong className="text-primary">{playerName}</strong>
                     </p>
                 </div>
+
+                {hasOpponent && onStartGame && isHost && (
+                    <Button
+                        className="mt-6 btn-game w-full"
+                        onClick={onStartGame}
+                    >
+                        Start Game
+                    </Button>
+                )}
 
                 {/* Waiting message for non-host */}
                 {hasOpponent && !isHost && (
@@ -133,18 +139,9 @@ export function MiniGameWaitingRoom({
                     </div>
                 )}
 
-                {hasOpponent && onStartGame && (
-                    <Button
-                        className="mt-6 btn-game w-full"
-                        onClick={onStartGame}
-                    >
-                        Start Game
-                    </Button>
-                )}
-
                 <Button
                     variant="outline"
-                    className="mt-6 w-full"
+                    className="mt-6"
                     onClick={onLeave}
                 >
                     Leave Room

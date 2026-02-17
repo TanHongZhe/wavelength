@@ -158,12 +158,9 @@ export function FantasySliderGameEngine({ onClose, initialMode = "initial" }: Fa
         return (
             <MiniGameWaitingRoom
                 roomCode={room.room_code}
-                playerName={gameConfig?.playerName || "Player"}
-                playerAvatar={gameConfig?.playerAvatar || "🐼"}
                 isHost={isPlayer1}
                 hasOpponent={hasOpponent}
-                opponentName={isPlayer1 ? room.player2_name : room.player1_name}
-                opponentAvatar={isPlayer1 ? room.player2_avatar : room.player1_avatar}
+                playerName={gameConfig?.playerName || "Player"}
                 onLeave={handleLeave}
                 onStartGame={handleStartGame}
             />
