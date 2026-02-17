@@ -212,6 +212,11 @@ export const joinRoomByCode = mutation({
             return { error: null, roomId: room._id, room, isCreator: false };
         }
 
+        // Bypass strict 2-player limit for Party Mode and Minigames
+        if (room.game_mode && (room.game_mode === "party" || room.game_mode.startsWith("mini_"))) {
+            return { error: null, roomId: room._id, room, isCreator: false };
+        }
+
         // Room is full
         if (room.guesser_id) {
             return { error: "Room is full", roomId: null, room: null };

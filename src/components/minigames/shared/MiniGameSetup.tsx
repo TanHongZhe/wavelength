@@ -49,19 +49,27 @@ function MiniGameSetupContent({
     initialMode = "initial"
 }: MiniGameSetupProps) {
     const searchParams = useSearchParams();
-    const [mode, setMode] = useState<"initial" | "create" | "join">(initialMode);
+
+    // Initialize state directly from URL params to prevent UI flickering/mismatch
+    const initialCode = searchParams.get("code");
+    const [mode, setMode] = useState<"initial" | "create" | "join">(() => {
+        return initialCode ? "join" : initialMode;
+    });
+
     const [playerName, setPlayerName] = useState("");
     const [selectedAvatar, setSelectedAvatar] = useState(AVATARS[0]);
     const [isAvatarExpanded, setIsAvatarExpanded] = useState(false);
-    const [roomCode, setRoomCode] = useState("");
 
-    // Auto-fill room code from URL for Mini Games
+    // Initialize roomCode from URL if present
+    const [roomCode, setRoomCode] = useState(() => initialCode || "");
+
+    // Keep syncing URL changes (e.g. back button navigation)
     useEffect(() => {
         const code = searchParams.get("code");
-        console.log("MiniGameSetup: URL Code check:", code); // Debug log
         if (code) {
             setRoomCode(code);
-            setMode("join");
+            // Use timeout to ensure state update persists through mount/animations
+            setTimeout(() => setMode("join"), 250);
         }
     }, [searchParams]);
 
@@ -244,7 +252,7 @@ function MiniGameSetupContent({
                                     onChange={(e) => setPlayerName(e.target.value)}
                                     placeholder="Your name"
                                     maxLength={20}
-                                    className="text-lg h-12 bg-secondary border-2 border-primary/20 focus:border-primary flex-1"
+                                    className="h-11 bg-secondary border-2 border-primary/20 focus:border-primary flex-1"
                                     autoFocus
                                 />
                                 <div className="flex items-center justify-center bg-secondary border-2 border-primary/20 rounded-md w-12 h-12 text-2xl">
@@ -269,7 +277,7 @@ function MiniGameSetupContent({
                             <Button
                                 onClick={handleCreateGame}
                                 disabled={!playerName.trim() || isLoading}
-                                className="w-full h-14 text-lg font-bold btn-game"
+                                className="w-full h-12 font-bold btn-game"
                             >
                                 {isLoading ? "Creating..." : "Play"}
                             </Button>
@@ -302,7 +310,7 @@ function MiniGameSetupContent({
                                     onChange={(e) => setPlayerName(e.target.value)}
                                     placeholder="Your name"
                                     maxLength={20}
-                                    className="text-lg h-12 bg-secondary border-2 border-primary/20 focus:border-primary flex-1"
+                                    className="h-11 bg-secondary border-2 border-primary/20 focus:border-primary flex-1"
                                     autoFocus
                                 />
                                 <div className="flex items-center justify-center bg-secondary border-2 border-primary/20 rounded-md w-12 h-12 text-2xl">
@@ -319,7 +327,7 @@ function MiniGameSetupContent({
                                 onChange={(e) => setRoomCode(e.target.value.toUpperCase())}
                                 placeholder="Enter 4-letter code"
                                 maxLength={4}
-                                className="text-lg h-12 bg-secondary border-2 border-primary/20 focus:border-primary uppercase text-center tracking-widest font-mono font-bold mb-4"
+                                className="h-11 bg-secondary border-2 border-primary/20 focus:border-primary uppercase text-center tracking-widest font-mono font-bold mb-4"
                             />
 
                             {/* Error message */}
@@ -333,7 +341,7 @@ function MiniGameSetupContent({
                             <Button
                                 onClick={handleJoinGame}
                                 disabled={!playerName.trim() || roomCode.trim().length !== 4 || isLoading}
-                                className="w-full h-14 text-lg font-bold btn-game"
+                                className="w-full h-12 font-bold btn-game"
                             >
                                 {isLoading ? "Joining..." : "Join Game"}
                             </Button>

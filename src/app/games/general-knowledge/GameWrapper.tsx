@@ -1,13 +1,29 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import { GeneralKnowledgeGameEngine } from "@/components/minigames/general-knowledge/GeneralKnowledgeGameEngine";
 import { Sparkles, GraduationCap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 
 export function GameWrapper() {
+    return (
+        <Suspense fallback={<div className="min-h-screen bg-background" />}>
+            <GameWrapperContent />
+        </Suspense>
+    );
+}
+
+function GameWrapperContent() {
+    const searchParams = useSearchParams();
     const [gameMode, setGameMode] = useState<"landing" | "create" | "join" | null>("landing");
+
+    useEffect(() => {
+        if (searchParams.get("code")) {
+            setGameMode("join");
+        }
+    }, [searchParams]);
 
     if (gameMode === "create" || gameMode === "join") {
         return (
