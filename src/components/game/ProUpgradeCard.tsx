@@ -92,9 +92,9 @@ export function ProUpgradeCard({ className }: ProUpgradeCardProps) {
                             <Button
                                 onClick={handleLifetime}
                                 variant="outline"
-                                className="w-full flex-1 border-pink-500/30 hover:bg-pink-900/20 hover:text-pink-200 hover:border-pink-500/60 py-6 text-base md:text-lg bg-transparent text-pink-300 transition-all hover:scale-[1.02] relative overflow-hidden group"
+                                className="w-full flex-1 border-pink-500/30 hover:bg-pink-900/20 hover:text-pink-200 hover:border-pink-500/60 py-6 text-base md:text-lg bg-transparent text-pink-300 transition-all hover:scale-[1.02] relative overflow-visible group"
                             >
-                                <div className="absolute top-0 right-0 bg-gradient-to-l from-red-600 to-red-800 px-10 py-1 text-[10px] font-bold uppercase tracking-wider text-white rotate-45 translate-x-[28px] -translate-y-2 shadow-md z-10">Limited Time</div>
+                                <div className="absolute -top-3 -right-3 bg-gradient-to-r from-red-600 to-rose-600 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider text-white shadow-lg z-10 animate-pulse border border-white/10">Limited Time</div>
                                 <div className="flex flex-col items-center relative z-0">
                                     <span className="font-bold">Lifetime Access</span>
                                     <div className="flex items-center gap-2">
@@ -108,7 +108,7 @@ export function ProUpgradeCard({ className }: ProUpgradeCardProps) {
                         <SignInButton mode="modal">
                             <Button className="w-full max-w-sm mx-auto bg-gradient-to-r from-pink-600 to-violet-600 hover:from-pink-500 hover:to-violet-500 text-white border-0 shadow-lg shadow-pink-500/20 py-6 text-lg transition-all hover:scale-[1.02]">
                                 <LogIn className="w-5 h-5 mr-2" />
-                                Log In to Upgrade
+                                Log In to Claim Free Trial
                             </Button>
                         </SignInButton>
                     )}
