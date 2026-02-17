@@ -168,7 +168,7 @@ export function LandingScreen({ onCreateGame, onJoinGame, isLoading, error }: La
     };
 
     return (
-        <div className="min-h-screen flex flex-col items-center pt-36 pb-12 px-6 sm:py-24 bg-background text-foreground transition-colors duration-300">
+        <div className="min-h-screen flex flex-col items-center pt-24 pb-12 px-6 sm:py-24 bg-background text-foreground transition-colors duration-300">
             {/* Animated Background Elements */}
             <div className="fixed inset-0 overflow-hidden pointer-events-none">
                 <motion.div

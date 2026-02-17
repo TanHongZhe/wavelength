@@ -53,6 +53,46 @@ primary-content:
     description: Why playfulness predicts relationship success
   - path: /blog/green-flags-communication
     description: How gaming styles reveal relationship green flags
+  - path: /blog/the-ick-psychology
+    description: Understanding sudden repulsion in dating ("The Ick")
+  - path: /blog/situationship-signs-exit-strategy
+    description: 5 signs you're in a situationship and how to leave
+  - path: /blog/how-to-apologize-correctly
+    description: The 4-part formula for a genuine apology
+  - path: /blog/introvert-extrovert-dating-guide
+    description: Managing social energy differences in relationships
+  - path: /blog/weekly-relationship-check-in-ritual
+    description: 3 questions to ask every Sunday to prevent resentment
+  - path: /blog/stay-at-home-date-ideas
+    description: Romantic date ideas that don't involve going out
+  - path: /blog/gamifying-conflict-resolution
+    description: Using game mechanics to resolve arguments without yelling
+  - path: /blog/bids-for-connection-explained
+    description: How to recognize and respond to small bids for emotional connection
+  - path: /blog/maintaining-ldr-intimacy
+    description: Creative ways (and games) to keep intimacy alive in LDRs
+  - path: /blog/double-date-games-guide
+    description: Best games for double dates to avoid awkwardness
+  - path: /blog/financial-compatibility-games
+    description: Discussing finances without fighting using gamified methods
+  - path: /blog/love-languages-gamified
+    description: Stress-testing your love languages with "This or That"
+  - path: /blog/jealousy-in-ldr
+    description: Managing jealousy and FOMO in long distance relationships
+  - path: /blog/meeting-the-parents-prep
+    description: Prepping for in-laws using "Who's Most Likely"
+  - path: /blog/travel-compatibility-test
+    description: Testing travel compatibility before booking a trip
+  - path: /blog/social-media-boundaries
+    description: Defining "Private" vs "Secret" in the digital age
+  - path: /blog/escaping-roommate-phase
+    description: Breaking the "Roommate Phase" with pattern interrupts
+  - path: /blog/apology-languages
+    description: The 5 Apology Languages and why "I'm sorry" isn't always enough
+  - path: /blog/budget-date-night
+    description: 3 creative date night ideas that cost $0
+  - path: /blog/digital-detox-irony
+    description: Using tech to connect, then disconnecting to deepen the bond
 
 ## Games available on the platform
 games:
