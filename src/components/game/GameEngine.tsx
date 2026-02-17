@@ -6,6 +6,7 @@ import { api } from "convex/_generated/api";
 import { LandingScreen } from "./LandingScreen";
 import { ClassicGameEngine } from "./ClassicGameEngine";
 import { PartyGameEngine } from "./party/PartyGameEngine";
+import { DeckType } from "@/lib/gameData";
 
 export function GameEngine() {
     const [gameState, setGameState] = useState<{
@@ -14,6 +15,7 @@ export function GameEngine() {
         name: string;
         avatar: string;
         roomCode?: string;
+        deckType?: DeckType;
     } | null>(null);
 
     const [isLoading, setIsLoading] = useState(false);
@@ -22,12 +24,13 @@ export function GameEngine() {
     // Use Convex mutation to check room mode during join
     const joinRoomByCode = useMutation(api.rooms.joinRoomByCode);
 
-    const handleCreateGame = (mode: "classic" | "party", name: string, avatar: string) => {
+    const handleCreateGame = (mode: "classic" | "party", name: string, avatar: string, deckType: DeckType = "fun") => {
         setGameState({
             mode,
             isCreating: true,
             name,
-            avatar
+            avatar,
+            deckType
         });
     };
 
@@ -80,6 +83,7 @@ export function GameEngine() {
                     initialPlayerName={gameState.name}
                     initialAvatar={gameState.avatar}
                     initialRoomCode={gameState.roomCode}
+                    initialDeckType={gameState.deckType}
                     isCreating={gameState.isCreating}
                     onLeave={() => setGameState(null)}
                 />
@@ -90,6 +94,7 @@ export function GameEngine() {
                     initialPlayerName={gameState.name}
                     initialAvatar={gameState.avatar}
                     initialRoomCode={gameState.roomCode}
+                    initialDeckType={gameState.deckType}
                     isCreating={gameState.isCreating}
                     onLeave={() => setGameState(null)}
                 />

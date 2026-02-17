@@ -139,7 +139,7 @@ export function usePartyRoom() {
     }, [room?.round_number, room?.psychic_id, roomId, playerId, lastProcessedRound, updatePartyPlayerMutation]);
 
     // CREATE PARTY ROOM
-    const createPartyRoom = useCallback(async (name: string, avatar: string) => {
+    const createPartyRoom = useCallback(async (name: string, avatar: string, deckType: DeckType = "fun") => {
         if (!playerId) { setError("Please wait..."); return; }
 
         if (!isSignedIn) {
@@ -153,7 +153,8 @@ export function usePartyRoom() {
 
         const roomCode = generateRoomCode();
         const targetAngle = generateRandomTarget();
-        const card = getRandomCard("random");
+        const card = getRandomCard(deckType);
+        setCurrentDeck(deckType);
 
         try {
             const newRoomId = await createRoomMutation({
@@ -162,6 +163,7 @@ export function usePartyRoom() {
                 current_card: card,
                 phase: "waiting",
                 game_mode: "party",
+                deck_type: deckType,
                 psychic_id: playerId,
                 round_number: 1,
                 ip_hash: playerId,

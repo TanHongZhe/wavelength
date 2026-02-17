@@ -14,12 +14,14 @@ export function ClassicGameEngine({
     initialPlayerName,
     initialAvatar,
     initialRoomCode,
+    initialDeckType,
     isCreating,
     onLeave
 }: {
     initialPlayerName: string,
     initialAvatar: string,
     initialRoomCode?: string,
+    initialDeckType?: any, // Using any to avoid circular dependency issues if DeckType isn't exported here, but better to import it
     isCreating: boolean,
     onLeave: () => void
 }) {
@@ -58,7 +60,7 @@ export function ClassicGameEngine({
         setHasInitialized(true);
 
         if (isCreating) {
-            createRoom(initialPlayerName, initialAvatar);
+            createRoom(initialPlayerName, initialAvatar, initialDeckType || "fun");
         } else if (initialRoomCode) {
             joinRoom(initialRoomCode, initialPlayerName, initialAvatar);
         }

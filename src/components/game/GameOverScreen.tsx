@@ -11,7 +11,8 @@ import { ProUpgradeCard } from "./ProUpgradeCard";
 
 // Stripe Payment Link for monthly upgrade (same as PaywallModal)
 // Stripe Payment Link for monthly upgrade (PRODUCTION)
-const STRIPE_MONTHLY_LINK = "https://buy.stripe.com/5kQ4gBeej9Nla9g0yrfQI02";
+// Stripe Payment Link for monthly upgrade (PRODUCTION)
+import { STRIPE_MONTHLY_LINK } from "@/lib/stripe";
 
 interface GameOverScreenProps {
     room: Room;
@@ -233,7 +234,7 @@ export function GameOverScreen({ room, playerId, onLeave }: GameOverScreenProps)
                                 <Crown className="w-10 h-10 text-white fill-white/20 mb-3" />
                                 <h3 className="text-2xl font-bold font-display mb-2">Unlock Unlimited Play</h3>
                                 <p className="text-white/90 text-sm">
-                                    Upgrade to Pro to keep playing! <span className="font-bold underline text-white">Only the host needs Pro for the whole party.</span>
+                                    Try Pro free for 24 hours! <span className="font-bold underline text-white">Only the host needs Pro for the whole party.</span>
                                 </p>
                             </div>
 
@@ -258,7 +259,7 @@ export function GameOverScreen({ room, playerId, onLeave }: GameOverScreenProps)
                                     className="w-full h-12 text-lg font-bold bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-500 hover:to-orange-600 text-white shadow-lg"
                                 >
                                     <Sparkles className="w-4 h-4 mr-2" />
-                                    Get Pro Access
+                                    Start 1-Day Free Trial
                                 </Button>
                             ) : (
                                 <SignInButton mode="modal">

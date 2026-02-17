@@ -6,6 +6,7 @@ import { api } from "../../../convex/_generated/api";
 import { Button } from "@/components/ui/button";
 import { Sparkles, Infinity as InfinityIcon, Layers, Gamepad2, LogIn } from "lucide-react";
 import { motion } from "framer-motion";
+import { STRIPE_MONTHLY_LINK, STRIPE_LIFETIME_LINK } from "@/lib/stripe";
 
 interface ProUpgradeCardProps {
     className?: string;
@@ -20,10 +21,6 @@ export function ProUpgradeCard({ className }: ProUpgradeCardProps) {
 
     // Don't show if user is already Pro
     if (isPro) return null;
-
-    // Payment Links
-    const STRIPE_MONTHLY_LINK = "https://buy.stripe.com/5kQ4gBeej9Nla9g0yrfQI02";
-    const STRIPE_LIFETIME_LINK = "https://buy.stripe.com/4gMeVf2vB7Fda9g0yrfQI03";
 
     const handleUpgrade = () => {
         const email = user?.primaryEmailAddress?.emailAddress;
@@ -88,8 +85,8 @@ export function ProUpgradeCard({ className }: ProUpgradeCardProps) {
                                 className="w-full flex-1 bg-gradient-to-r from-pink-600 to-violet-600 hover:from-pink-500 hover:to-violet-500 text-white border-0 shadow-lg shadow-pink-500/20 py-6 text-base md:text-lg transition-all hover:scale-[1.02]"
                             >
                                 <div className="flex flex-col items-center">
-                                    <span className="font-bold">Upgrade Monthly</span>
-                                    <span className="text-xs opacity-90">$0.99 / month</span>
+                                    <span className="font-bold text-lg">Start 1-Day Free Trial</span>
+                                    <span className="text-xs opacity-90">$0.99/mo after • Cancel anytime</span>
                                 </div>
                             </Button>
                             <Button
@@ -97,7 +94,7 @@ export function ProUpgradeCard({ className }: ProUpgradeCardProps) {
                                 variant="outline"
                                 className="w-full flex-1 border-pink-500/30 hover:bg-pink-900/20 hover:text-pink-200 hover:border-pink-500/60 py-6 text-base md:text-lg bg-transparent text-pink-300 transition-all hover:scale-[1.02] relative overflow-hidden group"
                             >
-                                <div className="absolute top-0 right-0 bg-gradient-to-l from-red-600 to-transparent px-8 py-1 text-[9px] font-bold uppercase tracking-wider text-white rotate-45 translate-x-[18px] -translate-y-0.5 shadow-md z-10">Limited Time</div>
+                                <div className="absolute top-0 right-0 bg-gradient-to-l from-red-600 to-red-800 px-10 py-1 text-[10px] font-bold uppercase tracking-wider text-white rotate-45 translate-x-[28px] -translate-y-2 shadow-md z-10">Limited Time</div>
                                 <div className="flex flex-col items-center relative z-0">
                                     <span className="font-bold">Lifetime Access</span>
                                     <div className="flex items-center gap-2">

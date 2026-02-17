@@ -9,9 +9,10 @@ import { MiniGamesModal } from "@/components/minigames/MiniGamesModal";
 import { useUser } from "@clerk/nextjs";
 import { useQuery } from "convex/react";
 import { api } from "convex/_generated/api";
+import { DECK_INFO, DeckType } from "@/lib/gameData";
 
 interface LandingScreenProps {
-    onCreateGame: (mode: "classic" | "party", name: string, avatar: string) => void;
+    onCreateGame: (mode: "classic" | "party", name: string, avatar: string, deckType: DeckType) => void;
     onJoinGame: (code: string, name: string, avatar: string) => void;
     isLoading: boolean;
     error: string | null;
@@ -28,6 +29,7 @@ export function LandingScreen({ onCreateGame, onJoinGame, isLoading, error }: La
     const [roomCode, setRoomCode] = useState("");
     const [playerName, setPlayerName] = useState("");
     const [selectedAvatar, setSelectedAvatar] = useState(AVATARS[0]);
+    const [selectedDeck, setSelectedDeck] = useState<DeckType>("fun");
     const [mode, setMode] = useState<"initial" | "wavelength" | "create" | "join">("initial");
     const [isAvatarExpanded, setIsAvatarExpanded] = useState(false);
     const [showMiniGames, setShowMiniGames] = useState(false);
@@ -279,10 +281,43 @@ export function LandingScreen({ onCreateGame, onJoinGame, isLoading, error }: La
                             </p>
                         )}
 
+                        {/* Deck Selection */}
+                        <div className="mb-6">
+                            <label className="text-sm font-medium text-muted-foreground mb-2 block">Choose a Deck:</label>
+                            <div className="grid grid-cols-2 gap-2 max-h-48 overflow-y-auto pr-1 custom-scrollbar">
+                                {(Object.entries(DECK_INFO) as [DeckType, typeof DECK_INFO[DeckType]][]).map(([key, info]) => {
+                                    const isLocked = !isPro && key !== "fun";
+                                    return (
+                                        <button
+                                            key={key}
+                                            onClick={() => !isLocked && setSelectedDeck(key)}
+                                            className={`p-2 rounded-lg border text-left transition-all relative ${selectedDeck === key
+                                                ? "border-primary bg-primary/10 ring-1 ring-primary ring-inset"
+                                                : isLocked
+                                                    ? "border-border/50 bg-muted/40 opacity-60 cursor-not-allowed"
+                                                    : "border-border hover:bg-secondary"
+                                                }`}
+                                        >
+                                            <div className="flex justify-between items-start">
+                                                <span className="text-lg">{info.emoji}</span>
+                                                {isLocked && <Lock className="w-3 h-3 text-orange-500" />}
+                                            </div>
+                                            <div className="font-semibold text-xs truncate">{info.name}</div>
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                            {!isPro && selectedDeck !== "fun" && (
+                                <p className="text-xs text-orange-500 mt-1 flex items-center gap-1">
+                                    <Lock className="w-3 h-3" /> Upgrade to Pro to unlock all decks
+                                </p>
+                            )}
+                        </div>
+
                         <div className="grid grid-cols-2 gap-3 mb-3">
                             <Button
                                 className="h-14 flex flex-col items-center justify-center gap-1 bg-gradient-to-br from-[#0EA5E9] to-[#2563EB] hover:from-[#0284C7] hover:to-[#1D4ED8] text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300"
-                                onClick={() => onCreateGame("classic", playerName, selectedAvatar)}
+                                onClick={() => onCreateGame("classic", playerName, selectedAvatar, selectedDeck)}
                                 disabled={!playerName.trim() || isLoading}
                             >
                                 <Gamepad2 className="w-5 h-5" />
@@ -291,7 +326,7 @@ export function LandingScreen({ onCreateGame, onJoinGame, isLoading, error }: La
 
                             <Button
                                 className={`h-14 flex flex-col items-center justify-center gap-1 text-white border-0 shadow-lg transition-all duration-300 relative overflow-hidden ${isPro ? "bg-gradient-to-br from-[#F43F5E] to-[#E11D48] hover:from-[#E11D48] hover:to-[#BE123C] hover:shadow-xl" : "bg-gray-400 cursor-not-allowed opacity-70"}`}
-                                onClick={() => onCreateGame("party", playerName, selectedAvatar)}
+                                onClick={() => onCreateGame("party", playerName, selectedAvatar, selectedDeck)}
                                 disabled={!playerName.trim() || isLoading || !isPro}
                             >
                                 {!isPro && (

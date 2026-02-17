@@ -12,12 +12,14 @@ export function PartyGameEngine({
     initialPlayerName,
     initialAvatar,
     initialRoomCode,
+    initialDeckType,
     isCreating,
     onLeave
 }: {
     initialPlayerName: string,
     initialAvatar: string,
     initialRoomCode?: string,
+    initialDeckType?: any,
     isCreating: boolean,
     onLeave: () => void
 }) {
@@ -54,7 +56,7 @@ export function PartyGameEngine({
         setHasInitialized(true);
 
         if (isCreating) {
-            createPartyRoom(initialPlayerName, initialAvatar);
+            createPartyRoom(initialPlayerName, initialAvatar, initialDeckType || "fun");
         } else if (initialRoomCode) {
             joinPartyRoom(initialRoomCode, initialPlayerName, initialAvatar);
         }

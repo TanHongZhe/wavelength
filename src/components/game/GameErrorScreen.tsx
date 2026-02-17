@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button";
 
 // Stripe Payment Link for monthly upgrade (same as PaywallModal)
 // Stripe Payment Link for monthly upgrade (PRODUCTION)
-const STRIPE_MONTHLY_LINK = "https://buy.stripe.com/5kQ4gBeej9Nla9g0yrfQI02";
+// Stripe Payment Link for monthly upgrade (PRODUCTION)
+import { STRIPE_MONTHLY_LINK } from "@/lib/stripe";
 
 interface GameErrorScreenProps {
     error: string;

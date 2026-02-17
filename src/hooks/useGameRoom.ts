@@ -94,7 +94,7 @@ export function useGameRoom() {
     }, [room?.phase, isGameFinished]);
 
     // CREATE ROOM
-    const createRoom = useCallback(async (name: string, avatar: string) => {
+    const createRoom = useCallback(async (name: string, avatar: string, deckType: DeckType = "fun") => {
         if (!playerId) { setError("Please wait..."); return; }
         if (!name.trim()) { setError("Please enter your name"); return; }
 
@@ -109,7 +109,8 @@ export function useGameRoom() {
 
         const roomCode = generateRoomCode();
         const targetAngle = generateRandomTarget();
-        const card = getRandomCard("random");
+        const card = getRandomCard(deckType);
+        setCurrentDeck(deckType);
 
         try {
             const newRoomId = await createRoomMutation({
@@ -121,6 +122,7 @@ export function useGameRoom() {
                 player1_name: trimmedName,
                 player1_avatar: avatar,
                 game_mode: "classic",
+                deck_type: deckType,
                 ip_hash: playerId,
             });
             setRoomId(newRoomId);
