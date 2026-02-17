@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { GameConfig } from "./types";
 import { Button } from "@/components/ui/button";
 import { getDeckCards, FantasyCard, DeckType } from "./cards";
-import { useMutation } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { api } from "convex/_generated/api";
 import { Id } from "convex/_generated/dataModel";
 import { ArrowRight, Check, Lock, Star } from "lucide-react";
@@ -174,6 +174,10 @@ export function FantasySliderGameScreen({
         );
     }
 
+    // Check user pro status
+    const user = useQuery(api.rooms.getMyUser);
+    const isPro = user?.isPro ?? false;
+
     if (gameOver) {
         return (
             <>
@@ -200,7 +204,7 @@ export function FantasySliderGameScreen({
                     </motion.div>
                 </div>
 
-                {showUpgradeOverlay && (
+                {showUpgradeOverlay && !isPro && (
                     <div
                         className="fixed inset-0 z-[60] flex items-center justify-center p-4"
                         style={{ backgroundColor: "rgba(0,0,0,0.85)" }}

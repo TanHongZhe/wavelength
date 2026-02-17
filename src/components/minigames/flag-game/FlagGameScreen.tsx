@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { getFlagCards, FlagCard } from "./flagCards";
-import { useMutation } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { api } from "convex/_generated/api";
 import { Id } from "convex/_generated/dataModel";
 import { ArrowRight, MessageCircle } from "lucide-react";
@@ -357,6 +357,10 @@ export function FlagGameScreen({
 
 
 
+    // Check user pro status
+    const user = useQuery(api.rooms.getMyUser);
+    const isPro = user?.isPro ?? false;
+
     // Game Over Screen
     if (gameOver) {
         return (
@@ -393,7 +397,7 @@ export function FlagGameScreen({
                     </motion.div>
                 </div>
 
-                {showUpgradeOverlay && (
+                {showUpgradeOverlay && !isPro && (
                     <div
                         className="fixed inset-0 z-[60] flex items-center justify-center p-4"
                         style={{ backgroundColor: "rgba(0,0,0,0.85)" }}

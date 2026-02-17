@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { GameConfig } from "./RapidFireGameEngine";
 import { Button } from "@/components/ui/button";
 import { getDeckCards, RapidFireCard, DeckType } from "./cards";
-import { useMutation } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { api } from "convex/_generated/api";
 import { Id } from "convex/_generated/dataModel";
 import { ArrowRight, Check, X, Zap } from "lucide-react";
@@ -240,6 +240,10 @@ export function RapidFireGameScreen({
 
 
 
+    // Check user pro status
+    const user = useQuery(api.rooms.getMyUser);
+    const isPro = user?.isPro ?? false;
+
     // Game Over Screen
     if (gameOver) {
         return (
@@ -276,7 +280,7 @@ export function RapidFireGameScreen({
                     </motion.div>
                 </div>
 
-                {showUpgradeOverlay && (
+                {showUpgradeOverlay && !isPro && (
                     <div
                         className="fixed inset-0 z-[60] flex items-center justify-center p-4"
                         style={{ backgroundColor: "rgba(0,0,0,0.85)" }}

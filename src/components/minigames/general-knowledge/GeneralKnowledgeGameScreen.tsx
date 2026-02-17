@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Check, X, Trophy, Clock, ArrowRight } from "lucide-react";
 import { Room, Player } from "./useGeneralKnowledgeRoom";
 import confetti from "canvas-confetti";
+import { useQuery } from "convex/react";
+import { api } from "convex/_generated/api";
 import { ProUpgradeCard } from "@/components/game/ProUpgradeCard";
 
 interface GeneralKnowledgeGameScreenProps {
@@ -108,9 +110,10 @@ export function GeneralKnowledgeGameScreen({
         );
     }
 
-    // ============================
-    // GAME OVER SCREEN
-    // ============================
+    // Game Over Screen - Check user pro status
+    const user = useQuery(api.rooms.getMyUser);
+    const isPro = user?.isPro ?? false;
+
     if (room.phase === "ended") {
         const sortedPlayers = [...players].sort((a, b) => b.score - a.score);
         const winner = sortedPlayers[0];
@@ -161,7 +164,7 @@ export function GeneralKnowledgeGameScreen({
                 </div>
 
                 {/* Upgrade Overlay - ABOVE everything with z-[60] */}
-                {showUpgradeOverlay && (
+                {showUpgradeOverlay && !isPro && (
                     <div
                         className="fixed inset-0 z-[60] flex items-center justify-center p-4"
                         style={{ backgroundColor: "rgba(0,0,0,0.85)" }}
