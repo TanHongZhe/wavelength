@@ -333,9 +333,12 @@ export const updateRoom = mutation({
             // Party Mode Limit Logic
             // if (!isPro && gameMode === "party") { ... } -> Removed to allow play with limit
 
-            // Enforce round limit: if current round >= limit, block the next round
-            if (!isPro && currentRound >= roundLimit) {
-                console.log("LIMIT REACHED! Round:", currentRound, ">=", roundLimit, "- ENDING GAME");
+            // Start checking limits
+            // Only enforce if we are trying to ADVANCE the round (start a new one)
+            const newRoundNumber = args.updates.round_number;
+
+            if (!isPro && typeof newRoundNumber === "number" && newRoundNumber > roundLimit) {
+                console.log("LIMIT REACHED! New Round:", newRoundNumber, "> Limit:", roundLimit, "- ENDING GAME");
                 await ctx.db.patch(args.roomId, {
                     phase: "ended",
                     clue: "Daily Limit Reached! Upgrade to play more.",
