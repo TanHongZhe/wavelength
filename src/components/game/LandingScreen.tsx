@@ -483,14 +483,13 @@ export function LandingScreen({ onCreateGame, onJoinGame, isLoading, error }: La
                             </Button>
 
                             <Button
-                                className={`h-14 flex flex-col items-center justify-center gap-1 text-white border-0 shadow-lg transition-all duration-300 relative overflow-hidden ${isPro ? "bg-gradient-to-br from-[#F43F5E] to-[#E11D48] hover:from-[#E11D48] hover:to-[#BE123C] hover:shadow-xl" : "bg-gray-400 cursor-not-allowed opacity-70"}`}
+                                className={`h-14 flex flex-col items-center justify-center gap-1 text-white border-0 shadow-lg transition-all duration-300 relative overflow-hidden bg-gradient-to-br from-[#F43F5E] to-[#E11D48] hover:from-[#E11D48] hover:to-[#BE123C] hover:shadow-xl`}
                                 onClick={() => onCreateGame("party", playerName, selectedAvatar, selectedDeck)}
-                                disabled={!playerName.trim() || isLoading || !isPro}
+                                disabled={!playerName.trim() || isLoading}
                             >
                                 {!isPro && (
                                     <div className="absolute top-1 right-1 bg-black/30 backdrop-blur-md px-1.5 py-0.5 rounded text-[10px] font-bold flex items-center gap-1 border border-white/20">
-                                        <Lock className="w-2.5 h-2.5 text-yellow-400" />
-                                        <span className="text-yellow-400">PRO</span>
+                                        <span className="text-white">3 Rounds Free</span>
                                     </div>
                                 )}
                                 <PartyPopper className="w-5 h-5 mt-1" />

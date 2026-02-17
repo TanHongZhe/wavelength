@@ -63,15 +63,12 @@ export const createRoom = mutation({
             }
         }
 
-        // 2. Game Mode Restrictions
+        // 2. Game Mode Restrictions - Party Mode unlocked with limit
+        /* 
         if (args.game_mode === "party") {
-            if (!identity) {
-                throw new ConvexError("Please log in to play Party Mode.");
-            }
-            if (!isPro) {
-                throw new ConvexError("Party Mode is locked for Pro users only.");
-            }
+           // Allow creation for non-pro, implemented limit in updateRoom
         }
+        */
 
         // Note: Per-room round limits are enforced in updateRoom
 
@@ -281,7 +278,7 @@ export const updateRoom = mutation({
             const currentRound = room?.round_number ?? 1;
 
             // Determine the round limit for this game mode
-            let roundLimit = 3; // TESTING LIMIT (change to 10 for production)
+            let roundLimit = 3; // Free tier limit
             if (gameMode === "mini_rapid_fire" || gameMode === "mini_flag_game" || gameMode === "mini_whos_most_likely" || gameMode === "mini_fantasy_slider" || gameMode === "mini_general_knowledge") {
                 roundLimit = 20;
             }
@@ -310,10 +307,8 @@ export const updateRoom = mutation({
                 }
             }
 
-            // Party Mode is Pro-only
-            if (!isPro && gameMode === "party") {
-                throw new ConvexError("Party Mode is locked for Pro users.");
-            }
+            // Party Mode Limit Logic
+            // if (!isPro && gameMode === "party") { ... } -> Removed to allow play with limit
 
             // Enforce round limit: if current round >= limit, block the next round
             if (!isPro && currentRound >= roundLimit) {

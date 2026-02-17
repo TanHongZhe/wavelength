@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import confetti from "canvas-confetti";
 import { Dial } from "../Dial";
+import { ProUpgradeCard } from "../ProUpgradeCard";
 import { Room, PartyPlayer } from "@/hooks/usePartyRoom";
 import { calculatePoints, DECK_INFO, DeckType } from "@/lib/gameData";
 import { Button } from "@/components/ui/button";
@@ -67,6 +68,7 @@ export function PartyGameScreen({
 }: PartyGameScreenProps) {
     const [clue, setClue] = useState("");
     const [showDeckPicker, setShowDeckPicker] = useState(false);
+    const [showUpgradeOverlay, setShowUpgradeOverlay] = useState(true);
 
     // Check Pro status
     const myUser = useQuery(api.rooms.getMyUser);
@@ -113,6 +115,8 @@ export function PartyGameScreen({
     const handleSubmitClue = () => {
         if (clue.trim()) onSubmitClue(clue.trim());
     };
+
+    const isLimitReached = room.clue?.includes("Daily Limit");
 
     return (
         <div className="min-h-screen p-6 pt-36 md:pt-28 flex flex-col items-center">
@@ -197,10 +201,10 @@ export function PartyGameScreen({
                                             }}
                                             disabled={isLocked}
                                             className={`p-4 rounded-xl border-2 transition-all relative overflow-hidden ${isSelected
-                                                    ? "border-primary bg-primary/20"
-                                                    : isLocked
-                                                        ? "border-border/50 bg-muted/20 opacity-60 cursor-not-allowed"
-                                                        : "border-border hover:border-primary/50 bg-card hover:bg-secondary cursor-pointer"
+                                                ? "border-primary bg-primary/20"
+                                                : isLocked
+                                                    ? "border-border/50 bg-muted/20 opacity-60 cursor-not-allowed"
+                                                    : "border-border hover:border-primary/50 bg-card hover:bg-secondary cursor-pointer"
                                                 }`}
                                         >
                                             <div className="flex justify-between items-start">
@@ -490,7 +494,7 @@ export function PartyGameScreen({
                                     className="game-card text-center"
                                 >
                                     <h3 className="font-display text-3xl font-bold text-destructive mb-6">
-                                        Game Ended
+                                        {isLimitReached ? "Daily Limit Reached!" : "Game Ended"}
                                     </h3>
 
                                     <div className="space-y-4 mb-8">
@@ -610,6 +614,23 @@ export function PartyGameScreen({
                     </div>
                 </div>
             </div>
+            {/* Overlay Component */}
+            {showUpgradeOverlay && !isPro && isLimitReached && (
+                <div
+                    className="fixed inset-0 z-[60] flex items-center justify-center p-4"
+                    style={{ backgroundColor: "rgba(0,0,0,0.85)" }}
+                >
+                    <div className="relative w-full max-w-4xl">
+                        <button
+                            onClick={() => setShowUpgradeOverlay(false)}
+                            className="absolute -top-3 -right-3 z-[70] bg-white text-black rounded-full w-10 h-10 flex items-center justify-center shadow-xl text-xl font-bold hover:bg-gray-200 transition-colors border-2 border-gray-300"
+                        >
+                            ✕
+                        </button>
+                        <ProUpgradeCard className="mt-0" />
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
