@@ -230,8 +230,11 @@ export function getDeckCards(deckType: DeckType, count: number, seed: number): F
     const allDeckCards = getCardsByDeck(deckType);
     const random = mulberry32(seed);
 
-    const shuffled = [...allDeckCards]
-        .sort(() => 0.5 - random());
+    const shuffled = [...allDeckCards];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
 
     return shuffled.slice(0, count);
 }

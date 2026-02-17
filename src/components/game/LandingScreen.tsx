@@ -1,11 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { AudioWaveform, Users, Sparkles, ChevronDown, Gamepad2, PartyPopper, Dices, Lock } from "lucide-react";
+import { AudioWaveform, Users, Sparkles, ChevronDown, Gamepad2, PartyPopper, Lock, SlidersVertical, Zap, Flag, GraduationCap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { MiniGamesModal } from "@/components/minigames/MiniGamesModal";
 import { useUser } from "@clerk/nextjs";
 import { useQuery } from "convex/react";
 import { api } from "convex/_generated/api";
@@ -22,7 +22,90 @@ interface LandingScreenProps {
 const AVATARS = ["🐼", "🐯", "🐶", "🐱", "🐷", "🐰", "🦊", "🐻", "🐨", "🦁", "🐮", "🐵", "🐸", "🦄", "🐧", "🐳", "🦉"];
 const INITIAL_AVATAR_COUNT = 5;
 
+// Game Definitions
+const GAMES = [
+    {
+        id: "wavelength",
+        name: "Wavelength",
+        description: "Signature telepathic game",
+        players: "2-6 players",
+        icon: AudioWaveform,
+        style: "bg-gradient-to-br from-wedge-teal to-wedge-orange text-white",
+        iconStyle: "text-white",
+        isMultiplayer: true,
+        isTwoPlayer: true,
+        action: "mode",
+        path: ""
+    },
+    {
+        id: "fantasy-slider",
+        name: "Fantasy Slider",
+        description: "Rate your interest in various fantasies on a scale of 0-10.",
+        players: "2 players",
+        icon: SlidersVertical,
+        style: "bg-gradient-to-br from-blue-400/20 to-cyan-400/20 text-cyan-500 group-hover:from-blue-400 group-hover:to-cyan-400 group-hover:text-white",
+        iconStyle: "",
+        isMultiplayer: false,
+        isTwoPlayer: true,
+        action: "navigate",
+        path: "/games/fantasy-slider"
+    },
+    {
+        id: "whos-most-likely",
+        name: "Who's Most Likely?",
+        description: "Point fingers! Who is most likely to do what? 10s to decide.",
+        players: "2 players",
+        icon: Users,
+        style: "bg-gradient-to-br from-purple-400/20 to-pink-400/20 text-pink-500 group-hover:from-purple-400 group-hover:to-pink-400 group-hover:text-white",
+        iconStyle: "",
+        isMultiplayer: false,
+        isTwoPlayer: true,
+        action: "navigate",
+        path: "/games/whos-most-likely"
+    },
+    {
+        id: "this-or-that",
+        name: "This or That",
+        description: "10 seconds to choose between two options. Are you in sync?",
+        players: "2 players",
+        icon: Zap,
+        style: "bg-gradient-to-br from-yellow-400/20 to-orange-400/20 text-orange-500 group-hover:from-yellow-400 group-hover:to-orange-400 group-hover:text-white",
+        iconStyle: "",
+        isMultiplayer: false,
+        isTwoPlayer: true,
+        action: "navigate",
+        path: "/games/this-or-that"
+    },
+    {
+        id: "flag-game",
+        name: "Red, Green, Beige",
+        description: "Rate dating behaviors as red, green, or beige flags.",
+        players: "2 players",
+        icon: Flag,
+        style: "bg-gradient-to-br from-red-400/20 to-green-400/20 text-red-500 group-hover:from-red-400 group-hover:to-green-400 group-hover:text-white",
+        iconStyle: "",
+        isMultiplayer: false,
+        isTwoPlayer: true,
+        action: "navigate",
+        path: "/games/flag-game"
+    },
+    {
+        id: "general-knowledge",
+        name: "General Knowledge",
+        description: "Test your smarts across 8 topics. 10s to answer!",
+        players: "2-6 players",
+        icon: GraduationCap,
+        style: "bg-gradient-to-br from-blue-400/20 to-indigo-400/20 text-indigo-500 group-hover:from-blue-400 group-hover:to-indigo-400 group-hover:text-white",
+        iconStyle: "",
+        isMultiplayer: true, // As per user request, this shows in multiplayer
+        isTwoPlayer: true,
+        action: "navigate",
+        path: "/games/general-knowledge"
+    }
+];
+
 export function LandingScreen({ onCreateGame, onJoinGame, isLoading, error }: LandingScreenProps) {
+    const router = useRouter();
     const { isSignedIn } = useUser();
     const myUser = useQuery(api.rooms.getMyUser);
     const isPro = myUser?.isPro ?? false;
@@ -32,10 +115,11 @@ export function LandingScreen({ onCreateGame, onJoinGame, isLoading, error }: La
     const [selectedDeck, setSelectedDeck] = useState<DeckType>("fun");
     const [mode, setMode] = useState<"initial" | "wavelength" | "create" | "join">("initial");
     const [isAvatarExpanded, setIsAvatarExpanded] = useState(false);
-    const [showMiniGames, setShowMiniGames] = useState(false);
+
+    // Filter State: "2P" -> 2 Players (Everything), "MP" -> Multiplayer (Subset)
+    const [filter, setFilter] = useState<"2P" | "MP">("2P");
 
     // Auto-fill room code from URL
-    // Re-implemented with safety checks for client-side execution
     useEffect(() => {
         if (typeof window !== "undefined") {
             const params = new URLSearchParams(window.location.search);
@@ -43,13 +127,26 @@ export function LandingScreen({ onCreateGame, onJoinGame, isLoading, error }: La
             if (codeParam && codeParam !== roomCode) {
                 setRoomCode(codeParam);
                 setMode("join");
-                // We purposefully avoid window.history.replaceState here to prevent conflicts with Clerk/Next router
             }
         }
-    }, []); // Run once on mount
+    }, []);
+
+    const filteredGames = GAMES.filter(game => {
+        if (filter === "2P") return true; // Show all games for 2 Players
+        if (filter === "MP") return game.isMultiplayer; // Show only multiplayer games
+        return true;
+    });
+
+    const handleGameClick = (game: typeof GAMES[0]) => {
+        if (game.action === "mode") {
+            setMode("wavelength");
+        } else if (game.action === "navigate") {
+            router.push(game.path);
+        }
+    };
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-background text-foreground transition-colors duration-300">
+        <div className="min-h-screen flex flex-col items-center py-12 px-6 sm:py-24 bg-background text-foreground transition-colors duration-300">
             {/* Animated Background Elements */}
             <div className="fixed inset-0 overflow-hidden pointer-events-none">
                 <motion.div
@@ -69,7 +166,7 @@ export function LandingScreen({ onCreateGame, onJoinGame, isLoading, error }: La
                 initial={{ opacity: 0, y: -30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
-                className="text-center mb-12"
+                className="text-center mb-8"
             >
                 <motion.div
                     className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-primary mb-6"
@@ -83,63 +180,82 @@ export function LandingScreen({ onCreateGame, onJoinGame, isLoading, error }: La
                     <AudioWaveform className="w-10 h-10 text-primary-foreground" />
                 </motion.div>
 
-                <h1 className="font-display text-5xl md:text-6xl font-bold text-primary mb-3">
+                <h1 className="font-display text-4xl md:text-5xl font-bold text-primary mb-2">
                     Wavelength
                 </h1>
-                <p className="text-xl text-muted-foreground font-medium">
+                <p className="text-lg text-muted-foreground font-medium">
                     Are you on the same wavelength?
                 </p>
             </motion.div>
 
-            {/* Action Cards */}
+            {/* Main Content */}
             <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
-                className="w-full max-w-md space-y-4"
+                className="w-full max-w-md"
             >
                 {mode === "initial" ? (
-                    <>
-                        <motion.button
-                            className="game-card w-full text-left group hover:scale-[1.02] transition-transform"
-                            onClick={() => setMode("wavelength")}
-                            whileTap={{ scale: 0.98 }}
-                        >
-                            <div className="flex items-start gap-4">
-                                <div className="p-3 rounded-xl bg-gradient-to-br from-wedge-teal to-wedge-orange text-white transition-all">
-                                    <AudioWaveform className="w-6 h-6" />
-                                </div>
-                                <div className="flex-1">
-                                    <h3 className="font-display text-xl font-semibold text-primary mb-1">
-                                        Wavelength
-                                    </h3>
-                                    <p className="text-muted-foreground">
-                                        Signature telepathic game • 2-6 players
-                                    </p>
-                                </div>
-                            </div>
-                        </motion.button>
+                    <div className="space-y-4">
+                        {/* Filter Toggle */}
+                        <div className="flex bg-secondary/50 p-1 rounded-xl border border-border/50 mb-4">
+                            <button
+                                onClick={() => setFilter("2P")}
+                                className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all ${filter === "2P"
+                                    ? "bg-bg-background shadow-sm text-primary"
+                                    : "text-muted-foreground hover:text-primary"
+                                    }`}
+                            >
+                                2 Players
+                            </button>
+                            <button
+                                onClick={() => setFilter("MP")}
+                                className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all ${filter === "MP"
+                                    ? "bg-background shadow-sm text-primary"
+                                    : "text-muted-foreground hover:text-primary"
+                                    }`}
+                            >
+                                Multiplayer
+                            </button>
+                        </div>
 
-                        <motion.button
-                            className="game-card w-full text-left group hover:scale-[1.02] transition-transform"
-                            onClick={() => setShowMiniGames(true)}
-                            whileTap={{ scale: 0.98 }}
-                        >
-                            <div className="flex items-start gap-4">
-                                <div className="p-3 rounded-xl bg-gradient-to-br from-blue-500/20 to-purple-500/20 text-purple-500 group-hover:from-blue-500 group-hover:to-purple-500 group-hover:text-white transition-all">
-                                    <Dices className="w-6 h-6" />
-                                </div>
-                                <div>
-                                    <h3 className="font-display text-xl font-semibold text-primary mb-1">
-                                        Mini Games 🎲
-                                    </h3>
-                                    <p className="text-muted-foreground">
-                                        Quick 2-player games to play together
-                                    </p>
-                                </div>
-                            </div>
-                        </motion.button>
-                    </>
+                        {/* Games List */}
+                        <div className="space-y-3">
+                            <AnimatePresence mode="popLayout">
+                                {filteredGames.map((game) => (
+                                    <motion.button
+                                        key={game.id}
+                                        layout
+                                        initial={{ opacity: 0, scale: 0.95 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        exit={{ opacity: 0, scale: 0.95 }}
+                                        className="game-card w-full text-left group hover:scale-[1.02] transition-transform"
+                                        onClick={() => handleGameClick(game)}
+                                        whileTap={{ scale: 0.98 }}
+                                    >
+                                        <div className="flex items-start gap-4">
+                                            <div className={`p-3 rounded-xl transition-all ${game.style}`}>
+                                                <game.icon className={`w-6 h-6 ${game.iconStyle}`} />
+                                            </div>
+                                            <div className="flex-1">
+                                                <h3 className="font-display text-lg font-semibold text-primary mb-1">
+                                                    {game.name}
+                                                </h3>
+                                                <div className="flex items-center gap-2 mb-1">
+                                                    <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-secondary text-primary border border-border">
+                                                        {game.players}
+                                                    </span>
+                                                </div>
+                                                <p className="text-sm text-muted-foreground leading-snug">
+                                                    {game.description}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </motion.button>
+                                ))}
+                            </AnimatePresence>
+                        </div>
+                    </div>
                 ) : mode === "wavelength" ? (
                     <motion.div
                         initial={{ opacity: 0, scale: 0.95 }}
@@ -473,16 +589,6 @@ export function LandingScreen({ onCreateGame, onJoinGame, isLoading, error }: La
                     </motion.div>
                 )}
             </motion.div>
-
-            {/* Footer */}
-
-
-
-            {/* Mini Games Modal */}
-            <MiniGamesModal
-                isOpen={showMiniGames}
-                onClose={() => setShowMiniGames(false)}
-            />
         </div>
     );
 }

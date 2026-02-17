@@ -366,9 +366,12 @@ export function getDeckCards(deckType: DeckType, count: number, seed: number): W
     const random = mulberry32(seed);
 
     // Filter duplicates if any (though static lists shouldn't have them)
-    // Then shuffle
-    const shuffled = [...allDeckCards]
-        .sort(() => 0.5 - random());
+    // Then shuffle using Fisher-Yates
+    const shuffled = [...allDeckCards];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
 
     // Return requested amount
     return shuffled.slice(0, count);

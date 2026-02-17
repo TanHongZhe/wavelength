@@ -885,24 +885,29 @@ export const DECKS = {
 
 export type DeckType = keyof typeof DECKS;
 
+// Mulberry32 based seeded random
+function mulberry32(a: number) {
+    return function () {
+        let t = a += 0x6D2B79F5;
+        t = Math.imul(t ^ t >>> 15, t | 1);
+        t ^= t + Math.imul(t ^ t >>> 7, t | 61);
+        return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    }
+}
+
 export function getDeckCards(deckType: DeckType, count: number, seed?: number): RapidFireCard[] {
     // Safety check: default to couples if deckType is invalid
     const validDeckType = deckType && DECKS[deckType] ? deckType : 'couples';
     const deck = DECKS[validDeckType].cards;
 
-    // Seeded random number generator for consistent shuffle across clients
-    const seededRandom = (s: number) => {
-        const x = Math.sin(s) * 10000;
-        return x - Math.floor(x);
-    };
+    // Use seed if provided, otherwise random
+    const currentSeed = seed ?? Math.floor(Math.random() * 1000000);
+    const random = mulberry32(currentSeed);
 
-    // Shuffle the deck - use seed if provided for consistent results
+    // Fisher-Yates shuffle using the seeded random generator
     const shuffled = [...deck];
-    let currentSeed = seed ?? Math.random() * 10000;
-
     for (let i = shuffled.length - 1; i > 0; i--) {
-        currentSeed = seededRandom(currentSeed * (i + 1));
-        const j = Math.floor(currentSeed * (i + 1));
+        const j = Math.floor(random() * (i + 1));
         [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
     }
 
