@@ -9,7 +9,6 @@ import { dark } from "@clerk/themes";
 
 const siteUrl = process.env.NEXT_PUBLIC_APP_URL || "https://wavelength.lol";
 
-export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),

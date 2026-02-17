@@ -1,7 +1,6 @@
 import { Metadata } from "next";
 import FeedbackForm from "./FeedbackForm";
 
-export const runtime = 'edge';
 
 export const metadata: Metadata = {
     title: "Send Feedback | Wavelength Online",

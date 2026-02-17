@@ -2,7 +2,6 @@ import { Metadata } from "next";
 import { GameWrapper } from "./GameWrapper";
 import { MoreGamesSidebar } from "@/components/minigames/MoreGamesSidebar";
 
-export const runtime = 'edge';
 
 export const metadata: Metadata = {
     title: "Who's Most Likely? - The Couples & Friends Party Game | Wavelength",
