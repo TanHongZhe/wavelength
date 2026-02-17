@@ -131,6 +131,17 @@ export function PartyGameScreen({
                         <div className="font-display text-sm text-muted-foreground mr-1">
                             Room: <span className="font-bold text-primary">{room.room_code}</span>
                         </div>
+
+                        {/* Deck Badge */}
+                        <div className="flex items-center gap-2 px-3 py-1.5 bg-secondary/50 rounded-full border border-border/50 backdrop-blur-sm shadow-sm">
+                            <span className="text-lg animate-bounce-slow" role="img" aria-label="deck">
+                                {DECK_INFO[currentDeck]?.emoji || "🃏"}
+                            </span>
+                            <span className="text-xs font-medium text-foreground/80 uppercase tracking-wider hidden sm:inline-block">
+                                {DECK_INFO[currentDeck]?.name || "Deck"}
+                            </span>
+                        </div>
+
                         <div className="font-display text-sm text-muted-foreground">
                             Round: <span className="font-bold text-primary">{room.round_number}</span>
                         </div>

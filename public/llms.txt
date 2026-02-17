@@ -39,6 +39,20 @@ primary-content:
     description: Complete guide on how to play Wavelength
   - path: /about
     description: About the project and technology
+  - path: /blog
+    description: Relationship advice, game guides, and tips for LDR couples
+  - path: /blog/long-distance-relationship-games
+    description: Guide on using games to keep the spark alive in LDRs
+  - path: /blog/virtual-date-night-guide
+    description: 5 virtual date ideas beyond just watching movies
+  - path: /blog/relationship-telepathy-science
+    description: The psychology behind "syncing up" with your partner
+  - path: /blog/deep-questions-for-couples
+    description: 10 deep conversation starters to skip small talk
+  - path: /blog/playfulness-relationship-success
+    description: Why playfulness predicts relationship success
+  - path: /blog/green-flags-communication
+    description: How gaming styles reveal relationship green flags
 
 ## Games available on the platform
 games:
