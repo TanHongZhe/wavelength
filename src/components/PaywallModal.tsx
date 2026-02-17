@@ -190,7 +190,7 @@ export function PaywallModal({ isOpen, onClose, message }: PaywallModalProps) {
                             <SignInButton mode="modal">
                                 <Button className="w-full bg-gradient-to-r from-pink-600 to-violet-600 hover:from-pink-500 hover:to-violet-500 text-white border-0 shadow-lg shadow-pink-500/20 py-6 text-lg transition-all hover:scale-[1.02]">
                                     <LogIn className="w-5 h-5 mr-2" />
-                                    Log In to Claim Free Trial
+                                    Log In to Upgrade
                                 </Button>
                             </SignInButton>
                         )}

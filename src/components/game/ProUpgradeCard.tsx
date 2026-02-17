@@ -108,7 +108,7 @@ export function ProUpgradeCard({ className }: ProUpgradeCardProps) {
                         <SignInButton mode="modal">
                             <Button className="w-full max-w-sm mx-auto bg-gradient-to-r from-pink-600 to-violet-600 hover:from-pink-500 hover:to-violet-500 text-white border-0 shadow-lg shadow-pink-500/20 py-4 text-base transition-all hover:scale-[1.02]">
                                 <LogIn className="w-4 h-4 mr-2" />
-                                Log In to Claim Free Trial
+                                Log In to Upgrade
                             </Button>
                         </SignInButton>
                     )}

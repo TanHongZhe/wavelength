@@ -272,7 +272,7 @@ export function GameOverScreen({ room, playerId, onLeave }: GameOverScreenProps)
                             ) : (
                                 <SignInButton mode="modal">
                                     <LogIn className="w-4 h-4 mr-2" />
-                                    Log In to Claim Free Trial
+                                    Log In to Upgrade
                                 </SignInButton>
                             )}
                         </motion.div>

@@ -94,7 +94,7 @@ export function GameErrorScreen({ error, onLeave, playerId }: GameErrorScreenPro
                                 className="w-full h-12 text-lg font-bold bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-500 hover:to-orange-600 text-white border-0 shadow-lg hover:shadow-orange-500/25 transition-all"
                             >
                                 <LogIn className="w-5 h-5 mr-2" />
-                                Log In to Claim Free Trial
+                                Log In to Upgrade
                             </Button>
                         </SignInButton>
                     )}
