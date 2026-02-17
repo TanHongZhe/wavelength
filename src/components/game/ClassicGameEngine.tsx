@@ -128,7 +128,6 @@ export function ClassicGameEngine({
                     onUpdateScore={updateScore}
                     onSetCustomCard={setCustomCard}
                     onChangeCard={changeCard}
-                    onSwitchDeck={switchDeck}
                     onEndGame={endGame}
                     onLeave={handleLeave}
                 />
