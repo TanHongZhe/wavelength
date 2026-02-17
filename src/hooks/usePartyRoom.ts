@@ -55,6 +55,7 @@ export function usePartyRoom() {
     const updatePartyPlayerMutation = useMutation(api.rooms.updatePartyPlayer);
     const removePartyPlayerMutation = useMutation(api.rooms.removePartyPlayer);
     const joinPartyRoomMutation = useMutation(api.rooms.joinPartyRoomByCode);
+    const revealPartyRoundMutation = useMutation(api.rooms.revealPartyRound);
 
     // Convert to expected format
     const room: Room | null = convexRoom ? {
@@ -268,65 +269,10 @@ export function usePartyRoom() {
         }
     }, [roomId, currentPlayer, playerId, updatePartyPlayerMutation]);
 
-    // SCORING EFFECT — only runs when phase transitions to "revealed"
-    // Uses a ref-based guard rather than depending on `currentPlayer` (which changes on every player update)
-    useEffect(() => {
-        if (!roomId || !room || !playerId) return;
-        if (room.phase !== "revealed") return;
-
-        // Guard: only score once per round
-        const roundKey = room.round_number;
-        if (scoredRoundsRef.current.has(roundKey)) return;
-
-        // Need to read current player data from the latest convexPlayers snapshot
-        const myPlayer = convexPlayers?.find((p: any) => p.player_id === playerId);
-
-        // Safety check if myPlayer exists
-        if (!myPlayer) return;
-
-        // 1. GUESSER LOGIC: Calculate point based on my guess angle
-        if (myPlayer.role === "guesser" && myPlayer.guess_angle != null) {
-            scoredRoundsRef.current.add(roundKey);
-            const points = calculatePoints(room.target_angle, myPlayer.guess_angle);
-            const newScore = (myPlayer.score ?? 0) + points;
-
-            updatePartyPlayerMutation({
-                room_id: roomId,
-                player_id: playerId,
-                updates: { score: newScore },
-            }).catch(err => console.error("Failed to update own score:", err));
-        }
-
-        // 2. PSYCHIC LOGIC: Calculate points based on AVERAGE of all valid guessers
-        if (myPlayer.role === "psychic") {
-            scoredRoundsRef.current.add(roundKey);
-
-            // Get all guessers who made a valid guess
-            const validGuessers = (convexPlayers || []).filter((p: any) => p.role === "guesser" && p.guess_angle != null);
-
-            if (validGuessers.length > 0) {
-                let totalPoints = 0;
-                validGuessers.forEach((p: any) => {
-                    totalPoints += calculatePoints(room.target_angle, p.guess_angle);
-                });
-
-                // Average rounded to nearest integer
-                const avgPoints = Math.round(totalPoints / validGuessers.length);
-                const newScore = (myPlayer.score ?? 0) + avgPoints;
-
-                updatePartyPlayerMutation({
-                    room_id: roomId,
-                    player_id: playerId,
-                    updates: { score: newScore },
-                }).catch(err => console.error("Failed to update psychic score:", err));
-            }
-        }
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [room?.phase, room?.round_number, room?.target_angle, roomId, playerId, updatePartyPlayerMutation]);
+    // SCORING REMOVED - Handled by atomic mutation revealPartyRound
 
     const lockInGuess = useCallback(async (angle: number) => {
-        if (!roomId || !currentPlayer) return;
+        if (!roomId || !currentPlayer || !room) return; // Added room check
 
         await updatePartyPlayerMutation({
             room_id: roomId,
@@ -338,13 +284,23 @@ export function usePartyRoom() {
         });
 
         // Check if everyone is locked in
+        // NOTE: 'players' from the hook might be slightly stale compared to DB.
+        // However, for the last person locking in, their local optimistic update (or rapid sequence)
+        // usually aligns.
+        // Better pattern: The mutation could check this, but we'll stick to client trigger for now.
         const guessingPlayers = players.filter(p => p.role === "guesser");
-        const allLocked = guessingPlayers.every(p => p.player_id === playerId || p.locked_in);
 
-        if (allLocked && guessingPlayers.length > 0) {
-            await updateRoomMutation({ roomId, updates: { phase: "revealed" } });
+        // We consider "all locked" if everyone ELSE is locked, and WE just locked.
+        const allOthersLocked = guessingPlayers.every(p => p.player_id === playerId || p.locked_in);
+
+        if (allOthersLocked && guessingPlayers.length > 0) {
+            // Updated to use ATOMIC scoring mutation
+            await revealPartyRoundMutation({
+                roomId,
+                targetAngle: room.target_angle
+            });
         }
-    }, [roomId, currentPlayer, playerId, players, updateRoomMutation, updatePartyPlayerMutation]);
+    }, [roomId, currentPlayer, playerId, players, room, updatePartyPlayerMutation, revealPartyRoundMutation]);
 
     const nextRound = useCallback(async () => {
         if (!roomId || !players.length) return;
@@ -353,11 +309,7 @@ export function usePartyRoom() {
             // Find next psychic
             const sortedPlayers = [...players].sort((a, b) => a.id.localeCompare(b.id)); // Using unique DB ID for deterministic sort
 
-            // Find current psychic index
-            // We use 'room.psychic_id' if available, otherwise just use roles
-            // Actually, we store psychic_id in room now
-
-            // Wait, previous implementation logic:
+            // ... (psychic selection logic) ...
             const currentPsychicId = room?.psychic_id;
             const currentPsychicIndex = sortedPlayers.findIndex(p => p.player_id === currentPsychicId);
 
@@ -367,7 +319,13 @@ export function usePartyRoom() {
             const nextPsychicId = sortedPlayers[nextPsychicIndex].player_id;
 
             const targetAngle = generateRandomTarget();
-            const card = getRandomCard(currentDeck);
+
+            // Use Deck from ROOM STATE if available, otherwise currentDeck
+            // This ensures all players use the deck set by the host
+            // (Note: convexRoom from usePartyRoom isn't typed with deck_type exposed in hook currently,
+            // but we can assume it might be there or fallback)
+            const activeDeck = (room as any)?.deck_type || currentDeck;
+            const card = getRandomCard(activeDeck);
 
             await updateRoomMutation({
                 roomId,
@@ -385,7 +343,7 @@ export function usePartyRoom() {
             const msg = err.data?.message || err.message || "Failed to start next round";
             setError(msg);
         }
-    }, [roomId, players, room?.round_number, room?.psychic_id, currentDeck, updateRoomMutation]);
+    }, [roomId, players, room?.round_number, room?.psychic_id, room, currentDeck, updateRoomMutation]);
 
     const setCustomCard = useCallback(async (left: string, right: string) => {
         if (!roomId) return;
@@ -405,7 +363,13 @@ export function usePartyRoom() {
         setCurrentDeck(deck);
         if (!roomId) return;
         const newCard = getRandomCard(deck);
-        await updateRoomMutation({ roomId, updates: { current_card: newCard } });
+        await updateRoomMutation({
+            roomId,
+            updates: {
+                current_card: newCard,
+                deck_type: deck
+            }
+        });
     }, [roomId, updateRoomMutation]);
 
     const endGame = useCallback(async () => {

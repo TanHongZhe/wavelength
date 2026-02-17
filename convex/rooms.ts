@@ -221,7 +221,7 @@ export const joinRoomByCode = mutation({
         }
 
         // Room is full
-        if (room.guesser_id) {
+        if (room.guesser_id && room.guesser_id !== args.playerId) {
             return { error: "Room is full", roomId: null, room: null };
         }
 
@@ -335,6 +335,67 @@ export const updateRoom = mutation({
             await ctx.db.patch(args.roomId, patchData);
         }
     },
+});
+
+// Reveal Party Round & Score (Atomic)
+export const revealPartyRound = mutation({
+    args: {
+        roomId: v.id("rooms"),
+        targetAngle: v.number(),
+    },
+    handler: async (ctx, args) => {
+        const room = await ctx.db.get(args.roomId);
+        if (!room || room.phase === "revealed") return;
+
+        // 1. Get all players
+        const players = await ctx.db
+            .query("party_players")
+            .withIndex("by_room", (q) => q.eq("room_id", args.roomId))
+            .collect();
+
+        const updates: Promise<any>[] = [];
+        const guessers = players.filter(p => p.role === "guesser" && p.guess_angle != null);
+
+        // 2. Score Guessers
+        let totalGuesserPoints = 0;
+
+        // Helper for points
+        const getPoints = (target: number, guess: number) => {
+            const diff = Math.abs(target - guess);
+            if (diff <= 5) return 4;
+            if (diff <= 13) return 3;
+            if (diff <= 19) return 2;
+            return 0;
+        };
+
+        for (const player of guessers) {
+            const points = getPoints(args.targetAngle, player.guess_angle!);
+            totalGuesserPoints += points;
+
+            updates.push(ctx.db.patch(player._id, {
+                score: (player.score ?? 0) + points
+            }));
+        }
+
+        // 3. Score Psychic (Combined Average)
+        const psychics = players.filter(p => p.role === "psychic");
+        const avgPoints = guessers.length > 0
+            ? Math.round(totalGuesserPoints / guessers.length)
+            : 0;
+
+        for (const psychic of psychics) {
+            updates.push(ctx.db.patch(psychic._id, {
+                score: (psychic.score ?? 0) + avgPoints
+            }));
+        }
+
+        // 4. Update Room Phase
+        updates.push(ctx.db.patch(args.roomId, {
+            phase: "revealed",
+            updated_at: Date.now()
+        }));
+
+    }
 });
 
 // Delete room
