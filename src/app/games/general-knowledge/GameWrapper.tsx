@@ -58,9 +58,9 @@ function GameWrapperContent() {
                     <GraduationCap className="w-10 h-10 text-white" />
                 </motion.div>
 
-                <h1 className="font-display text-5xl md:text-6xl font-bold text-primary mb-3">
+                <h2 className="font-display text-5xl md:text-6xl font-bold text-primary mb-3">
                     General Knowledge
-                </h1>
+                </h2>
 
                 <p className="text-xl text-muted-foreground font-medium max-w-2xl mx-auto mb-8">
                     10 seconds to answer from 8 topics. Compete against friends locally or online!

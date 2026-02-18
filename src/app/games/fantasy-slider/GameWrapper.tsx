@@ -61,9 +61,9 @@ function GameWrapperContent() {
                     <SlidersVertical className="w-10 h-10 text-white" />
                 </motion.div>
 
-                <h1 className="font-display text-5xl md:text-6xl font-bold text-primary mb-3">
+                <h2 className="font-display text-5xl md:text-6xl font-bold text-primary mb-3">
                     Fantasy Slider
-                </h1>
+                </h2>
 
                 <p className="text-xl text-muted-foreground font-medium max-w-2xl mx-auto mb-8">
                     Discover your shared desires. Rate scenarios from "Hard Pass" to "Absolute Dream" and see where you match!

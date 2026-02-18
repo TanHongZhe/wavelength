@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
     title: "Refund Policy | Wavelength Game Online",
-    description: "Refund Policy for Wavelength Game Online.",
+    description: "Review the Refund Policy for Wavelength Game Online. Learn about our no-refund policy, subscription cancellations, and billing inquiries for Pro Access.",
 };
 
 export default function RefundPolicyPage() {

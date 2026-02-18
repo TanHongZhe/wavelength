@@ -17,6 +17,7 @@ export const metadata: Metadata = {
 export default function FantasySliderPage() {
     return (
         <div className="min-h-screen bg-background text-foreground flex flex-col">
+            <h1 className="sr-only">Fantasy Slider: The Ultimate Couples Lust & Romance Game</h1>
             <GameWrapper />
 
             {/* SEO Content Section */}

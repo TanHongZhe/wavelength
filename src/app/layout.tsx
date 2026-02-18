@@ -40,7 +40,7 @@ export const metadata: Metadata = {
   creator: "Wavelength Online",
   publisher: "Wavelength Online",
   alternates: {
-    canonical: `${siteUrl}/`,
+    canonical: "./",
   },
   openGraph: {
     type: "website",

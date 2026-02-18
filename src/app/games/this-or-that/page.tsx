@@ -17,6 +17,7 @@ export const metadata: Metadata = {
 export default function ThisOrThatPage() {
     return (
         <div className="min-h-screen bg-background text-foreground flex flex-col">
+            <h1 className="sr-only">This or That: Rapid Fire Couples Game</h1>
             <GameWrapper />
 
             <div className="container mx-auto px-4 py-16 max-w-6xl">

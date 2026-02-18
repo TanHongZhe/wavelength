@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
     title: "Terms of Service | Wavelength Game Online",
-    description: "Terms of Service for Wavelength Game Online.",
+    description: "Read the Terms of Service for Wavelength Game Online. Understand our rules, user conduct, intellectual property rights, and disclaimers before playing.",
 };
 
 export default function TermsPage() {

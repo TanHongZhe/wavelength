@@ -12,7 +12,7 @@ export interface BlogPost {
 export const BLOG_POSTS: BlogPost[] = [
     {
         slug: "long-distance-relationship-games",
-        title: "How Long Distance Couples Keep The Spark Alive (Beyond Just FaceTime)",
+        title: "Long Distance Tips: Keeping The Spark Alive Beyond FaceTime",
         excerpt: "Spoiler alert: staring at each other on a screen for 3 hours isn't actually quality time. Here is how to fix it.",
         date: "2024-02-14",
         readTime: "5 min read",
@@ -54,7 +54,7 @@ It beats asking "what did you have for lunch" for the 500th time.
     },
     {
         slug: "virtual-date-night-guide",
-        title: "The Ultimate Virtual Date Night Guide: Stop Watching Netflix on Zoom",
+        title: "Virtual Date Night Guide: Stop Watching Netflix on Zoom",
         excerpt: "Watching a movie together is fine. But you can do better. Here are 5 date ideas that involve actually interacting.",
         date: "2024-02-20",
         readTime: "6 min read",
@@ -98,7 +98,7 @@ Be creative. Be silly. And for the love of god, stop just watching The Office ag
     },
     {
         slug: "relationship-telepathy-science",
-        title: "Is Your Relationship Telepathic? The Science Behind 'Syncing Up'",
+        title: "Is Your Relationship Telepathic? Science of 'Syncing Up'",
         excerpt: "Ever finish each other's sentences? It’s not magic. It’s science. Here is how your brains literally start to look alike.",
         date: "2024-02-25",
         readTime: "4 min read",
@@ -137,7 +137,7 @@ And if you miss completely? Well, at least you have something to talk about.
     },
     {
         slug: "deep-questions-for-couples",
-        title: "10 Deep Questions to Ask Your Partner Tonight (No Small Talk Allowed)",
+        title: "10 Deep Questions to Ask Your Partner Tonight (No Chat)",
         excerpt: "If you ask 'how was work' one more time, you might scream. Try these instead to spark a frantic 3 AM conversation.",
         date: "2024-03-01",
         readTime: "7 min read",
@@ -251,8 +251,8 @@ If they can't handle a card game, they can't handle a mortgage.
     },
     {
         slug: "36-questions-vs-wavelength",
-        title: "The 36 Questions to Fall in Love vs. Wavelength",
-        excerpt: "The famous NYT experiment is great. But is it too structured? Here is a more organic way to fall in love.",
+        title: "36 Questions to Fall in Love vs. Playing Wavelength",
+        excerpt: "The famous NYT experiment is great for deep connection. But is it too structured? Here is a more organic (and fun) way to fall in love using game mechanics.",
         date: "2024-03-15",
         readTime: "6 min read",
         category: "Psychology",
@@ -287,7 +287,7 @@ Both tools serve the same purpose: bridging the gap between two minds. And we ca
     {
         slug: "host-virtual-game-night",
         title: "How to Host a Virtual Game Night That Isn't Awkward",
-        excerpt: "Avoid the silence. Avoid the lag. Here is the technical setup and game list you need for a smooth Zoom party.",
+        excerpt: "Avoid the awkward silence and the lag. Here is the complete technical setup and curated game list you need for a smooth, high-energy Zoom party.",
         date: "2024-03-20",
         readTime: "5 min read",
         category: "Guides",
@@ -324,8 +324,8 @@ Leave people wanting more, rather than exhausted.
     },
     {
         slug: "surviving-distance-closeness",
-        title: "Surviving the Distance: Creative Ways to Feel Close (When You Can't Touch)",
-        excerpt: "Touch starvation is real. Here are 4 weird but effective ways to hack your brain into feeling closer.",
+        title: "Surviving Distance: Creative Ways to Feel Close Remotely",
+        excerpt: "Touch starvation is real in long distance relationships. Here are 4 weird but scientifically effective ways to hack your brain into feeling closer across the miles.",
         date: "2024-03-25",
         readTime: "4 min read",
         category: "Relationships",
@@ -355,7 +355,7 @@ It simulates the feeling of "domestic bliss." Just existing in the same space, e
     {
         slug: "best-browser-games-couples",
         title: "The Best Browser Games for Couples Who Want to Reconnect",
-        excerpt: "No downloads. No steam accounts. Just instant fun. Our curated list for 2026.",
+        excerpt: "No downloads, no steam accounts, just instant fun. Explore our curated list of the best browser games for couples to play together in 2026.",
         date: "2024-04-01",
         readTime: "6 min read",
         category: "Game Roundups",
@@ -398,8 +398,8 @@ Here are our top picks for 2026:
     },
     {
         slug: "the-ick-psychology",
-        title: "The Psychology of 'The Ick': Why It Happens and How to Fix It",
-        excerpt: "You liked them yesterday. Today, watching them chew makes you want to scream. Is it over?",
+        title: "Psychology of 'The Ick': Why It Happens & How to Fix It",
+        excerpt: "You liked them yesterday. Today, watching them chew makes you want to scream. Is it over? Learn the psychology behind 'The Ick' and how to overcome it.",
         date: "2024-04-05",
         readTime: "5 min read",
         category: "Dating",
@@ -432,13 +432,13 @@ If you get The Ick because they were rude to a waiter? That is a legitimate red 
 
 If you can laugh about it together, The Ick usually dissolves.
 
-*Test your dealbreakers now in [Red Flag Green Flag](https://wavelength.lol/games/flag-game)*
+*Test your dealbreakers now in [Red Flag Green Flag](https://wavelength.lol/games/flag-game/)*
 `
     },
     {
         slug: "situationship-signs-exit-strategy",
         title: "5 Signs You're in a 'Situationship' (And How to Get Out)",
-        excerpt: "Technically single, biologically taken. Welcome to the grey zone of modern dating. Here is your escape map.",
+        excerpt: "Technically single, biologically taken. Welcome to the grey zone of modern dating. Here is your escape map to either define the relationship or move on.",
         date: "2024-04-10",
         readTime: "6 min read",
         category: "Dating",
@@ -474,13 +474,13 @@ You have two choices: **Escalate** or **Evacuate**.
 
 Life is too short to be someone's "maybe."
 
-*Clarify the vibe. Play [Who's Most Likely](https://wavelength.lol/games/whos-most-likely)*
+*Clarify the vibe. Play [Who's Most Likely](https://wavelength.lol/games/whos-most-likely/)*
 `
     },
     {
         slug: "how-to-apologize-correctly",
         title: "How to Apologize Like an Adult (Step-by-Step Guide)",
-        excerpt: "Saying 'I'm sorry you feel that way' is not an apology. It is a fight starter. Learn the 4-part formula.",
+        excerpt: "Saying 'I'm sorry you feel that way' is not an apology—it is a fight starter. Learn the 4-part formula to apologize actually heals the relationship.",
         date: "2024-04-15",
         readTime: "5 min read",
         category: "Relationships",
@@ -552,7 +552,7 @@ For date night, choose activities that are "Low Social Demand" but "High Connect
 
 You don't have to change your personality. You just have to budget your energy.
 
-*Find your balance. Play [Fantasy Slider](https://wavelength.lol/games/fantasy-slider)*
+*Find your balance. Play [Fantasy Slider](https://wavelength.lol/games/fantasy-slider/)*
 `
     },
     {
@@ -596,7 +596,7 @@ Make your relationship intentional. Don't just let it "happen" to you.
     {
         slug: "stay-at-home-date-ideas",
         title: "Why 'Date Night' Doesn't Have to Mean 'Going Out'",
-        excerpt: "Inflation is up. Energy is down. Here is how to have a romantic night without putting on real pants.",
+        excerpt: "Inflation is up and energy is down, but romance shouldn't suffer. Here is how to have a special, romantic night at home without putting on real pants.",
         date: "2024-05-01",
         readTime: "5 min read",
         category: "Date Ideas",
@@ -636,7 +636,7 @@ Focus on the person in front of you.
     {
         slug: "gamifying-conflict-resolution",
         title: "Gamifying Your Arguments: Resolving Conflict Without Yelling",
-        excerpt: "Fighting is normal. Screaming is not. Use game mechanics to turn a fight into a problem-solving session.",
+        excerpt: "Fighting is normal in relationships. Screaming is not. Use simple game mechanics to turn a heated fight into a productive problem-solving session.",
         date: "2024-05-05",
         readTime: "6 min read",
         category: "Psychology",
@@ -674,7 +674,7 @@ Acknowledging that you define reality differently diffuses anger. You aren't "Ri
     },
     {
         slug: "bids-for-connection-explained",
-        title: "The 'Bid for Connection': The Tiny Moment That Defines Your Relationship",
+        title: "Bids for Connection: Tiny Moments That Define Relationships",
         excerpt: "It's the sigh. The 'look at this bird'. The reaching for a hand. Ignore these, and love dies. Answer them, and it thrives.",
         date: "2024-05-10",
         readTime: "4 min read",
@@ -746,7 +746,7 @@ It allows you to discuss desires openly without fear of rejection. It is a safe 
 
 Don't let the fire go out. Fan it from afar.
 
-*Explore your desires. Play [Fantasy Slider (18+ Mode)](https://wavelength.lol/games/fantasy-slider)*
+*Explore your desires. Play [Fantasy Slider (18+ Mode)](https://wavelength.lol/games/fantasy-slider/)*
 `
     },
     {
@@ -793,7 +793,7 @@ Make it a tradition.
     },
     {
         slug: "financial-compatibility-games",
-        title: "Money Talks: How to Discuss Finances Without fighting (Gamified)",
+        title: "Money Talks: Discussing Finances Without Fighting Gamified",
         excerpt: "Money is the #1 cause of divorce. Stop avoiding the topic. Here is how to make financial planning actually fun.",
         date: "2024-05-25",
         readTime: "6 min read",
@@ -833,7 +833,7 @@ If you are a 2 on "Home" and they are a 10, you have a mismatch to discuss. Bett
     },
     {
         slug: "love-languages-gamified",
-        title: "Gamifying the 5 Love Languages: Which One Do You Actually Speak?",
+        title: "Gamifying the 5 Love Languages: Which One Do You Speak?",
         excerpt: "You think you know your love language. But under stress, it changes. Here is how to stress-test your affection.",
         date: "2024-06-01",
         readTime: "5 min read",
@@ -861,13 +861,13 @@ When we are stressed, we crave ONE specific type.
 "When I am overwhelmed, don't hug me. Just do the laundry."
 Knowing your partner's "Stress Language" is a superpower.
 
-*Discover your language. Play [This or That](https://wavelength.lol/games/this-or-that)*
+*Discover your language. Play [This or That](https://wavelength.lol/games/this-or-that/)*
 `
     },
     {
         slug: "jealousy-in-ldr",
-        title: "Managing Jealousy in Long Distance Relationships (Without Being Toxic)",
-        excerpt: "They went to a party. You are home alone. The monster appears. Here is how to tame the green-eyed beast.",
+        title: "Managing Jealousy in LDRs Without Being Toxic For Couples",
+        excerpt: "They went to a party. You are home alone. The monster appears. Here is how to tame the green-eyed beast of jealousy in long distance relationships.",
         date: "2024-06-05",
         readTime: "6 min read",
         category: "LDR",
@@ -902,13 +902,13 @@ Discuss boundaries before they are crossed.
 
 Define what "Loyalty" looks like to both of you.
 
-*Set your boundaries. Play [Red Flag Green Flag](https://wavelength.lol/games/flag-game)*
+*Set your boundaries. Play [Red Flag Green Flag](https://wavelength.lol/games/flag-game/)*
 `
     },
     {
         slug: "meeting-the-parents-prep",
         title: "Meeting the Parents: How to Prep Using 'Who's Most Likely'",
-        excerpt: "The in-laws are coming. Avoid the grill-session by prepping your partner for your crazy family dynamic.",
+        excerpt: "The in-laws are coming. Avoid the grilling session by prepping your partner for your crazy family dynamic with these specific conversation games.",
         date: "2024-06-10",
         readTime: "4 min read",
         category: "Guides",
@@ -935,13 +935,13 @@ Establish a signal.
 "If I say 'How about them Knicks', it means we need to leave in 10 minutes."
 You are a team behind enemy lines. Act like it.
 
-*Prep for the in-laws. Play [Who's Most Likely](https://wavelength.lol/games/whos-most-likely)*
+*Prep for the in-laws. Play [Who's Most Likely](https://wavelength.lol/games/whos-most-likely/)*
 `
     },
     {
         slug: "travel-compatibility-test",
         title: "The Travel Compatibility Test: Are You Soulmates or enemies?",
-        excerpt: "You love them at home. Will you love them after a 12-hour flight delay? Find out before you book.",
+        excerpt: "You love them at home. Will you love them after a 12-hour flight delay? Find out if you are travel compatible before you book that expensive trip.",
         date: "2024-06-15",
         readTime: "5 min read",
         category: "Compatibility",
@@ -970,13 +970,13 @@ Solve the fights before you get to the airport.
 
 Compromise is easy on a couch. It is hard in a foreign country. Plan ahead.
 
-*Test your travel vibes. Play [This or That](https://wavelength.lol/games/this-or-that)*
+*Test your travel vibes. Play [This or That](https://wavelength.lol/games/this-or-that/)*
 `
     },
     {
         slug: "social-media-boundaries",
-        title: "Social Media & Relationships: Finding the Line Between 'Private' and 'Secret'",
-        excerpt: "He hasn't posted you in 6 months. Is he private? Or is he single online? Let's discuss the modern rules.",
+        title: "Social Media & Relationships: Private vs Secret Boundaries",
+        excerpt: "He hasn't posted you in 6 months. Is he private? Or is he single online? Let's discuss the modern rules of social media boundaries in relationships.",
         date: "2024-06-20",
         readTime: "5 min read",
         category: "Modern Dating",
@@ -1005,13 +1005,13 @@ Use **Red Flag Green Flag** to calibrate.
 Most fights happen because you assume you have the same rules. You don't.
 Define the Digital Cheat Sheet.
 
-*Define your digital boundaries. Play [Red Flag Green Flag](https://wavelength.lol/games/flag-game)*
+*Define your digital boundaries. Play [Red Flag Green Flag](https://wavelength.lol/games/flag-game/)*
 `
     },
     {
         slug: "escaping-roommate-phase",
         title: "Escaping the 'Roommate Phase': How to Be lovers Again",
-        excerpt: "You pay bills together. You choreograph bathroom schedules. But when did you last flirt? Here is the fix.",
+        excerpt: "You pay bills together and choreograph bathroom schedules. But when did you last flirt? Here is the fix to escape the roommate phase and be lovers again.",
         date: "2024-06-25",
         readTime: "5 min read",
         category: "Advice",
@@ -1044,7 +1044,7 @@ It forces your brains to touch in a new way.
     {
         slug: "apology-languages",
         title: "The 5 Apology Languages: Why 'I'm Sorry' Isn't Enough",
-        excerpt: "Just like Love Languages, we need different things when we are hurt. Stop apologizing in the wrong language.",
+        excerpt: "Just like Love Languages, we need different things when we are hurt. Stop apologizing in the wrong language and learn what your partner actually needs.",
         date: "2024-07-01",
         readTime: "5 min read",
         category: "Psychology",
@@ -1076,8 +1076,8 @@ Some people want flowers. Some people want policy changes. Know the difference.
     },
     {
         slug: "budget-date-night",
-        title: "Date Night on a Budget: Romance for $0",
-        excerpt: "Broke? You can still be romantic. Creativity is free. Here are 3 ideas that cost nothing but effort.",
+        title: "Date Night on a Budget: Creating True Romance for $0",
+        excerpt: "Broke? You can still be romantic. Creativity is free. Here are 3 unique date ideas that cost nothing but effort and will impress your partner.",
         date: "2024-07-05",
         readTime: "4 min read",
         category: "Date Ideas",
@@ -1112,8 +1112,8 @@ Challenge: "Loser has to cook dinner." Now there are stakes.
     },
     {
         slug: "digital-detox-irony",
-        title: "The Digital Detox Paradox: Using Tech to Connect (Then Disconnect)",
-        excerpt: "We build online games. But sometimes, you need to put the phone down. Here is when to log off.",
+        title: "The Digital Detox Paradox: Using Tech to Connect & Detach",
+        excerpt: "We build online games for connection. But sometimes, you need to put the phone down. Here is exactly when to log off and connect in the real world.",
         date: "2024-07-10",
         readTime: "4 min read",
         category: "Advice",

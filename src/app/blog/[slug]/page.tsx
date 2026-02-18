@@ -36,7 +36,7 @@ export async function generateMetadata({ params }: BlogPostProps): Promise<Metad
             type: "article",
             publishedTime,
             authors: ["Wavelength Online"],
-            url: `https://wavelength.lol/blog/${post.slug}`,
+            url: `https://wavelength.lol/blog/${post.slug}/`,
         },
         twitter: {
             card: "summary_large_image",
