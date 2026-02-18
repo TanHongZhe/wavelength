@@ -8,6 +8,9 @@ import { Footer } from "@/components/Footer";
 export const metadata: Metadata = {
     title: "Relationship Blog | Wavelength Online",
     description: "Expert advice on long distance relationships, virtual date ideas, and communication games for couples.",
+    openGraph: {
+        url: "https://wavelength.lol/blog/",
+    },
 };
 
 export default function BlogIndex() {

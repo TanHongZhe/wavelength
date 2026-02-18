@@ -330,32 +330,7 @@ export const absurdDeck: Card[] = [
     { left: "Makes A Good Password", right: "Terrible Password" },
     { left: "Should Exist", right: "Should Not Exist" },
     { left: "Good Invention", right: "Bad Invention" },
-    { left: "Truly Happy", right: "Optimistic" },
-    { left: "Better to have", right: "No Elbows" }, // No Knees
-    { left: "Scarier", right: "Ocean" }, // Space
-    { left: "Trustworthy", right: "Dog with Mustache" }, // Cat with Monocle
-    { left: "Worse Home", right: "Inside Volcano" }, // Inside Whale
-    { left: "Better Pet", right: "Mini Dragon" }, // Giant Hamster
-    { left: "Likely Alien", right: "Elon Musk" }, // Mark Zuckerberg
-    { left: "Better Meal", right: "100 Year Old Egg" }, // Fresh Raw Onion
-    { left: "Harder Fight", right: "Ghost" }, // Skeleton
-    { left: "Confusing", right: "Time Travel" }, // Multiverse
-    { left: "Apocalypse Weapon", right: "Chainsaw" }, // Flamethrower
-    { left: "Suspicious", right: "Suit in Park" }, // Clown in Bank
-    { left: "Hand Replacement", right: "Hook" }, // Lobster Claw
-    { left: "Embarrassing", right: "Tripping in Public" }, // Waving at Wrong Person
-    { left: "Scarier Sound", right: "Child Laughing" }, // Footsteps Upstairs
-    { left: "Power", right: "Fire" }, // Ice
-    { left: "Annoying", right: "Wet Socks" }, // Sand in Bed
-    { left: "Transport", right: "Teleportation" }, // Flying
-    { left: "Cursed", right: "Blessed" },
-    { left: "Round", right: "Flat" },
-    { left: "Infinite", right: "Finite" },
-    { left: "Simulation", right: "Reality" },
-    { left: "Chicken", right: "Egg" },
-    { left: "Half Full", right: "Half Empty" },
-    { left: "Utopia", right: "Dystopia" },
-    { left: "Waking Up", right: "Falling Asleep" }
+    { left: "Would Survive Falling Off", right: "Would Not Survive" },
 ];
 
 // WORK DECK: Professional life, office politics

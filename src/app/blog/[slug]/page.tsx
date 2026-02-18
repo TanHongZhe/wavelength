@@ -28,7 +28,9 @@ export async function generateMetadata({ params }: BlogPostProps): Promise<Metad
     const publishedTime = new Date(post.date).toISOString();
 
     return {
-        title: `${post.title} | Wavelength Blog`,
+        title: {
+            absolute: post.title,
+        },
         description: post.excerpt,
         openGraph: {
             title: post.title,

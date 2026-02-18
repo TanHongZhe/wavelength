@@ -93,7 +93,7 @@ To have a real date night from 3,000 miles away, you need **interaction**.
 Relationships thrive on new experiences. You cannot go to a new restaurant together this weekend. But you can go to a new digital world.
 Be creative. Be silly. And for the love of god, stop just watching The Office again.
 
-*Looking for an instant activity? Play [Wavelength](https://wavelength.lol) right now.*
+*Looking for an instant activity? Play [Wavelength](https://wavelength.lol) right now. Or check out our [Valentine's Day Games](/valentines-games/) for special occasions.*
 `
     },
     {
@@ -132,7 +132,7 @@ You are literally practicing walking in their shoes (or inside their brain).
 So next time you score a perfect 4 points on a hard clue, celebrate. It means your minds are beautifully intertwined.
 And if you miss completely? Well, at least you have something to talk about.
 
-*Test your telepathy score today on [Wavelength](https://wavelength.lol)*
+*Test your telepathy score today on [Wavelength](https://wavelength.lol). You can also explore more [Relationship Games](/relationship-games/) to deepen your bond.*
 `
     },
     {
@@ -169,7 +169,7 @@ If asking these directly feels too heavy, use a game as a buffer. **Wavelength**
 *   **Clue**: "The Internet"
 
 Discussing *why* you placed the dial where you did often reveals more about your values than a direct interview.
-It is deep conversation disguised as a game. Sneaky, right?
+It feels less like an interview and more like a conversation.
 
 *Spark a conversation now at [Wavelength](https://wavelength.lol)*
 `
@@ -325,7 +325,7 @@ Leave people wanting more, rather than exhausted.
     {
         slug: "surviving-distance-closeness",
         title: "Surviving Distance: Creative Ways to Feel Close Remotely",
-        excerpt: "Touch starvation is real in long distance relationships. Here are 4 weird but scientifically effective ways to hack your brain into feeling closer across the miles.",
+        excerpt: "Touch starvation is real in long distance relationships. Here are 4 weird but scientifically effective ways to hack your brain into feeling closer.",
         date: "2024-03-25",
         readTime: "4 min read",
         category: "Relationships",
@@ -393,7 +393,7 @@ Here are our top picks for 2026:
 **Vibe**: Classic
 **Why**: If you miss Catan or Ticket to Ride, play the official digital ports here. It is a bit clunky, but it works.
 
-*Start with the best one (we are biased): [Play Wavelength](https://wavelength.lol)*
+*Start with the best one (we are biased): [Play Wavelength](https://wavelength.lol). See our full collection of [Couple Games](/couple-games/) for more options.*
 `
     },
     {
