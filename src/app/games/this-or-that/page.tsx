@@ -4,11 +4,13 @@ import { MoreGamesSidebar } from "@/components/minigames/MoreGamesSidebar";
 
 
 export const metadata: Metadata = {
-    title: "This or That: Rapid Fire Couples Game | Wavelength",
+    title: {
+        absolute: "This or That: Rapid Fire Couples Game",
+    },
     description: "The ultimate 'This or That' rapid fire game for couples. Choose between two options in 10 seconds and see if you match!",
     keywords: ["this or that game", "couples rapid fire", "relationship quiz", "online date night game", "compatibility test"],
     openGraph: {
-        title: "This or That - Couples Rapid Fire",
+        title: "This or That: Rapid Fire Couples Game",
         description: "10 seconds. 2 options. Can you match your partner's choice?",
         type: "website",
     },

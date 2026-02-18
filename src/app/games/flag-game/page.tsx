@@ -4,11 +4,13 @@ import { MoreGamesSidebar } from "@/components/minigames/MoreGamesSidebar";
 
 
 export const metadata: Metadata = {
-    title: "Red Flag or Green Flag Game - Rate Dating Scenarios | Wavelength",
+    title: {
+        absolute: "Red Flag or Green Flag Game - Rate Dating Scenarios",
+    },
     description: "Use Red, Green, and Beige flags to rate dating behaviors. The viral TikTok trend made into a multiplayer game. Play now with friends or partners.",
     keywords: ["red flag quiz", "green flag game", "beige flags", "dating quiz game", "relationship red flags", "viral tiktok game", "online multiplayer game"],
     openGraph: {
-        title: "Red Flag or Green Flag? - Rate Dating Behaviors",
+        title: "Red Flag or Green Flag Game - Rate Dating Scenarios",
         description: "Is owning a snake a Red Flag or Green Flag? You decide with friends!",
         type: "website",
     },

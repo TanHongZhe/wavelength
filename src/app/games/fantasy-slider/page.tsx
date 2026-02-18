@@ -4,11 +4,13 @@ import { MoreGamesSidebar } from "@/components/minigames/MoreGamesSidebar";
 
 
 export const metadata: Metadata = {
-    title: "Fantasy Slider: The Ultimate Couples Lust & Romance Game | Wavelength",
+    title: {
+        absolute: "Fantasy Slider: The Ultimate Couples Lust & Romance Game",
+    },
     description: "Rate your spicy fantasies from 0-10 and see if you match! The perfect lust mini-game for couples to explore desires. Play for free online.",
     keywords: ["lust mini games", "spicy couple games", "online couples games", "fantasy rating game", "18+ couple games", "relationship games"],
     openGraph: {
-        title: "Fantasy Slider for Couples",
+        title: "Fantasy Slider: The Ultimate Couples Lust & Romance Game",
         description: "How well do your fantasies align? Rate them and find out!",
         type: "website",
     },

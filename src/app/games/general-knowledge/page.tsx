@@ -4,11 +4,13 @@ import { MoreGamesSidebar } from "@/components/minigames/MoreGamesSidebar";
 
 
 export const metadata: Metadata = {
-    title: "General Knowledge Quiz Game - Play Online Trivia for Free | Wavelength",
+    title: {
+        absolute: "General Knowledge Quiz Game - Play Online Trivia for Free",
+    },
     description: "Challenge friends in this fast-paced General Knowledge Quiz! Answer in 10 seconds across 8 topics like History & Science. Play free online now.",
     keywords: ["general knowledge quiz", "online trivia game", "multiplayer quiz", "play trivia with friends", "history quiz", "science trivia", "pop culture quiz", "free online games"],
     openGraph: {
-        title: "General Knowledge Quiz - Rate Your Brainpower",
+        title: "General Knowledge Quiz Game - Play Online Trivia for Free",
         description: "Think you know it all? Prove it in this rapid-fire trivia showdown. Play with friends for free!",
         type: "website",
     },

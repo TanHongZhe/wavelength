@@ -4,11 +4,13 @@ import { MoreGamesSidebar } from "@/components/minigames/MoreGamesSidebar";
 
 
 export const metadata: Metadata = {
-    title: "Who's Most Likely? - The Couples & Friends Party Game | Wavelength",
+    title: {
+        absolute: "Who's Most Likely? - The Couples & Friends Party Game",
+    },
     description: "Point fingers in this rapid-fire 'Who is most likely to' game. Perfect for couples, friends, and parties. Play online for free.",
     keywords: ["who's most likely game", "couples most likely to", "fun party games for friends", "online drinking game", "zoom party games"],
     openGraph: {
-        title: "Who's Most Likely? - Play Online",
+        title: "Who's Most Likely? - The Couples & Friends Party Game",
         description: "Point fingers and find out what your friends really think of you!",
         type: "website",
     },
