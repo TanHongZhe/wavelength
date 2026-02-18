@@ -626,6 +626,46 @@ export const joinPartyRoomByCode = mutation({
     },
 });
 
+// Reveal + Score a General Knowledge round atomically (combines reveal + calculateScores)
+export const revealGeneralKnowledgeRound = mutation({
+    args: {
+        roomId: v.id("rooms"),
+    },
+    handler: async (ctx, args) => {
+        const room = await ctx.db.get(args.roomId);
+        if (!room || room.phase !== "playing") return;
+
+        const correctAnswer = room.current_question?.answer;
+        if (correctAnswer === undefined || correctAnswer === null) {
+            // No question or no answer — just reveal without scoring
+            await ctx.db.patch(args.roomId, { phase: "revealed", updated_at: Date.now() });
+            return;
+        }
+
+        // Read all players and score correct answers
+        const allPlayers = await ctx.db
+            .query("party_players")
+            .withIndex("by_room", (q) => q.eq("room_id", args.roomId))
+            .collect();
+
+        const roundNumber = room.round_number ?? 1;
+
+        for (const player of allPlayers) {
+            if (
+                player.answer &&
+                player.answer.round === roundNumber &&
+                player.answer.choice === correctAnswer
+            ) {
+                await ctx.db.patch(player._id, {
+                    score: (player.score ?? 0) + 1,
+                });
+            }
+        }
+
+        // Set phase to revealed
+        await ctx.db.patch(args.roomId, { phase: "revealed", updated_at: Date.now() });
+    },
+});
 // Join General Knowledge room 
 export const joinGeneralKnowledgeRoom = mutation({
     args: {

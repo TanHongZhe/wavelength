@@ -18,7 +18,6 @@ interface GeneralKnowledgeGameScreenProps {
     onSubmitAnswer: (index: number) => void;
     onReveal: () => void;
     onNextRound: () => void;
-    onCalculateScores: () => void;
     onLeave: () => void;
     deckType: string;
 }
@@ -31,14 +30,12 @@ export function GeneralKnowledgeGameScreen({
     onSubmitAnswer,
     onReveal,
     onNextRound,
-    onCalculateScores,
     onLeave,
     deckType,
 }: GeneralKnowledgeGameScreenProps) {
     const [timeLeft, setTimeLeft] = useState(10);
     const [selectedOption, setSelectedOption] = useState<number | null>(null);
     const [showUpgradeOverlay, setShowUpgradeOverlay] = useState(true);
-    const scoredRoundsRef = useRef<Set<number>>(new Set());
     const confettiFiredRef = useRef(false);
 
     // Timer logic
@@ -79,13 +76,7 @@ export function GeneralKnowledgeGameScreen({
         }
     }, [players, room.phase, room.round_number, isHost, onReveal]);
 
-    // Score calculation
-    useEffect(() => {
-        if (room.phase === "revealed" && isHost && !scoredRoundsRef.current.has(room.round_number)) {
-            scoredRoundsRef.current.add(room.round_number);
-            onCalculateScores();
-        }
-    }, [room.phase, room.round_number, isHost, onCalculateScores]);
+    // Score calculation now happens server-side inside onReveal — no separate useEffect needed
 
     // Handle Option Click
     const handleOptionClick = (index: number) => {

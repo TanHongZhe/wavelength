@@ -44,8 +44,7 @@ export function GeneralKnowledgeGameEngine({ onClose, initialMode = "initial" }:
         startGame,
         nextRound,
         submitAnswer,
-        revealAnswer,
-        calculateScores,
+        revealAndScore,
         leaveRoom,
     } = useGeneralKnowledgeRoom();
 
@@ -202,9 +201,8 @@ export function GeneralKnowledgeGameEngine({ onClose, initialMode = "initial" }:
                 isHost={isHost}
                 deckType={room.deck_type || selectedDeck}
                 onSubmitAnswer={submitAnswer}
-                onReveal={revealAnswer}
+                onReveal={revealAndScore}
                 onNextRound={() => nextRound(room.deck_type || selectedDeck)}
-                onCalculateScores={calculateScores}
                 onLeave={handleLeave}
             />
         );

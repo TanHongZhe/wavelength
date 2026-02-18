@@ -53,6 +53,7 @@ export function useGeneralKnowledgeRoom() {
     const updatePartyPlayerMutation = useMutation(api.rooms.updatePartyPlayer);
     const removePartyPlayerMutation = useMutation(api.rooms.removePartyPlayer);
     const joinRoomMutation = useMutation(api.rooms.joinGeneralKnowledgeRoom);
+    const revealGeneralKnowledgeRoundMutation = useMutation(api.rooms.revealGeneralKnowledgeRound);
 
     // Derived State
     const room: Room | null = convexRoom ? {
@@ -253,35 +254,12 @@ export function useGeneralKnowledgeRoom() {
         });
     }, [roomId, playerId, room, updatePartyPlayerMutation]);
 
-    const revealAnswer = useCallback(async () => {
+    // Reveal + Score in one atomic server-side mutation
+    // Replaces the old revealAnswer() + calculateScores() two-step flow
+    const revealAndScore = useCallback(async () => {
         if (!roomId) return;
-        await updateRoomMutation({
-            roomId,
-            updates: { phase: "revealed" }
-        });
-    }, [roomId, updateRoomMutation]);
-
-    const calculateScores = useCallback(async () => {
-        if (!roomId || !room?.current_question || !players) return;
-
-        const correctAnswer = room.current_question.answer;
-
-        // Iterate players and update scores
-        // Only award points if they haven't been awarded for this round yet
-        for (const p of players) {
-            if (p.answer && p.answer.round === room.round_number && p.answer.choice === correctAnswer) {
-                // Check if this player already has the correct score for this round
-                // We'll increment by 1 point per correct answer
-                const newScore = (p.score || 0) + 1;
-
-                await updatePartyPlayerMutation({
-                    room_id: roomId,
-                    player_id: p.player_id,
-                    updates: { score: newScore }
-                });
-            }
-        }
-    }, [roomId, room, players, updatePartyPlayerMutation]);
+        await revealGeneralKnowledgeRoundMutation({ roomId });
+    }, [roomId, revealGeneralKnowledgeRoundMutation]);
 
     const leaveRoom = useCallback(async () => {
         if (roomId && playerId) {
@@ -306,8 +284,7 @@ export function useGeneralKnowledgeRoom() {
         startGame,
         nextRound,
         submitAnswer,
-        revealAnswer,
-        calculateScores,
+        revealAndScore,
         leaveRoom,
         clearError
     };
