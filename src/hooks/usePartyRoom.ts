@@ -47,7 +47,33 @@ export function usePartyRoom() {
 
     // Reactive Convex queries
     const convexRoom = useQuery(api.rooms.getRoom, roomId ? { roomId } : "skip");
-    const convexPlayers = useQuery(api.rooms.getPartyPlayers, roomId ? { roomId } : "skip");
+
+    // Conditional player subscriptions to reduce function calls:
+    // - During guessing phase, guessers only subscribe to their OWN player (1 document)
+    //   instead of ALL players (N documents). This prevents N query re-executions
+    //   every time any guesser moves their dial.
+    // - Psychic always gets full player list (needs to see mini-dials).
+    // - Non-guessing phases: everyone gets full list (for scores, sidebar, etc.)
+    const isActivePsychic = convexRoom?.psychic_id === playerId;
+    const isGuessingPhase = convexRoom?.phase === "guessing";
+    const shouldSkipFullList = isGuessingPhase && !isActivePsychic;
+
+    const convexPlayers = useQuery(
+        api.rooms.getPartyPlayers,
+        roomId && !shouldSkipFullList ? { roomId } : "skip"
+    );
+    const myConvexPlayer = useQuery(
+        api.rooms.getPartyPlayer,
+        roomId && playerId && shouldSkipFullList ? { roomId, playerId } : "skip"
+    );
+
+    // Cache last known full player list for when we skip
+    const cachedPlayersRef = useRef<any[]>([]);
+    useEffect(() => {
+        if (convexPlayers && convexPlayers.length > 0) {
+            cachedPlayersRef.current = convexPlayers;
+        }
+    }, [convexPlayers]);
 
     // Mutations
     const createRoomMutation = useMutation(api.rooms.createRoom);
@@ -56,7 +82,6 @@ export function usePartyRoom() {
     const updatePartyPlayerMutation = useMutation(api.rooms.updatePartyPlayer);
     const removePartyPlayerMutation = useMutation(api.rooms.removePartyPlayer);
     const joinPartyRoomMutation = useMutation(api.rooms.joinPartyRoomByCode);
-    const revealPartyRoundMutation = useMutation(api.rooms.revealPartyRound);
 
     // Convert to expected format
     const room: Room | null = convexRoom ? {
@@ -72,17 +97,29 @@ export function usePartyRoom() {
         deck_type: convexRoom.deck_type as DeckType,
     } : null;
 
-    const players: PartyPlayer[] = convexPlayers ? convexPlayers.map((p: any) => ({
-        id: p._id,
-        room_id: p.room_id,
-        player_id: p.player_id,
-        name: p.name,
-        avatar: p.avatar,
-        role: p.role as "psychic" | "guesser",
-        score: p.score,
-        guess_angle: p.guess_angle ?? null,
-        locked_in: p.locked_in,
-    })) : [];
+    // Build player array from full list or cached list + own fresh data
+    const basePlayers = convexPlayers ?? cachedPlayersRef.current;
+    const players: PartyPlayer[] = basePlayers.map((p: any) => {
+        const mapped: PartyPlayer = {
+            id: p._id,
+            room_id: p.room_id,
+            player_id: p.player_id,
+            name: p.name,
+            avatar: p.avatar,
+            role: p.role as "psychic" | "guesser",
+            score: p.score,
+            guess_angle: p.guess_angle ?? null,
+            locked_in: p.locked_in,
+        };
+        // During guessing phase, overlay own fresh data from single-doc query
+        if (myConvexPlayer && p.player_id === playerId) {
+            mapped.guess_angle = myConvexPlayer.guess_angle ?? null;
+            mapped.locked_in = myConvexPlayer.locked_in;
+            mapped.score = myConvexPlayer.score;
+            mapped.role = myConvexPlayer.role as "psychic" | "guesser";
+        }
+        return mapped;
+    });
 
     const currentPlayer = players.find(p => p.player_id === playerId);
     const isPsychic = room?.psychic_id ? room.psychic_id === playerId : currentPlayer?.role === "psychic";
@@ -233,48 +270,21 @@ export function usePartyRoom() {
         await updateRoomMutation({ roomId, updates: { clue: clue.trim(), phase: "guessing" } });
     }, [roomId, updateRoomMutation]);
 
-    // Throttling for updateMyGuess (same pattern as Dial throttle)
-    const guessLastUpdateRef = useRef(0);
-    const guessTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-
+    // updateMyGuess — simple pass-through, throttling is handled by the Dial component
     const updateMyGuess = useCallback(async (angle: number) => {
         if (!roomId || !currentPlayer || currentPlayer.locked_in) return;
-
-        const now = Date.now();
-        const timeSinceLast = now - guessLastUpdateRef.current;
-
-        if (timeSinceLast >= 1000) {
-            if (guessTimeoutRef.current) {
-                clearTimeout(guessTimeoutRef.current);
-                guessTimeoutRef.current = null;
-            }
-            updatePartyPlayerMutation({
-                room_id: roomId,
-                player_id: playerId,
-                updates: { guess_angle: Math.round(angle) },
-            }).catch(err => console.error("Error updating guess:", err));
-            guessLastUpdateRef.current = now;
-        } else {
-            if (guessTimeoutRef.current) {
-                clearTimeout(guessTimeoutRef.current);
-            }
-            const wait = 1000 - timeSinceLast;
-            guessTimeoutRef.current = setTimeout(() => {
-                updatePartyPlayerMutation({
-                    room_id: roomId,
-                    player_id: playerId,
-                    updates: { guess_angle: Math.round(angle) },
-                }).catch(err => console.error("Error updating guess:", err));
-                guessLastUpdateRef.current = Date.now();
-                guessTimeoutRef.current = null;
-            }, wait);
-        }
+        updatePartyPlayerMutation({
+            room_id: roomId,
+            player_id: playerId,
+            updates: { guess_angle: Math.round(angle) },
+        }).catch(err => console.error("Error updating guess:", err));
     }, [roomId, currentPlayer, playerId, updatePartyPlayerMutation]);
 
     // SCORING REMOVED - Handled by atomic mutation revealPartyRound
 
+    // lockInGuess — server-side auto-reveal handles the "all locked in" check atomically
     const lockInGuess = useCallback(async (angle: number) => {
-        if (!roomId || !currentPlayer || !room) return; // Added room check
+        if (!roomId || !currentPlayer || !room) return;
 
         await updatePartyPlayerMutation({
             room_id: roomId,
@@ -284,25 +294,8 @@ export function usePartyRoom() {
                 locked_in: true,
             },
         });
-
-        // Check if everyone is locked in
-        // NOTE: 'players' from the hook might be slightly stale compared to DB.
-        // However, for the last person locking in, their local optimistic update (or rapid sequence)
-        // usually aligns.
-        // Better pattern: The mutation could check this, but we'll stick to client trigger for now.
-        const guessingPlayers = players.filter(p => p.role === "guesser");
-
-        // We consider "all locked" if everyone ELSE is locked, and WE just locked.
-        const allOthersLocked = guessingPlayers.every(p => p.player_id === playerId || p.locked_in);
-
-        if (allOthersLocked && guessingPlayers.length > 0) {
-            // Updated to use ATOMIC scoring mutation
-            await revealPartyRoundMutation({
-                roomId,
-                targetAngle: room.target_angle
-            });
-        }
-    }, [roomId, currentPlayer, playerId, players, room, updatePartyPlayerMutation, revealPartyRoundMutation]);
+        // Server automatically checks if all guessers are locked and triggers reveal + scoring
+    }, [roomId, currentPlayer, playerId, room, updatePartyPlayerMutation]);
 
     const nextRound = useCallback(async () => {
         if (!roomId || !players.length) return;

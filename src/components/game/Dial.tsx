@@ -62,54 +62,62 @@ export function Dial({
         }
     }, [guessAngle, isDragging]);
 
-    // Throttling helper
-    const lastUpdateRef = useRef(0);
-    const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+    // Throttling: 300ms debounce + 2s max interval
+    const lastSentRef = useRef(0);
+    const debounceRef = useRef<NodeJS.Timeout | null>(null);
+    const maxIntervalRef = useRef<NodeJS.Timeout | null>(null);
+    const latestAngleRef = useRef(guessAngle);
 
-    const handleAngleUpdate = useCallback((angle: number) => {
-        setLocalAngle(angle); // Update UI immediately
+    // Cleanup timers on unmount
+    useEffect(() => {
+        return () => {
+            if (debounceRef.current) clearTimeout(debounceRef.current);
+            if (maxIntervalRef.current) clearTimeout(maxIntervalRef.current);
+        };
+    }, []);
 
-        const now = Date.now();
-        const timeSinceLast = now - lastUpdateRef.current;
-
-        if (timeSinceLast >= 1000) {
-            // Ready to send immediately
-            if (timeoutRef.current) {
-                clearTimeout(timeoutRef.current);
-                timeoutRef.current = null;
-            }
-            onAngleChange?.(angle);
-            lastUpdateRef.current = now;
-        } else {
-            // Not ready, schedule for the end of the 250ms window
-            // If a timeout is already scheduled, we strictly only update the *angle* it will eventually send?
-            // Actually, for a closure, we need to ensure the most recent angle is sent. 
-            // The simplest way with strict throttling is to clear and reschedule the tail call 
-            // so it always sends the LATEST angle at the end of the window.
-            if (timeoutRef.current) {
-                clearTimeout(timeoutRef.current);
-            }
-            const wait = 1000 - timeSinceLast;
-            timeoutRef.current = setTimeout(() => {
-                onAngleChange?.(angle);
-                lastUpdateRef.current = Date.now();
-                timeoutRef.current = null;
-            }, wait);
-        }
+    const sendUpdate = useCallback((angle: number) => {
+        onAngleChange?.(angle);
+        lastSentRef.current = Date.now();
+        if (debounceRef.current) { clearTimeout(debounceRef.current); debounceRef.current = null; }
+        if (maxIntervalRef.current) { clearTimeout(maxIntervalRef.current); maxIntervalRef.current = null; }
     }, [onAngleChange]);
 
-    const handlePointerUp = useCallback(() => {
-        setIsDragging(false);
-        // Cancel any pending throttled update, because we want to send the FINAL position immediately
-        if (timeoutRef.current) {
-            clearTimeout(timeoutRef.current);
-            timeoutRef.current = null;
+    const handleAngleUpdate = useCallback((angle: number) => {
+        setLocalAngle(angle);
+        latestAngleRef.current = angle;
+
+        // Reset debounce: send after 300ms of no movement
+        if (debounceRef.current) clearTimeout(debounceRef.current);
+        debounceRef.current = setTimeout(() => {
+            sendUpdate(latestAngleRef.current);
+            debounceRef.current = null;
+        }, 300);
+
+        // Max interval: force send every 2s during continuous dragging
+        const timeSinceLast = Date.now() - lastSentRef.current;
+        if (timeSinceLast >= 2000) {
+            if (debounceRef.current) { clearTimeout(debounceRef.current); debounceRef.current = null; }
+            sendUpdate(angle);
+        } else if (!maxIntervalRef.current) {
+            const wait = 2000 - timeSinceLast;
+            maxIntervalRef.current = setTimeout(() => {
+                if (debounceRef.current) { clearTimeout(debounceRef.current); debounceRef.current = null; }
+                sendUpdate(latestAngleRef.current);
+                maxIntervalRef.current = null;
+            }, wait);
         }
-        // Force send the exact final position instantly
-        // We override the rate limit here because precision on release is critical
+    }, [sendUpdate]);
+
+    const handlePointerUp = useCallback(() => {
+        if (!isDragging) return; // Guard against phantom pointerLeave fires
+        setIsDragging(false);
+        // Cancel all pending timers and send final position immediately
+        if (debounceRef.current) { clearTimeout(debounceRef.current); debounceRef.current = null; }
+        if (maxIntervalRef.current) { clearTimeout(maxIntervalRef.current); maxIntervalRef.current = null; }
         onAngleChange?.(localAngle);
-        lastUpdateRef.current = Date.now();
-    }, [localAngle, onAngleChange]);
+        lastSentRef.current = Date.now();
+    }, [isDragging, localAngle, onAngleChange]);
 
     const handlePointerDown = useCallback((e: React.PointerEvent) => {
         if (!canInteract) return;

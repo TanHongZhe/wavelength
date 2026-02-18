@@ -493,6 +493,60 @@ export const updatePartyPlayer = mutation({
                 }
             }
             await ctx.db.patch(player._id, patchData);
+
+            // Auto-reveal: when a player locks in, check if ALL guessers are now locked
+            if (args.updates.locked_in === true) {
+                const room = await ctx.db.get(args.room_id);
+                if (room && room.phase === "guessing") {
+                    // Re-read all players (sees our just-patched update)
+                    const allPlayers = await ctx.db
+                        .query("party_players")
+                        .withIndex("by_room", (q) => q.eq("room_id", args.room_id))
+                        .collect();
+
+                    const guessers = allPlayers.filter(p => p.role === "guesser");
+                    const allLocked = guessers.length > 0 && guessers.every(p => p.locked_in);
+
+                    if (allLocked) {
+                        // Score and reveal (same logic as revealPartyRound)
+                        const targetAngle = room.target_angle ?? 90;
+                        const getPoints = (target: number, guess: number) => {
+                            const diff = Math.abs(target - guess);
+                            if (diff <= 5) return 4;
+                            if (diff <= 13) return 3;
+                            if (diff <= 19) return 2;
+                            return 0;
+                        };
+
+                        let totalGuesserPoints = 0;
+                        const guessersWithAngles = guessers.filter(p => p.guess_angle != null);
+
+                        for (const guesser of guessersWithAngles) {
+                            const points = getPoints(targetAngle, guesser.guess_angle!);
+                            totalGuesserPoints += points;
+                            await ctx.db.patch(guesser._id, {
+                                score: (guesser.score ?? 0) + points,
+                            });
+                        }
+
+                        const psychics = allPlayers.filter(p => p.role === "psychic");
+                        const avgPoints = guessersWithAngles.length > 0
+                            ? Math.round(totalGuesserPoints / guessersWithAngles.length)
+                            : 0;
+
+                        for (const psychic of psychics) {
+                            await ctx.db.patch(psychic._id, {
+                                score: (psychic.score ?? 0) + avgPoints,
+                            });
+                        }
+
+                        await ctx.db.patch(args.room_id, {
+                            phase: "revealed",
+                            updated_at: Date.now(),
+                        });
+                    }
+                }
+            }
         }
     },
 });
