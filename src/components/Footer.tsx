@@ -6,6 +6,7 @@ export function Footer() {
     return (
         <footer className="text-center pt-12 pb-8 border-t border-border/40">
             <div className="flex flex-wrap items-center justify-center gap-6 mb-8">
+                <Link href="/faq" className="text-sm text-muted-foreground hover:text-foreground transition-colors">FAQ</Link>
                 <Link href="/terms" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Terms of Service</Link>
                 <Link href="/refund-policy" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Refund Policy</Link>
 

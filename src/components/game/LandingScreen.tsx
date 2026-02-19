@@ -225,7 +225,7 @@ export function LandingScreen({ onCreateGame, onJoinGame, isLoading, error }: La
                             <button
                                 onClick={() => setFilter("2P")}
                                 className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all ${filter === "2P"
-                                    ? "bg-bg-background shadow-sm text-primary"
+                                    ? "bg-background shadow-sm text-primary"
                                     : "text-muted-foreground hover:text-primary"
                                     }`}
                             >
