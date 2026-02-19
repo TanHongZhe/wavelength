@@ -3,10 +3,10 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { AudioWaveform, Users, Sparkles, ChevronDown, Gamepad2, PartyPopper, Lock, SlidersVertical, Zap, Flag, GraduationCap, LogIn } from "lucide-react";
+import { AudioWaveform, Users, Sparkles, ChevronDown, Gamepad2, PartyPopper, Lock, SlidersVertical, Zap, Flag, GraduationCap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useUser, SignInButton } from "@clerk/nextjs";
+
 import { useQuery } from "convex/react";
 import { api } from "convex/_generated/api";
 import { DECK_INFO, DeckType } from "@/lib/gameData";
@@ -129,7 +129,6 @@ const GAMES = [
 
 export function LandingScreen({ onCreateGame, onJoinGame, isLoading, error }: LandingScreenProps) {
     const router = useRouter();
-    const { isSignedIn } = useUser();
     const myUser = useQuery(api.rooms.getMyUser);
     const isPro = myUser?.isPro ?? false;
     const dailyUsage = useQuery(api.rooms.getDailyRoomCreations);
@@ -294,46 +293,25 @@ export function LandingScreen({ onCreateGame, onJoinGame, isLoading, error }: La
                         animate={{ opacity: 1, scale: 1 }}
                         className="space-y-3"
                     >
-                        {!isSignedIn ? (
-                            /* Guest: show sign-in prompt instead of create */
-                            <div className="game-card w-full text-center space-y-3">
-                                <div className="p-3 rounded-xl bg-wedge-teal/20 text-wedge-teal inline-flex">
+                        <motion.button
+                            className="game-card w-full text-left group hover:scale-[1.02] transition-transform"
+                            onClick={() => setMode("create")}
+                            whileTap={{ scale: 0.98 }}
+                        >
+                            <div className="flex items-start gap-4">
+                                <div className="p-3 rounded-xl bg-wedge-teal/20 text-wedge-teal group-hover:bg-wedge-teal group-hover:text-white transition-colors">
                                     <Sparkles className="w-6 h-6" />
                                 </div>
-                                <h3 className="font-display text-lg font-semibold text-primary">
-                                    Sign in to Create a Room
-                                </h3>
-                                <p className="text-sm text-muted-foreground">
-                                    Create an account to host games. You can join rooms as a guest!
-                                </p>
-                                <SignInButton mode="modal">
-                                    <Button className="w-full bg-gradient-to-r from-wedge-teal to-wedge-orange hover:opacity-90 text-white border-0 shadow-lg py-3 transition-all hover:scale-[1.02]">
-                                        <LogIn className="w-4 h-4 mr-2" />
-                                        Sign In / Sign Up
-                                    </Button>
-                                </SignInButton>
-                            </div>
-                        ) : (
-                            <motion.button
-                                className="game-card w-full text-left group hover:scale-[1.02] transition-transform"
-                                onClick={() => setMode("create")}
-                                whileTap={{ scale: 0.98 }}
-                            >
-                                <div className="flex items-start gap-4">
-                                    <div className="p-3 rounded-xl bg-wedge-teal/20 text-wedge-teal group-hover:bg-wedge-teal group-hover:text-white transition-colors">
-                                        <Sparkles className="w-6 h-6" />
-                                    </div>
-                                    <div>
-                                        <h3 className="font-display text-xl font-semibold text-primary mb-1">
-                                            Create Room
-                                        </h3>
-                                        <p className="text-muted-foreground">
-                                            Start a new game (Classic or Party)
-                                        </p>
-                                    </div>
+                                <div>
+                                    <h3 className="font-display text-xl font-semibold text-primary mb-1">
+                                        Create Room
+                                    </h3>
+                                    <p className="text-muted-foreground">
+                                        Start a new game (Classic or Party)
+                                    </p>
                                 </div>
-                            </motion.button>
-                        )}
+                            </div>
+                        </motion.button>
 
                         <motion.button
                             className="game-card w-full text-left group hover:scale-[1.02] transition-transform"

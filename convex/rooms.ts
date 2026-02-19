@@ -78,58 +78,69 @@ export const createRoom = mutation({
     },
     handler: async (ctx, args) => {
         const identity = await ctx.auth.getUserIdentity();
+        const gameMode = args.game_mode ?? "classic";
+        const isWavelengthMode = gameMode === "classic" || gameMode === "party";
 
-        // 1. Guest users cannot create rooms
-        if (!identity) {
+        // 1. Guest users can only create classic/party rooms — minigames require login
+        if (!identity && !isWavelengthMode) {
             throw new ConvexError("GUEST_CANNOT_CREATE");
         }
 
-        const creatorId = identity.tokenIdentifier;
+        let creatorId: string;
+        let isPro = false;
 
-        // 2. Check/create user record
-        let user = await ctx.db
-            .query("users")
-            .withIndex("by_token", (q) => q.eq("tokenIdentifier", creatorId))
-            .unique();
+        if (identity) {
+            creatorId = identity.tokenIdentifier;
 
-        if (!user) {
-            // Create user if not exists (sync on the fly)
-            const userId = await ctx.db.insert("users", {
-                tokenIdentifier: creatorId,
-                name: identity.name,
-                email: identity.email,
-                isPro: false,
-            });
-            user = await ctx.db.get(userId);
-        }
-
-        const isPro = user?.isPro ?? false;
-
-        // 3. Enforce daily room creation limit for free users
-        if (!isPro) {
-            const today = getTodayDate();
-            const usage = await ctx.db
-                .query("daily_usage")
-                .withIndex("by_user_date", (q) => q.eq("user_token", creatorId).eq("date", today))
+            // 2. Check/create user record
+            let user = await ctx.db
+                .query("users")
+                .withIndex("by_token", (q) => q.eq("tokenIdentifier", creatorId))
                 .unique();
 
-            const currentCount = usage?.games_created ?? 0;
-
-            if (currentCount >= DAILY_ROOM_LIMIT) {
-                throw new ConvexError("DAILY_LIMIT_REACHED");
-            }
-
-            // Increment the counter
-            if (usage) {
-                await ctx.db.patch(usage._id, { games_created: currentCount + 1 });
-            } else {
-                await ctx.db.insert("daily_usage", {
-                    user_token: creatorId,
-                    date: today,
-                    games_created: 1,
-                    rounds_played: 0,
+            if (!user) {
+                // Create user if not exists (sync on the fly)
+                const userId = await ctx.db.insert("users", {
+                    tokenIdentifier: creatorId,
+                    name: identity.name,
+                    email: identity.email,
+                    isPro: false,
                 });
+                user = await ctx.db.get(userId);
             }
+
+            isPro = user?.isPro ?? false;
+
+            // 3. Enforce daily room creation limit for free users
+            if (!isPro) {
+                const today = getTodayDate();
+                const usage = await ctx.db
+                    .query("daily_usage")
+                    .withIndex("by_user_date", (q) => q.eq("user_token", creatorId).eq("date", today))
+                    .unique();
+
+                const currentCount = usage?.games_created ?? 0;
+
+                if (currentCount >= DAILY_ROOM_LIMIT) {
+                    throw new ConvexError("DAILY_LIMIT_REACHED");
+                }
+
+                // Increment the counter
+                if (usage) {
+                    await ctx.db.patch(usage._id, { games_created: currentCount + 1 });
+                } else {
+                    await ctx.db.insert("daily_usage", {
+                        user_token: creatorId,
+                        date: today,
+                        games_created: 1,
+                        rounds_played: 0,
+                    });
+                }
+            }
+        } else {
+            // Guest creating classic/party — use ip_hash or a guest identifier
+            creatorId = args.ip_hash ?? `guest_${Date.now()}`;
+            // Guests skip daily limit tracking (no user identity to track against)
         }
 
         // 4. Create the room

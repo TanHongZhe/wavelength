@@ -5,7 +5,6 @@ import { useQuery, useMutation } from "convex/react";
 import { api } from "convex/_generated/api";
 import { Id } from "convex/_generated/dataModel";
 import { generateRoomCode, generateRandomTarget, getRandomCard, calculatePoints, Card, DeckType } from "@/lib/gameData";
-import { useUser } from "@clerk/nextjs";
 
 export interface Room {
     id: string;
@@ -34,7 +33,6 @@ export interface PartyPlayer {
 }
 
 export function usePartyRoom() {
-    const { isSignedIn } = useUser();
     const [roomId, setRoomId] = useState<Id<"rooms"> | null>(null);
     const [playerId, setPlayerId] = useState<string>("");
     const [isLoading, setIsLoading] = useState(false);
@@ -183,11 +181,6 @@ export function usePartyRoom() {
     // CREATE PARTY ROOM
     const createPartyRoom = useCallback(async (name: string, avatar: string, deckType: DeckType = "fun", maxRounds?: number) => {
         if (!playerId) { setError("Please wait..."); return; }
-
-        if (!isSignedIn) {
-            setError("Please log in to create a party game.");
-            return;
-        }
 
         setIsLoading(true);
         setError(null);
