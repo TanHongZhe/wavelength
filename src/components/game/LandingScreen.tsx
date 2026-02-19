@@ -3,13 +3,14 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { AudioWaveform, Users, Sparkles, ChevronDown, Gamepad2, PartyPopper, Lock, SlidersVertical, Zap, Flag, GraduationCap } from "lucide-react";
+import { AudioWaveform, Users, Sparkles, ChevronDown, Gamepad2, PartyPopper, Lock, SlidersVertical, Zap, Flag, GraduationCap, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useUser } from "@clerk/nextjs";
+import { useUser, SignInButton } from "@clerk/nextjs";
 import { useQuery } from "convex/react";
 import { api } from "convex/_generated/api";
 import { DECK_INFO, DeckType } from "@/lib/gameData";
+import { DailyLimitBanner } from "@/components/DailyLimitBanner";
 
 interface LandingScreenProps {
     onCreateGame: (mode: "classic" | "party", name: string, avatar: string, deckType: DeckType) => void;
@@ -131,6 +132,8 @@ export function LandingScreen({ onCreateGame, onJoinGame, isLoading, error }: La
     const { isSignedIn } = useUser();
     const myUser = useQuery(api.rooms.getMyUser);
     const isPro = myUser?.isPro ?? false;
+    const dailyUsage = useQuery(api.rooms.getDailyRoomCreations);
+    const atLimit = !isPro && (dailyUsage?.roomsCreated ?? 0) >= 3;
     const [roomCode, setRoomCode] = useState("");
     const [playerName, setPlayerName] = useState("");
     const [selectedAvatar, setSelectedAvatar] = useState(AVATARS[0]);
@@ -290,25 +293,46 @@ export function LandingScreen({ onCreateGame, onJoinGame, isLoading, error }: La
                         animate={{ opacity: 1, scale: 1 }}
                         className="space-y-3"
                     >
-                        <motion.button
-                            className="game-card w-full text-left group hover:scale-[1.02] transition-transform"
-                            onClick={() => setMode("create")}
-                            whileTap={{ scale: 0.98 }}
-                        >
-                            <div className="flex items-start gap-4">
-                                <div className="p-3 rounded-xl bg-wedge-teal/20 text-wedge-teal group-hover:bg-wedge-teal group-hover:text-white transition-colors">
+                        {!isSignedIn ? (
+                            /* Guest: show sign-in prompt instead of create */
+                            <div className="game-card w-full text-center space-y-3">
+                                <div className="p-3 rounded-xl bg-wedge-teal/20 text-wedge-teal inline-flex">
                                     <Sparkles className="w-6 h-6" />
                                 </div>
-                                <div>
-                                    <h3 className="font-display text-xl font-semibold text-primary mb-1">
-                                        Create Room
-                                    </h3>
-                                    <p className="text-muted-foreground">
-                                        Start a new game (Classic or Party)
-                                    </p>
-                                </div>
+                                <h3 className="font-display text-lg font-semibold text-primary">
+                                    Sign in to Create a Room
+                                </h3>
+                                <p className="text-sm text-muted-foreground">
+                                    Create an account to host games. You can join rooms as a guest!
+                                </p>
+                                <SignInButton mode="modal">
+                                    <Button className="w-full bg-gradient-to-r from-wedge-teal to-wedge-orange hover:opacity-90 text-white border-0 shadow-lg py-3 transition-all hover:scale-[1.02]">
+                                        <LogIn className="w-4 h-4 mr-2" />
+                                        Sign In / Sign Up
+                                    </Button>
+                                </SignInButton>
                             </div>
-                        </motion.button>
+                        ) : (
+                            <motion.button
+                                className="game-card w-full text-left group hover:scale-[1.02] transition-transform"
+                                onClick={() => setMode("create")}
+                                whileTap={{ scale: 0.98 }}
+                            >
+                                <div className="flex items-start gap-4">
+                                    <div className="p-3 rounded-xl bg-wedge-teal/20 text-wedge-teal group-hover:bg-wedge-teal group-hover:text-white transition-colors">
+                                        <Sparkles className="w-6 h-6" />
+                                    </div>
+                                    <div>
+                                        <h3 className="font-display text-xl font-semibold text-primary mb-1">
+                                            Create Room
+                                        </h3>
+                                        <p className="text-muted-foreground">
+                                            Start a new game (Classic or Party)
+                                        </p>
+                                    </div>
+                                </div>
+                            </motion.button>
+                        )}
 
                         <motion.button
                             className="game-card w-full text-left group hover:scale-[1.02] transition-transform"
@@ -347,6 +371,9 @@ export function LandingScreen({ onCreateGame, onJoinGame, isLoading, error }: La
                         <h3 className="font-display text-xl font-semibold text-primary mb-4">
                             Create New Room
                         </h3>
+
+                        {/* Daily limit indicator */}
+                        <DailyLimitBanner />
 
                         <div className="flex gap-2 mb-4">
                             <Input
@@ -476,7 +503,7 @@ export function LandingScreen({ onCreateGame, onJoinGame, isLoading, error }: La
                             <Button
                                 className="h-14 flex flex-col items-center justify-center gap-1 bg-gradient-to-br from-[#0EA5E9] to-[#2563EB] hover:from-[#0284C7] hover:to-[#1D4ED8] text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300"
                                 onClick={() => onCreateGame("classic", playerName, selectedAvatar, selectedDeck)}
-                                disabled={!playerName.trim() || isLoading}
+                                disabled={!playerName.trim() || isLoading || atLimit}
                             >
                                 <Gamepad2 className="w-5 h-5" />
                                 <span className="font-bold">Classic (2P)</span>
@@ -485,7 +512,7 @@ export function LandingScreen({ onCreateGame, onJoinGame, isLoading, error }: La
                             <Button
                                 className={`h-14 flex flex-col items-center justify-center gap-1 text-white border-0 shadow-lg transition-all duration-300 relative overflow-hidden bg-gradient-to-br from-[#F43F5E] to-[#E11D48] hover:from-[#E11D48] hover:to-[#BE123C] hover:shadow-xl`}
                                 onClick={() => onCreateGame("party", playerName, selectedAvatar, selectedDeck)}
-                                disabled={!playerName.trim() || isLoading}
+                                disabled={!playerName.trim() || isLoading || atLimit}
                             >
 
                                 <PartyPopper className="w-5 h-5 mt-1" />

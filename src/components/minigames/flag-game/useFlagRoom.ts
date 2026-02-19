@@ -7,7 +7,7 @@ import { Id } from "convex/_generated/dataModel";
 
 // Generate 4-letter room code
 function generateRoomCode(): string {
-    const chars = " ABCDEFGHJKLMNPQRSTUVWXYZ";
+    const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ";
     let code = "";
     for (let i = 0; i < 4; i++) {
         code += chars.charAt(Math.floor(Math.random() * chars.length));
@@ -106,10 +106,17 @@ export function useFlagRoom() {
 
             setRoomId(newRoomId);
             setIsLoading(false);
-        } catch (e) {
+        } catch (e: any) {
             console.error("Create error:", e);
-            const errorMessage = e instanceof Error ? e.message : "Failed to create room";
-            setError(errorMessage);
+            const errorData = e?.data;
+            if (errorData === "DAILY_LIMIT_REACHED") {
+                setError("You've reached your daily room limit (3/day). Upgrade to Pro for unlimited!");
+            } else if (errorData === "GUEST_CANNOT_CREATE") {
+                setError("Please sign in to create a room.");
+            } else {
+                const errorMessage = e instanceof Error ? e.message : "Failed to create room";
+                setError(errorMessage);
+            }
             setIsLoading(false);
         }
     }, [playerId, createRoomMutation]);

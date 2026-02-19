@@ -225,8 +225,16 @@ export function usePartyRoom() {
             setIsLoading(false);
         } catch (err: any) {
             console.error("Create error:", err);
-            const msg = err.data?.message || err.message || "Failed to create party room";
-            setError(msg);
+            // Handle specific ConvexError codes
+            const errorData = err?.data;
+            if (errorData === "DAILY_LIMIT_REACHED") {
+                setError("You've reached your daily room limit (3/day). Upgrade to Pro for unlimited!");
+            } else if (errorData === "GUEST_CANNOT_CREATE") {
+                setError("Please sign in to create a room.");
+            } else {
+                const msg = err.data?.message || err.message || "Failed to create party room";
+                setError(msg);
+            }
             setIsLoading(false);
         }
     }, [playerId, createRoomMutation, addPartyPlayerMutation]);

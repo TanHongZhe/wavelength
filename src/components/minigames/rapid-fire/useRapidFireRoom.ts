@@ -113,9 +113,16 @@ export function useRapidFireRoom() {
 
             setRoomId(newRoomId);
             setIsLoading(false);
-        } catch (e) {
+        } catch (e: any) {
             console.error("Create error:", e);
-            setError("Failed to create room");
+            const errorData = e?.data;
+            if (errorData === "DAILY_LIMIT_REACHED") {
+                setError("You've reached your daily room limit (3/day). Upgrade to Pro for unlimited!");
+            } else if (errorData === "GUEST_CANNOT_CREATE") {
+                setError("Please sign in to create a room.");
+            } else {
+                setError("Failed to create room");
+            }
             setIsLoading(false);
         }
     }, [playerId, createRoomMutation]);

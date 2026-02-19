@@ -79,13 +79,16 @@ export default defineSchema({
         .index("by_email", ["email"])
         .index("by_stripe_id", ["stripeCustomerId"]),
 
-    // 2. IP Limits Table (For Guest Users)
+    // 2. Usage Limits Table (Tracks daily room creation per user)
     daily_usage: defineTable({
-        ip_hash: v.string(),             // SHA-256 of IP
+        ip_hash: v.optional(v.string()),             // SHA-256 of IP (legacy)
+        user_token: v.optional(v.string()),           // Clerk tokenIdentifier
         date: v.string(),                // YYYY-MM-DD
-        games_created: v.number(),       // Track games (analytics)
-        rounds_played: v.number(),       // Limit: 10 per day
-    }).index("by_ip_date", ["ip_hash", "date"]),
+        games_created: v.number(),       // Track room creations (limit: 3/day for free)
+        rounds_played: v.number(),       // Legacy field
+    })
+        .index("by_ip_date", ["ip_hash", "date"])
+        .index("by_user_date", ["user_token", "date"]),
 
     // 3. Daily Stats Archive (for preserving history after room deletion)
     daily_stats: defineTable({

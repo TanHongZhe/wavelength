@@ -141,7 +141,11 @@ export function useGeneralKnowledgeRoom() {
 
         try {
             // Generate Room Code
-            const roomCode = Math.random().toString(36).substring(2, 6).toUpperCase();
+            const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ";
+            let roomCode = "";
+            for (let i = 0; i < 4; i++) {
+                roomCode += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
 
             const newRoomId = await createRoomMutation({
                 room_code: roomCode,
@@ -165,7 +169,14 @@ export function useGeneralKnowledgeRoom() {
             });
 
         } catch (err: any) {
-            setError(err.message || "Failed to create room");
+            const errorData = err?.data;
+            if (errorData === "DAILY_LIMIT_REACHED") {
+                setError("You've reached your daily room limit (3/day). Upgrade to Pro for unlimited!");
+            } else if (errorData === "GUEST_CANNOT_CREATE") {
+                setError("Please sign in to create a room.");
+            } else {
+                setError(err.message || "Failed to create room");
+            }
         } finally {
             setIsLoading(false);
         }

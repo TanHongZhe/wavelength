@@ -9,6 +9,44 @@ function getTodayDate() {
 
 // ... queries ...
 
+// Daily room creation limit for free users
+const DAILY_ROOM_LIMIT = 3;
+
+// Get current user's daily room creation usage
+export const getDailyRoomCreations = query({
+    args: {},
+    handler: async (ctx) => {
+        const identity = await ctx.auth.getUserIdentity();
+        if (!identity) {
+            return { roomsCreated: 0, limit: DAILY_ROOM_LIMIT, isPro: false, isSignedIn: false };
+        }
+
+        const user = await ctx.db
+            .query("users")
+            .withIndex("by_token", (q) => q.eq("tokenIdentifier", identity.tokenIdentifier))
+            .unique();
+
+        const isPro = user?.isPro ?? false;
+
+        if (isPro) {
+            return { roomsCreated: 0, limit: Infinity, isPro: true, isSignedIn: true };
+        }
+
+        const today = getTodayDate();
+        const usage = await ctx.db
+            .query("daily_usage")
+            .withIndex("by_user_date", (q) => q.eq("user_token", identity.tokenIdentifier).eq("date", today))
+            .unique();
+
+        return {
+            roomsCreated: usage?.games_created ?? 0,
+            limit: DAILY_ROOM_LIMIT,
+            isPro: false,
+            isSignedIn: true,
+        };
+    },
+});
+
 // ============================================
 // MUTATIONS (Write Operations)
 // ============================================
@@ -39,39 +77,61 @@ export const createRoom = mutation({
     },
     handler: async (ctx, args) => {
         const identity = await ctx.auth.getUserIdentity();
-        let isPro = false;
-        let creatorId: string | undefined;
 
-        if (identity) {
-            // 1. Logged in user
-            creatorId = identity.tokenIdentifier; // Use tokenIdentifier as creator_id
-            const user = await ctx.db
-                .query("users")
-                .withIndex("by_token", (q) => q.eq("tokenIdentifier", identity.tokenIdentifier))
+        // 1. Guest users cannot create rooms
+        if (!identity) {
+            throw new ConvexError("GUEST_CANNOT_CREATE");
+        }
+
+        const creatorId = identity.tokenIdentifier;
+
+        // 2. Check/create user record
+        let user = await ctx.db
+            .query("users")
+            .withIndex("by_token", (q) => q.eq("tokenIdentifier", creatorId))
+            .unique();
+
+        if (!user) {
+            // Create user if not exists (sync on the fly)
+            const userId = await ctx.db.insert("users", {
+                tokenIdentifier: creatorId,
+                name: identity.name,
+                email: identity.email,
+                isPro: false,
+            });
+            user = await ctx.db.get(userId);
+        }
+
+        const isPro = user?.isPro ?? false;
+
+        // 3. Enforce daily room creation limit for free users
+        if (!isPro) {
+            const today = getTodayDate();
+            const usage = await ctx.db
+                .query("daily_usage")
+                .withIndex("by_user_date", (q) => q.eq("user_token", creatorId).eq("date", today))
                 .unique();
 
-            if (user) {
-                isPro = user.isPro;
+            const currentCount = usage?.games_created ?? 0;
+
+            if (currentCount >= DAILY_ROOM_LIMIT) {
+                throw new ConvexError("DAILY_LIMIT_REACHED");
+            }
+
+            // Increment the counter
+            if (usage) {
+                await ctx.db.patch(usage._id, { games_created: currentCount + 1 });
             } else {
-                // Create user if not exists (sync on the fly)
-                await ctx.db.insert("users", {
-                    tokenIdentifier: identity.tokenIdentifier,
-                    name: identity.name,
-                    email: identity.email,
-                    isPro: false,
+                await ctx.db.insert("daily_usage", {
+                    user_token: creatorId,
+                    date: today,
+                    games_created: 1,
+                    rounds_played: 0,
                 });
             }
         }
 
-        // 2. Game Mode Restrictions - Party Mode unlocked with limit
-        /* 
-        if (args.game_mode === "party") {
-           // Allow creation for non-pro, implemented limit in updateRoom
-        }
-        */
-
-        // Note: Per-room round limits are enforced in updateRoom
-
+        // 4. Create the room
         return await ctx.db.insert("rooms", {
             room_code: args.room_code.toUpperCase(),
             creator_id: creatorId,

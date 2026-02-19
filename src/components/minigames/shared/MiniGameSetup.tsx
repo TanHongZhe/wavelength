@@ -3,9 +3,13 @@
 import { useState, useEffect, ReactNode, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, ChevronDown, Sparkles, Users } from "lucide-react";
+import { ArrowLeft, ChevronDown, Sparkles, Users, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useUser, SignInButton } from "@clerk/nextjs";
+import { useQuery } from "convex/react";
+import { api } from "convex/_generated/api";
+import { DailyLimitBanner } from "@/components/DailyLimitBanner";
 
 // 17 animal avatars - same as main game
 export const AVATARS = ["🐼", "🐯", "🐶", "🐱", "🐷", "🐰", "🦊", "🐻", "🐨", "🦁", "🐮", "🐵", "🐸", "🦄", "🐧", "🐳", "🦉"];
@@ -59,6 +63,12 @@ function MiniGameSetupContent({
     const [playerName, setPlayerName] = useState("");
     const [selectedAvatar, setSelectedAvatar] = useState(AVATARS[0]);
     const [isAvatarExpanded, setIsAvatarExpanded] = useState(false);
+
+    // Auth & daily limit
+    const { isSignedIn } = useUser();
+    const dailyUsage = useQuery(api.rooms.getDailyRoomCreations);
+    const isPro = dailyUsage?.isPro ?? false;
+    const atLimit = !isPro && (dailyUsage?.roomsCreated ?? 0) >= 3;
 
     // Initialize roomCode from URL if present
     const [roomCode, setRoomCode] = useState(() => initialCode || "");
@@ -183,25 +193,46 @@ function MiniGameSetupContent({
 
                             {/* Create/Join buttons */}
                             <div className="space-y-3">
-                                <motion.button
-                                    className="game-card border border-white/10 w-full text-left group hover:scale-[1.02] transition-transform"
-                                    onClick={() => setMode("create")}
-                                    whileTap={{ scale: 0.98 }}
-                                >
-                                    <div className="flex items-start gap-4">
-                                        <div className="p-3 rounded-xl bg-wedge-teal/20 text-wedge-teal group-hover:bg-wedge-teal group-hover:text-white transition-colors">
+                                {!isSignedIn ? (
+                                    /* Guest: show sign-in prompt */
+                                    <div className="game-card border border-white/10 w-full text-center space-y-3 p-5">
+                                        <div className="p-3 rounded-xl bg-wedge-teal/20 text-wedge-teal inline-flex">
                                             <Sparkles className="w-6 h-6" />
                                         </div>
-                                        <div>
-                                            <h3 className="font-display text-xl font-semibold text-primary mb-1">
-                                                Create Room
-                                            </h3>
-                                            <p className="text-muted-foreground text-sm">
-                                                Start a new game
-                                            </p>
-                                        </div>
+                                        <h3 className="font-display text-lg font-semibold text-primary">
+                                            Sign in to Create a Room
+                                        </h3>
+                                        <p className="text-sm text-muted-foreground">
+                                            Create an account to host games. You can join rooms as a guest!
+                                        </p>
+                                        <SignInButton mode="modal">
+                                            <Button className="w-full bg-gradient-to-r from-wedge-teal to-wedge-orange hover:opacity-90 text-white border-0 shadow-lg py-3 transition-all hover:scale-[1.02]">
+                                                <LogIn className="w-4 h-4 mr-2" />
+                                                Sign In / Sign Up
+                                            </Button>
+                                        </SignInButton>
                                     </div>
-                                </motion.button>
+                                ) : (
+                                    <motion.button
+                                        className="game-card border border-white/10 w-full text-left group hover:scale-[1.02] transition-transform"
+                                        onClick={() => setMode("create")}
+                                        whileTap={{ scale: 0.98 }}
+                                    >
+                                        <div className="flex items-start gap-4">
+                                            <div className="p-3 rounded-xl bg-wedge-teal/20 text-wedge-teal group-hover:bg-wedge-teal group-hover:text-white transition-colors">
+                                                <Sparkles className="w-6 h-6" />
+                                            </div>
+                                            <div>
+                                                <h3 className="font-display text-xl font-semibold text-primary mb-1">
+                                                    Create Room
+                                                </h3>
+                                                <p className="text-muted-foreground text-sm">
+                                                    Start a new game
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </motion.button>
+                                )}
 
                                 <motion.button
                                     className="game-card border border-white/10 w-full text-left group hover:scale-[1.02] transition-transform"
@@ -263,6 +294,9 @@ function MiniGameSetupContent({
                             {/* Avatar Picker */}
                             <AvatarPicker />
 
+                            {/* Daily limit indicator */}
+                            <DailyLimitBanner />
+
                             {/* Optional game-specific options (e.g., deck picker) */}
                             {createGameOptions}
 
@@ -276,7 +310,7 @@ function MiniGameSetupContent({
                             {/* Play button */}
                             <Button
                                 onClick={handleCreateGame}
-                                disabled={!playerName.trim() || isLoading}
+                                disabled={!playerName.trim() || isLoading || atLimit}
                                 className="w-full h-12 font-bold btn-game"
                             >
                                 {isLoading ? "Creating..." : "Play"}
