@@ -38,8 +38,8 @@ export function PaywallModal({ isOpen, onClose, message }: PaywallModalProps) {
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className="max-w-4xl bg-slate-950 border-slate-800 text-slate-100 p-0 overflow-hidden">
-                <div className="p-6 md:p-8 max-h-[90vh] overflow-y-auto">
+            <DialogContent className="max-w-lg md:max-w-4xl bg-slate-950 border-slate-800 text-slate-100 p-0 overflow-hidden max-h-[85vh] my-4">
+                <div className="p-5 md:p-8 overflow-y-auto max-h-[85vh]">
                     <DialogHeader className="mb-8 text-center">
                         <DialogTitle className="flex items-center justify-center gap-2 text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-pink-400 to-violet-400">
                             <Sparkles className="w-8 h-8 text-pink-400" />

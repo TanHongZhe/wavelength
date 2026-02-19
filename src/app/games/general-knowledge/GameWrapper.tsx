@@ -72,26 +72,23 @@ function GameWrapperContent() {
 
                 <div className="space-y-4 w-full max-w-md mx-auto">
                     {isGuest ? (
-                        <SignInButton mode="modal">
-                            <motion.button
-                                className="game-card w-full text-left group hover:scale-[1.02] transition-transform"
-                                whileTap={{ scale: 0.98 }}
-                            >
-                                <div className="flex items-start gap-4">
-                                    <div className="p-3 rounded-xl bg-wedge-teal/20 text-wedge-teal group-hover:bg-wedge-teal group-hover:text-white transition-colors">
-                                        <LogIn className="w-6 h-6" />
-                                    </div>
-                                    <div>
-                                        <h3 className="font-display text-xl font-semibold text-primary mb-1">
-                                            Sign In to Create
-                                        </h3>
-                                        <p className="text-muted-foreground">
-                                            Create an account to host games. You can join as a guest!
-                                        </p>
-                                    </div>
-                                </div>
-                            </motion.button>
-                        </SignInButton>
+                        <div className="game-card border border-white/10 w-full text-center space-y-3 p-5">
+                            <div className="p-3 rounded-xl bg-wedge-teal/20 text-wedge-teal inline-flex">
+                                <Sparkles className="w-6 h-6" />
+                            </div>
+                            <h3 className="font-display text-lg font-semibold text-primary">
+                                Sign in to Create a Room
+                            </h3>
+                            <p className="text-sm text-muted-foreground">
+                                Create an account to host games. You can join rooms as a guest!
+                            </p>
+                            <SignInButton mode="modal">
+                                <button className="w-full bg-gradient-to-r from-wedge-teal to-wedge-orange hover:opacity-90 text-white border-0 shadow-lg py-3 rounded-lg font-semibold transition-all hover:scale-[1.02] flex items-center justify-center gap-2">
+                                    <LogIn className="w-4 h-4" />
+                                    Sign In / Sign Up
+                                </button>
+                            </SignInButton>
+                        </div>
                     ) : (
                         <motion.button
                             className="game-card w-full text-left group hover:scale-[1.02] transition-transform"

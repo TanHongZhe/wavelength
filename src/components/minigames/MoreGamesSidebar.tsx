@@ -2,6 +2,12 @@ import Link from "next/link";
 
 const GAMES = [
     {
+        href: "/",
+        emoji: "🌊",
+        title: "Wavelength",
+        desc: "The original mind-reading game."
+    },
+    {
         href: "/games/fantasy-slider",
         emoji: "🎚️",
         title: "Fantasy Slider",
