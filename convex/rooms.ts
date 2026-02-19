@@ -359,40 +359,9 @@ export const updateRoom = mutation({
         // Enforce Round Limits for Free Users
         if (args.updates.round_number !== undefined) {
             const room = await ctx.db.get(args.roomId);
-            const gameMode = room?.game_mode || "classic";
-            const currentRound = room?.round_number ?? 1;
 
-            // Determine the round limit for this game mode
-            // For classic/party: 4 free rounds, or room's max_rounds if set
-            // For mini games: 20 free rounds
-            let roundLimit = 4; // Free tier limit for Wavelength classic/party
-            if (gameMode === "mini_rapid_fire" || gameMode === "mini_flag_game" || gameMode === "mini_whos_most_likely" || gameMode === "mini_fantasy_slider" || gameMode === "mini_general_knowledge") {
-                roundLimit = 20;
-            }
 
-            // Check if ANYONE in this room is Pro (creator or current user)
-            let isPro = false;
 
-            // Check room creator
-            if (room?.creator_id) {
-                const creator = await ctx.db
-                    .query("users")
-                    .withIndex("by_token", (q) => q.eq("tokenIdentifier", room.creator_id!))
-                    .unique();
-                if (creator?.isPro) isPro = true;
-            }
-
-            // Check current user
-            if (!isPro) {
-                const identity = await ctx.auth.getUserIdentity();
-                if (identity) {
-                    const user = await ctx.db
-                        .query("users")
-                        .withIndex("by_token", (q) => q.eq("tokenIdentifier", identity.tokenIdentifier))
-                        .unique();
-                    if (user?.isPro) isPro = true;
-                }
-            }
 
             // Limit Enforcement Logic
             // Trust the limits set at creation time (guarded by UI)
