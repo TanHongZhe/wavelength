@@ -138,6 +138,22 @@ export function PaywallModal({ isOpen, onClose, message }: PaywallModalProps) {
                                 </tr>
                                 <tr className="border-b border-slate-800/50">
                                     <td className="py-3 px-4 text-slate-300">
+                                        <div>Wavelength Rounds</div>
+                                        <div className="text-xs text-slate-500 font-normal">Per game</div>
+                                    </td>
+                                    <td className="py-3 px-4 text-center text-slate-500">4 rounds</td>
+                                    <td className="py-3 px-4 text-center text-green-400 font-bold">Up to ∞</td>
+                                </tr>
+                                <tr className="border-b border-slate-800/50">
+                                    <td className="py-3 px-4 text-slate-300">
+                                        <div>Mini Games</div>
+                                        <div className="text-xs text-slate-500 font-normal">Per game</div>
+                                    </td>
+                                    <td className="py-3 px-4 text-center text-slate-500">5 rounds</td>
+                                    <td className="py-3 px-4 text-center text-green-400 font-bold">Up to 100</td>
+                                </tr>
+                                <tr className="border-b border-slate-800/50">
+                                    <td className="py-3 px-4 text-slate-300">
                                         <div>Party Access</div>
                                         <div className="text-xs text-slate-500 font-normal">Unlock for friends</div>
                                     </td>

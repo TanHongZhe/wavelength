@@ -16,6 +16,7 @@ export function GameEngine() {
         avatar: string;
         roomCode?: string;
         deckType?: DeckType;
+        maxRounds?: number;
     } | null>(null);
 
     const [isLoading, setIsLoading] = useState(false);
@@ -24,13 +25,14 @@ export function GameEngine() {
     // Use Convex mutation to check room mode during join
     const joinRoomByCode = useMutation(api.rooms.joinRoomByCode);
 
-    const handleCreateGame = (mode: "classic" | "party", name: string, avatar: string, deckType: DeckType = "fun") => {
+    const handleCreateGame = (mode: "classic" | "party", name: string, avatar: string, deckType: DeckType = "fun", maxRounds: number = 4) => {
         setGameState({
             mode,
             isCreating: true,
             name,
             avatar,
-            deckType
+            deckType,
+            maxRounds
         });
     };
 
@@ -84,6 +86,7 @@ export function GameEngine() {
                     initialAvatar={gameState.avatar}
                     initialRoomCode={gameState.roomCode}
                     initialDeckType={gameState.deckType}
+                    initialMaxRounds={gameState.maxRounds}
                     isCreating={gameState.isCreating}
                     onLeave={() => setGameState(null)}
                 />
@@ -95,6 +98,7 @@ export function GameEngine() {
                     initialAvatar={gameState.avatar}
                     initialRoomCode={gameState.roomCode}
                     initialDeckType={gameState.deckType}
+                    initialMaxRounds={gameState.maxRounds}
                     isCreating={gameState.isCreating}
                     onLeave={() => setGameState(null)}
                 />

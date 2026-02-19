@@ -137,7 +137,9 @@ export function GameScreen({
                             Room: <span className="font-bold text-primary">{room.room_code}</span>
                         </div>
                         <div className="font-display text-sm text-muted-foreground">
-                            Round: <span className="font-bold text-primary">{room.round_number}</span>
+                            Round: <span className="font-bold text-primary">
+                                {room.max_rounds === 0 ? room.round_number : `${room.round_number}/${room.max_rounds ?? 4}`}
+                            </span>
                         </div>
                         {currentDeck && DECK_INFO[currentDeck] && (
                             <div className="font-display text-xs bg-secondary/50 px-2 py-1 rounded-md flex items-center gap-1.5 border border-border/50 ml-2" title="Current Deck">

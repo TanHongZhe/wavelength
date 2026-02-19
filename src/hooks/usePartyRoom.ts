@@ -18,6 +18,7 @@ export interface Room {
     game_mode: "classic" | "party";
     psychic_id?: string;
     deck_type?: DeckType;
+    max_rounds?: number;
 }
 
 export interface PartyPlayer {
@@ -95,6 +96,7 @@ export function usePartyRoom() {
         game_mode: (convexRoom.game_mode as "classic" | "party") || "classic",
         psychic_id: convexRoom.psychic_id,
         deck_type: convexRoom.deck_type as DeckType,
+        max_rounds: convexRoom.max_rounds,
     } : null;
 
     // Build player array from full list or cached list + own fresh data
@@ -179,7 +181,7 @@ export function usePartyRoom() {
     }, [room?.round_number, room?.psychic_id, roomId, playerId, lastProcessedRound, updatePartyPlayerMutation]);
 
     // CREATE PARTY ROOM
-    const createPartyRoom = useCallback(async (name: string, avatar: string, deckType: DeckType = "fun") => {
+    const createPartyRoom = useCallback(async (name: string, avatar: string, deckType: DeckType = "fun", maxRounds?: number) => {
         if (!playerId) { setError("Please wait..."); return; }
 
         if (!isSignedIn) {
@@ -204,6 +206,7 @@ export function usePartyRoom() {
                 phase: "waiting",
                 game_mode: "party",
                 deck_type: deckType,
+                max_rounds: maxRounds,
                 psychic_id: playerId,
                 round_number: 1,
                 ip_hash: playerId,

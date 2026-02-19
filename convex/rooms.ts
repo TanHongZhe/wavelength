@@ -72,6 +72,7 @@ export const createRoom = mutation({
         psychic_score: v.optional(v.number()),
         guesser_score: v.optional(v.number()),
         card_count: v.optional(v.number()),
+        max_rounds: v.optional(v.number()),
         deck_type: v.optional(v.string()),
         ip_hash: v.optional(v.string()), // Added for guest limits
     },
@@ -151,6 +152,7 @@ export const createRoom = mutation({
             player2_name: args.player2_name,
             player2_avatar: args.player2_avatar,
             card_count: args.card_count,
+            max_rounds: args.max_rounds,
             deck_type: args.deck_type,
             updated_at: Date.now(),
         });
@@ -361,7 +363,9 @@ export const updateRoom = mutation({
             const currentRound = room?.round_number ?? 1;
 
             // Determine the round limit for this game mode
-            let roundLimit = 3; // Free tier limit
+            // For classic/party: 4 free rounds, or room's max_rounds if set
+            // For mini games: 20 free rounds
+            let roundLimit = 4; // Free tier limit for Wavelength classic/party
             if (gameMode === "mini_rapid_fire" || gameMode === "mini_flag_game" || gameMode === "mini_whos_most_likely" || gameMode === "mini_fantasy_slider" || gameMode === "mini_general_knowledge") {
                 roundLimit = 20;
             }
@@ -390,21 +394,34 @@ export const updateRoom = mutation({
                 }
             }
 
-            // Party Mode Limit Logic
-            // if (!isPro && gameMode === "party") { ... } -> Removed to allow play with limit
+            // Limit Enforcement Logic
+            // Trust the limits set at creation time (guarded by UI)
+            let roundLimit = 4; // Default fallback
+
+            // 1. Check max_rounds (Classic/Party)
+            if (room?.max_rounds !== undefined && room.max_rounds !== null) {
+                if (room.max_rounds === 0) {
+                    // Unlimited - skip check
+                    return;
+                }
+                roundLimit = room.max_rounds;
+            }
+            // 2. Check card_count (Mini Games)
+            else if (room?.card_count !== undefined) {
+                roundLimit = room.card_count;
+            }
 
             // Start checking limits
-            // Only enforce if we are trying to ADVANCE the round (start a new one)
             const newRoundNumber = args.updates.round_number;
 
-            if (!isPro && typeof newRoundNumber === "number" && newRoundNumber > roundLimit) {
+            if (typeof newRoundNumber === "number" && newRoundNumber > roundLimit) {
                 console.log("LIMIT REACHED! New Round:", newRoundNumber, "> Limit:", roundLimit, "- ENDING GAME");
                 await ctx.db.patch(args.roomId, {
                     phase: "ended",
-                    clue: "Daily Limit Reached! Upgrade to play more.",
+                    clue: "Game Over! Thanks for playing.",
                     updated_at: Date.now()
                 });
-                return; // Do NOT apply the round update. Game is over.
+                return; // Game over
             }
         }
 

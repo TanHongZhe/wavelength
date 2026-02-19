@@ -28,6 +28,7 @@ export default defineSchema({
         player2_choice: v.optional(v.string()),
         deck_type: v.optional(v.string()),
         card_count: v.optional(v.number()),
+        max_rounds: v.optional(v.number()), // Selected max rounds for the game (4 free, 10/20/50/unlimited for Pro)
         updated_at: v.optional(v.number()), // timestamp (ms) — set on create & every update
         current_question: v.optional(v.object({
             question: v.string(),

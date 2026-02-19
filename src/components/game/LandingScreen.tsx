@@ -13,7 +13,7 @@ import { DECK_INFO, DeckType } from "@/lib/gameData";
 import { DailyLimitBanner } from "@/components/DailyLimitBanner";
 
 interface LandingScreenProps {
-    onCreateGame: (mode: "classic" | "party", name: string, avatar: string, deckType: DeckType) => void;
+    onCreateGame: (mode: "classic" | "party", name: string, avatar: string, deckType: DeckType, maxRounds: number) => void;
     onJoinGame: (code: string, name: string, avatar: string) => void;
     isLoading: boolean;
     error: string | null;
@@ -138,6 +138,7 @@ export function LandingScreen({ onCreateGame, onJoinGame, isLoading, error }: La
     const [playerName, setPlayerName] = useState("");
     const [selectedAvatar, setSelectedAvatar] = useState(AVATARS[0]);
     const [selectedDeck, setSelectedDeck] = useState<DeckType>("fun");
+    const [selectedRounds, setSelectedRounds] = useState(4);
     const [mode, setMode] = useState<"initial" | "wavelength" | "create" | "join">("initial");
     const [isAvatarExpanded, setIsAvatarExpanded] = useState(false);
 
@@ -499,10 +500,46 @@ export function LandingScreen({ onCreateGame, onJoinGame, isLoading, error }: La
                             )}
                         </div>
 
+                        {/* Round Count Selection */}
+                        <div className="mb-6">
+                            <label className="text-sm font-medium text-muted-foreground mb-2 block">Rounds per Game:</label>
+                            <div className="grid grid-cols-5 gap-2">
+                                {[4, 10, 20, 50, 0].map((count) => {
+                                    const isLocked = !isPro && count !== 4;
+                                    const label = count === 0 ? "∞" : count.toString();
+                                    const sublabel = count === 4 ? "free" : count === 0 ? "unlimited" : "rounds";
+                                    return (
+                                        <button
+                                            key={count}
+                                            disabled={isLocked}
+                                            onClick={() => !isLocked && setSelectedRounds(count)}
+                                            className={`p-2 rounded-lg border text-center transition-all relative ${selectedRounds === count
+                                                ? "border-primary bg-primary/10 ring-1 ring-primary ring-inset"
+                                                : isLocked
+                                                    ? "border-border/50 bg-muted/40 opacity-60 cursor-not-allowed"
+                                                    : "border-border hover:bg-secondary cursor-pointer"
+                                                }`}
+                                        >
+                                            <div className="text-lg font-bold flex items-center justify-center gap-0.5">
+                                                {label}
+                                                {isLocked && <Lock className="w-3 h-3 text-orange-500" />}
+                                            </div>
+                                            <div className="text-[10px] text-muted-foreground">{sublabel}</div>
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                            {!isPro && selectedRounds !== 4 && (
+                                <p className="text-xs text-orange-500 mt-1 flex items-center gap-1">
+                                    <Lock className="w-3 h-3" /> Upgrade to Pro for more rounds
+                                </p>
+                            )}
+                        </div>
+
                         <div className="grid grid-cols-2 gap-3 mb-3">
                             <Button
                                 className="h-14 flex flex-col items-center justify-center gap-1 bg-gradient-to-br from-[#0EA5E9] to-[#2563EB] hover:from-[#0284C7] hover:to-[#1D4ED8] text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300"
-                                onClick={() => onCreateGame("classic", playerName, selectedAvatar, selectedDeck)}
+                                onClick={() => onCreateGame("classic", playerName, selectedAvatar, selectedDeck, selectedRounds)}
                                 disabled={!playerName.trim() || isLoading || atLimit}
                             >
                                 <Gamepad2 className="w-5 h-5" />
@@ -511,7 +548,7 @@ export function LandingScreen({ onCreateGame, onJoinGame, isLoading, error }: La
 
                             <Button
                                 className={`h-14 flex flex-col items-center justify-center gap-1 text-white border-0 shadow-lg transition-all duration-300 relative overflow-hidden bg-gradient-to-br from-[#F43F5E] to-[#E11D48] hover:from-[#E11D48] hover:to-[#BE123C] hover:shadow-xl`}
-                                onClick={() => onCreateGame("party", playerName, selectedAvatar, selectedDeck)}
+                                onClick={() => onCreateGame("party", playerName, selectedAvatar, selectedDeck, selectedRounds)}
                                 disabled={!playerName.trim() || isLoading || atLimit}
                             >
 

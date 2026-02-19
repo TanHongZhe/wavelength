@@ -271,8 +271,10 @@ export function GameOverScreen({ room, playerId, onLeave }: GameOverScreenProps)
                                 </Button>
                             ) : (
                                 <SignInButton mode="modal">
-                                    <LogIn className="w-4 h-4 mr-2" />
-                                    Log In to Upgrade
+                                    <Button className="w-full h-12 text-lg font-bold bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-500 hover:to-orange-600 text-white shadow-lg">
+                                        <LogIn className="w-4 h-4 mr-2" />
+                                        Log In to Upgrade
+                                    </Button>
                                 </SignInButton>
                             )}
                         </motion.div>

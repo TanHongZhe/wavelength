@@ -25,6 +25,7 @@ export interface Room {
     player1_avatar: string;
     player2_avatar: string;
     deck_type?: DeckType;
+    max_rounds?: number;
 }
 
 export function useGameRoom() {
@@ -66,6 +67,7 @@ export function useGameRoom() {
         player1_avatar: convexRoom.player1_avatar ?? "🐼",
         player2_avatar: convexRoom.player2_avatar ?? "🐯",
         deck_type: convexRoom.deck_type as DeckType | undefined,
+        max_rounds: convexRoom.max_rounds,
     } : null;
 
     // Initialize player ID (Clerk or localStorage)
@@ -103,7 +105,7 @@ export function useGameRoom() {
     }, [room?.deck_type, currentDeck]);
 
     // CREATE ROOM
-    const createRoom = useCallback(async (name: string, avatar: string, deckType: DeckType = "fun") => {
+    const createRoom = useCallback(async (name: string, avatar: string, deckType: DeckType = "fun", maxRounds?: number) => {
         if (!playerId) { setError("Please wait..."); return; }
         if (!name.trim()) { setError("Please enter your name"); return; }
 
@@ -132,6 +134,7 @@ export function useGameRoom() {
                 player1_avatar: avatar,
                 game_mode: "classic",
                 deck_type: deckType,
+                max_rounds: maxRounds,
                 ip_hash: playerId,
             });
             setRoomId(newRoomId);
