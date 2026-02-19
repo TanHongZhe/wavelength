@@ -10,7 +10,6 @@ import { Input } from "@/components/ui/input";
 import { useQuery } from "convex/react";
 import { api } from "convex/_generated/api";
 import { DECK_INFO, DeckType } from "@/lib/gameData";
-import { DailyLimitBanner } from "@/components/DailyLimitBanner";
 
 interface LandingScreenProps {
     onCreateGame: (mode: "classic" | "party", name: string, avatar: string, deckType: DeckType, maxRounds: number) => void;
@@ -131,8 +130,7 @@ export function LandingScreen({ onCreateGame, onJoinGame, isLoading, error }: La
     const router = useRouter();
     const myUser = useQuery(api.rooms.getMyUser);
     const isPro = myUser?.isPro ?? false;
-    const dailyUsage = useQuery(api.rooms.getDailyRoomCreations);
-    const atLimit = !isPro && (dailyUsage?.roomsCreated ?? 0) >= 3;
+
     const [roomCode, setRoomCode] = useState("");
     const [playerName, setPlayerName] = useState("");
     const [selectedAvatar, setSelectedAvatar] = useState(AVATARS[0]);
@@ -351,8 +349,7 @@ export function LandingScreen({ onCreateGame, onJoinGame, isLoading, error }: La
                             Create New Room
                         </h3>
 
-                        {/* Daily limit indicator */}
-                        <DailyLimitBanner />
+
 
                         <div className="flex gap-2 mb-4">
                             <Input
@@ -518,7 +515,7 @@ export function LandingScreen({ onCreateGame, onJoinGame, isLoading, error }: La
                             <Button
                                 className="h-14 flex flex-col items-center justify-center gap-1 bg-gradient-to-br from-[#0EA5E9] to-[#2563EB] hover:from-[#0284C7] hover:to-[#1D4ED8] text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300"
                                 onClick={() => onCreateGame("classic", playerName, selectedAvatar, selectedDeck, selectedRounds)}
-                                disabled={!playerName.trim() || isLoading || atLimit}
+                                disabled={!playerName.trim() || isLoading}
                             >
                                 <Gamepad2 className="w-5 h-5" />
                                 <span className="font-bold">Classic (2P)</span>
@@ -527,7 +524,7 @@ export function LandingScreen({ onCreateGame, onJoinGame, isLoading, error }: La
                             <Button
                                 className={`h-14 flex flex-col items-center justify-center gap-1 text-white border-0 shadow-lg transition-all duration-300 relative overflow-hidden bg-gradient-to-br from-[#F43F5E] to-[#E11D48] hover:from-[#E11D48] hover:to-[#BE123C] hover:shadow-xl`}
                                 onClick={() => onCreateGame("party", playerName, selectedAvatar, selectedDeck, selectedRounds)}
-                                disabled={!playerName.trim() || isLoading || atLimit}
+                                disabled={!playerName.trim() || isLoading}
                             >
 
                                 <PartyPopper className="w-5 h-5 mt-1" />

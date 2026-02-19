@@ -111,8 +111,8 @@ export const createRoom = mutation({
 
             isPro = user?.isPro ?? false;
 
-            // 3. Enforce daily room creation limit for free users
-            if (!isPro) {
+            // 3. Enforce daily room creation limit ONLY for minigames (not classic/party)
+            if (!isPro && !isWavelengthMode) {
                 const today = getTodayDate();
                 const usage = await ctx.db
                     .query("daily_usage")
