@@ -5,8 +5,8 @@ import { motion } from "framer-motion";
 import { Sparkles, Clock, Crown } from "lucide-react";
 import { useQuery } from "convex/react";
 import { api } from "convex/_generated/api";
-import { STRIPE_MONTHLY_LINK, STRIPE_LIFETIME_LINK } from "@/lib/stripe";
 import { useUser } from "@clerk/nextjs";
+import { PaywallModal } from "@/components/PaywallModal";
 
 function getTimeUntilMidnightUTC(): { hours: number; minutes: number; seconds: number } {
     const now = new Date();
@@ -23,6 +23,7 @@ export function DailyLimitBanner() {
     const { user } = useUser();
     const usage = useQuery(api.rooms.getDailyRoomCreations);
     const [timeLeft, setTimeLeft] = useState(getTimeUntilMidnightUTC());
+    const [showPaywall, setShowPaywall] = useState(false);
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -59,37 +60,36 @@ export function DailyLimitBanner() {
 
     // Free user at limit
     if (atLimit) {
-        const handleUpgrade = () => {
-            const email = user?.primaryEmailAddress?.emailAddress;
-            const url = email
-                ? `${STRIPE_MONTHLY_LINK}?prefilled_email=${encodeURIComponent(email)}`
-                : STRIPE_MONTHLY_LINK;
-            window.open(url, "_blank");
-        };
-
         return (
-            <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="flex flex-col items-center gap-2 px-4 py-3 rounded-xl bg-red-500/10 border border-red-500/20 mb-4"
-            >
-                <div className="flex items-center gap-2">
-                    <Clock className="w-4 h-4 text-red-400" />
-                    <span className="text-sm font-medium text-red-300">
-                        No rooms left today
-                    </span>
-                </div>
-                <span className="text-xs text-muted-foreground">
-                    Resets in {timeLeft.hours}h {timeLeft.minutes}m
-                </span>
-                <button
-                    onClick={handleUpgrade}
-                    className="flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-gradient-to-r from-pink-600 to-violet-600 hover:from-pink-500 hover:to-violet-500 text-white text-xs font-bold transition-all hover:scale-[1.03] shadow-lg shadow-pink-500/20"
+            <>
+                <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="flex flex-col items-center gap-2 px-4 py-3 rounded-xl bg-red-500/10 border border-red-500/20 mb-4"
                 >
-                    <Sparkles className="w-3 h-3" />
-                    Get Pro — Unlimited Rooms
-                </button>
-            </motion.div>
+                    <div className="flex items-center gap-2">
+                        <Clock className="w-4 h-4 text-red-400" />
+                        <span className="text-sm font-medium text-red-300">
+                            No rooms left today
+                        </span>
+                    </div>
+                    <span className="text-xs text-muted-foreground">
+                        Resets in {timeLeft.hours}h {timeLeft.minutes}m
+                    </span>
+                    <button
+                        onClick={() => setShowPaywall(true)}
+                        className="flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-gradient-to-r from-pink-600 to-violet-600 hover:from-pink-500 hover:to-violet-500 text-white text-xs font-bold transition-all hover:scale-[1.03] shadow-lg shadow-pink-500/20"
+                    >
+                        <Sparkles className="w-3 h-3" />
+                        Get Pro — Unlimited Rooms
+                    </button>
+                </motion.div>
+                <PaywallModal
+                    isOpen={showPaywall}
+                    onClose={() => setShowPaywall(false)}
+                    message="You've used all 3 free rooms today. Upgrade to Pro for unlimited room creation!"
+                />
+            </>
         );
     }
 

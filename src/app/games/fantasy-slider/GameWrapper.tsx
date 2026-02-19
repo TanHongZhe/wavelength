@@ -4,8 +4,9 @@ import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { FantasySliderGameEngine } from "@/components/minigames/fantasy-slider/FantasySliderGameEngine";
 import { Button } from "@/components/ui/button";
-import { SlidersVertical, Sparkles, Users } from "lucide-react";
+import { SlidersVertical, Sparkles, Users, LogIn } from "lucide-react";
 import { motion } from "framer-motion";
+import { useUser, SignInButton } from "@clerk/nextjs";
 
 export function GameWrapper() {
     return (
@@ -17,6 +18,7 @@ export function GameWrapper() {
 
 function GameWrapperContent() {
     const searchParams = useSearchParams();
+    const { isSignedIn, isLoaded } = useUser();
     const [gameState, setGameState] = useState<{ isPlaying: boolean; initialMode: "create" | "join" | "initial" }>({
         isPlaying: false,
         initialMode: "initial"
@@ -38,6 +40,9 @@ function GameWrapperContent() {
             </div>
         );
     }
+
+    // Check if guest trying to create
+    const isGuest = isLoaded && !isSignedIn;
 
     return (
         <div className="relative w-full py-20 bg-gradient-to-b from-background via-purple-900/10 to-background flex flex-col items-center justify-center text-center overflow-hidden">
@@ -70,25 +75,48 @@ function GameWrapperContent() {
                 </p>
 
                 <div className="space-y-4 w-full max-w-md mx-auto">
-                    <motion.button
-                        className="game-card w-full text-left group hover:scale-[1.02] transition-transform"
-                        onClick={() => setGameState({ isPlaying: true, initialMode: "create" })}
-                        whileTap={{ scale: 0.98 }}
-                    >
-                        <div className="flex items-start gap-4">
-                            <div className="p-3 rounded-xl bg-wedge-teal/20 text-wedge-teal group-hover:bg-wedge-teal group-hover:text-white transition-colors">
-                                <Sparkles className="w-6 h-6" />
+                    {isGuest ? (
+                        <SignInButton mode="modal">
+                            <motion.button
+                                className="game-card w-full text-left group hover:scale-[1.02] transition-transform"
+                                whileTap={{ scale: 0.98 }}
+                            >
+                                <div className="flex items-start gap-4">
+                                    <div className="p-3 rounded-xl bg-wedge-teal/20 text-wedge-teal group-hover:bg-wedge-teal group-hover:text-white transition-colors">
+                                        <LogIn className="w-6 h-6" />
+                                    </div>
+                                    <div>
+                                        <h3 className="font-display text-xl font-semibold text-primary mb-1">
+                                            Sign In to Create
+                                        </h3>
+                                        <p className="text-muted-foreground">
+                                            Create an account to host games. You can join as a guest!
+                                        </p>
+                                    </div>
+                                </div>
+                            </motion.button>
+                        </SignInButton>
+                    ) : (
+                        <motion.button
+                            className="game-card w-full text-left group hover:scale-[1.02] transition-transform"
+                            onClick={() => setGameState({ isPlaying: true, initialMode: "create" })}
+                            whileTap={{ scale: 0.98 }}
+                        >
+                            <div className="flex items-start gap-4">
+                                <div className="p-3 rounded-xl bg-wedge-teal/20 text-wedge-teal group-hover:bg-wedge-teal group-hover:text-white transition-colors">
+                                    <Sparkles className="w-6 h-6" />
+                                </div>
+                                <div>
+                                    <h3 className="font-display text-xl font-semibold text-primary mb-1">
+                                        Create Room
+                                    </h3>
+                                    <p className="text-muted-foreground">
+                                        Start a new game (Classic or Party)
+                                    </p>
+                                </div>
                             </div>
-                            <div>
-                                <h3 className="font-display text-xl font-semibold text-primary mb-1">
-                                    Create Room
-                                </h3>
-                                <p className="text-muted-foreground">
-                                    Start a new game (Classic or Party)
-                                </p>
-                            </div>
-                        </div>
-                    </motion.button>
+                        </motion.button>
+                    )}
 
                     <motion.button
                         className="game-card w-full text-left group hover:scale-[1.02] transition-transform"
