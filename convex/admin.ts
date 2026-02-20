@@ -66,7 +66,7 @@ export const upgradeUserByEmail = mutation({
             return `User with email ${args.email} not found. Make sure they have logged in at least once.`;
         }
 
-        await ctx.db.patch(user._id, { isPro: true, endsOn: 4102444800000 }); // Lifetime (Jan 1, 2100)
+        await ctx.db.patch(user._id, { isPro: true });
         return `Success! Upgraded ${user.email} (ID: ${user._id}) to Pro.`;
     },
 });

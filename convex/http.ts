@@ -84,23 +84,16 @@ http.route({
             const customerEmail = session.customer_details?.email || session.customer_email;
             const customerId = session.customer;
             const mode = session.mode; // "payment" for one-time, "subscription" for recurring
-            const amountTotal = session.amount_total; // Amount in cents
 
             if (mode === "payment") {
-                // Differentiate Monthly vs Lifetime by amount
-                // Monthly = $0.99 (99 cents), Lifetime = $2.99 (299 cents)
-                const isLifetime = amountTotal >= 200; // > $2.00 = lifetime
-                const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000;
-
+                // One-time payment = Lifetime Access
                 await ctx.runMutation(internal.payments.updateSubscription, {
                     stripeCustomerId: customerId || "",
                     email: customerEmail || "",
                     subscriptionId: session.id,
-                    status: isLifetime ? "lifetime" : "monthly",
-                    endsOn: isLifetime ? 4102444800000 : Date.now() + THIRTY_DAYS_MS,
+                    status: "lifetime",
+                    endsOn: 4102444800000, // Far future (Jan 1, 2100)
                 });
-
-                console.log(`One-time payment: ${isLifetime ? "LIFETIME" : "MONTHLY"} ($${(amountTotal / 100).toFixed(2)}) for ${customerEmail}`);
             } else if (mode === "subscription") {
                 // Subscription created - mark as active
                 await ctx.runMutation(internal.payments.updateSubscription, {

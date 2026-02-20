@@ -84,7 +84,7 @@ export const store = mutation({
 });
 
 /**
- * Get current user data (with time-aware isPro check)
+ * Get current user data
  */
 export const current = query({
     args: {},
@@ -92,23 +92,9 @@ export const current = query({
         const identity = await ctx.auth.getUserIdentity();
         if (!identity) return null;
 
-        const user = await ctx.db
+        return await ctx.db
             .query("users")
             .withIndex("by_token", (q) => q.eq("tokenIdentifier", identity.tokenIdentifier))
             .unique();
-
-        if (!user) return null;
-
-        // Compute time-aware isPro:
-        // If isPro is true but endsOn has passed, the monthly plan has expired
-        let effectiveIsPro = user.isPro;
-        if (user.isPro && user.endsOn && user.endsOn > 0 && user.endsOn < Date.now()) {
-            effectiveIsPro = false;
-        }
-
-        return {
-            ...user,
-            isPro: effectiveIsPro,
-        };
     },
 });
