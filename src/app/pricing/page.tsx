@@ -245,10 +245,6 @@ export default function PricingPage() {
                                 <span className="text-sm">Join any mini game room</span>
                             </div>
                             <div className="flex items-start gap-2.5">
-                                <X className="w-4 h-4 text-red-400/60 mt-0.5 shrink-0" />
-                                <span className="text-sm text-muted-foreground">Limited to 5 rounds per game</span>
-                            </div>
-                            <div className="flex items-start gap-2.5">
                                 <Check className="w-4 h-4 text-green-400 mt-0.5 shrink-0" />
                                 <span className="text-sm">Create mini game rooms (3/day)</span>
                             </div>
@@ -258,9 +254,12 @@ export default function PricingPage() {
                             </div>
                             <div className="flex items-start gap-2.5">
                                 <X className="w-4 h-4 text-red-400/60 mt-0.5 shrink-0" />
+                                <span className="text-sm text-muted-foreground">Limited to 5 rounds per game</span>
+                            </div>
+                            <div className="flex items-start gap-2.5">
+                                <X className="w-4 h-4 text-red-400/60 mt-0.5 shrink-0" />
                                 <span className="text-sm text-muted-foreground">Limited to 1 deck (Fun)</span>
                             </div>
-
                         </div>
 
                         {isSignedIn ? (

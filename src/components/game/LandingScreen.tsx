@@ -557,6 +557,12 @@ export function LandingScreen({ onCreateGame, onJoinGame, isLoading, error }: La
                             </Button>
                         </div>
 
+                        {!isPro && (
+                            <p className="text-[10px] text-muted-foreground text-center mb-2">
+                                Non-pro users are limited to 5 rounds per game.
+                            </p>
+                        )}
+
                         <Button
                             variant="ghost"
                             className="w-full text-muted-foreground"
@@ -657,7 +663,7 @@ export function LandingScreen({ onCreateGame, onJoinGame, isLoading, error }: La
                             </p>
                         )}
 
-                        <div className="flex gap-3 mt-4">
+                        <div className="flex gap-3 mt-4 mb-2">
                             <Button
                                 variant="outline"
                                 className="flex-1 h-12"
@@ -673,6 +679,12 @@ export function LandingScreen({ onCreateGame, onJoinGame, isLoading, error }: La
                                 {isLoading ? "Joining..." : "Join Game"}
                             </Button>
                         </div>
+
+                        {!isPro && (
+                            <p className="text-[10px] text-muted-foreground text-center">
+                                Non-pro users are limited to 5 rounds per game.
+                            </p>
+                        )}
                     </motion.div>
                 )}
             </motion.div>
