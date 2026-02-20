@@ -367,14 +367,12 @@ export const updateRoom = mutation({
         ip_hash: v.optional(v.string()),
     },
     handler: async (ctx, args) => {
-        // Enforce Round Limits (Mini Games only — Wavelength classic/party is unlimited)
+        // Enforce Round Limits
         if (args.updates.round_number !== undefined) {
             const room = await ctx.db.get(args.roomId);
 
-            // Classic/Party Wavelength: max_rounds is always 0 (unlimited), skip check
-            // Mini Games: enforce card_count limit
-            if (room?.card_count !== undefined && room.card_count > 0) {
-                const roundLimit = room.card_count;
+            const roundLimit = (room?.card_count ?? 0) > 0 ? room!.card_count! : (room?.max_rounds ?? 0) > 0 ? room!.max_rounds! : 0;
+            if (roundLimit > 0) {
                 const newRoundNumber = args.updates.round_number;
 
                 if (typeof newRoundNumber === "number" && newRoundNumber > roundLimit) {

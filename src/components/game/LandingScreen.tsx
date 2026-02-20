@@ -539,7 +539,7 @@ export function LandingScreen({ onCreateGame, onJoinGame, isLoading, error }: La
                         <div className="grid grid-cols-2 gap-3 mb-3">
                             <Button
                                 className="h-14 flex flex-col items-center justify-center gap-1 bg-gradient-to-br from-[#0EA5E9] to-[#2563EB] hover:from-[#0284C7] hover:to-[#1D4ED8] text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300"
-                                onClick={() => onCreateGame("classic", playerName, selectedAvatar, selectedDeck, 0)}
+                                onClick={() => onCreateGame("classic", playerName, selectedAvatar, selectedDeck, isPro ? 0 : 5)}
                                 disabled={!playerName.trim() || isLoading}
                             >
                                 <Gamepad2 className="w-5 h-5" />
@@ -548,7 +548,7 @@ export function LandingScreen({ onCreateGame, onJoinGame, isLoading, error }: La
 
                             <Button
                                 className={`h-14 flex flex-col items-center justify-center gap-1 text-white border-0 shadow-lg transition-all duration-300 relative overflow-hidden bg-gradient-to-br from-[#F43F5E] to-[#E11D48] hover:from-[#E11D48] hover:to-[#BE123C] hover:shadow-xl`}
-                                onClick={() => onCreateGame("party", playerName, selectedAvatar, selectedDeck, 0)}
+                                onClick={() => onCreateGame("party", playerName, selectedAvatar, selectedDeck, isPro ? 0 : 5)}
                                 disabled={!playerName.trim() || isLoading}
                             >
 

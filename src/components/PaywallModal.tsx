@@ -69,7 +69,7 @@ export function PaywallModal({ isOpen, onClose, message }: PaywallModalProps) {
                             </div>
                             <h3 className="text-lg md:text-xl font-bold mb-1 md:mb-2">Unlimited Access</h3>
                             <div className="text-slate-400 text-sm md:text-base">
-                                <p className="mb-1">Create unlimited mini game rooms. <span className="text-pink-200 font-medium">Your pro status<br />unlocks exclusive decks for everyone in<br />your party.</span></p>
+                                <p className="mb-1">Play unlimited rounds per game. <span className="text-pink-200 font-medium">Your pro status<br />unlocks unlimited rounds and exclusive decks for everyone in<br />your party.</span></p>
                             </div>
                         </div>
                     </div>
@@ -132,20 +132,28 @@ export function PaywallModal({ isOpen, onClose, message }: PaywallModalProps) {
                         <tbody className="text-sm">
                             <tr className="border-b border-slate-800/50">
                                 <td className="py-3 px-4 text-slate-300">
-                                    <div>Daily Games</div>
-                                    <div className="text-xs text-slate-500 font-normal">Per person</div>
+                                    <div>Wavelength Rooms</div>
+                                    <div className="text-xs text-slate-500 font-normal">Daily Room Creation</div>
                                 </td>
-                                <td className="py-3 px-4 text-center text-slate-500">3 / day</td>
+                                <td className="py-3 px-4 text-center text-slate-500">Unlimited</td>
                                 <td className="py-3 px-4 text-center text-green-400 font-bold">Unlimited</td>
                             </tr>
 
                             <tr className="border-b border-slate-800/50">
                                 <td className="py-3 px-4 text-slate-300">
-                                    <div>Mini Games</div>
-                                    <div className="text-xs text-slate-500 font-normal">Per game</div>
+                                    <div>Game Length</div>
+                                    <div className="text-xs text-slate-500 font-normal">Rounds per game</div>
                                 </td>
-                                <td className="py-3 px-4 text-center text-slate-500">5 rounds</td>
-                                <td className="py-3 px-4 text-center text-green-400 font-bold">Up to 100</td>
+                                <td className="py-3 px-4 text-center text-slate-500">5 rounds max</td>
+                                <td className="py-3 px-4 text-center text-green-400 font-bold">Unlimited</td>
+                            </tr>
+                            <tr className="border-b border-slate-800/50">
+                                <td className="py-3 px-4 text-slate-300">
+                                    <div>Mini Games Creation</div>
+                                    <div className="text-xs text-slate-500 font-normal">Per person daily</div>
+                                </td>
+                                <td className="py-3 px-4 text-center text-slate-500">3 / day</td>
+                                <td className="py-3 px-4 text-center text-green-400 font-bold">Unlimited</td>
                             </tr>
                             <tr className="border-b border-slate-800/50">
                                 <td className="py-3 px-4 text-slate-300">

@@ -412,10 +412,16 @@ export function GameScreen({
 
                         <div className="flex gap-3 justify-center flex-wrap mb-4">
                             <Button
-                                onClick={() => onNextRound()}
+                                onClick={() => {
+                                    if (room.max_rounds && room.max_rounds > 0 && room.round_number >= room.max_rounds) {
+                                        onEndGame();
+                                    } else {
+                                        onNextRound();
+                                    }
+                                }}
                                 className="btn-game gap-2"
                             >
-                                <ArrowRight className="w-4 h-4" /> Next Round
+                                <ArrowRight className="w-4 h-4" /> {(room.max_rounds && room.max_rounds > 0 && room.round_number >= room.max_rounds) ? "Finish Game" : "Next Round"}
                             </Button>
                         </div>
 

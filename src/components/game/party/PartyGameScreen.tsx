@@ -395,8 +395,14 @@ export function PartyGameScreen({
                                             return (
                                                 <div className="flex flex-col gap-4 items-center animate-in fade-in slide-in-from-bottom-4">
                                                     <p className="text-sm font-bold text-accent animate-pulse">You are the next Psychic!</p>
-                                                    <Button onClick={() => onNextRound()} className="btn-game gap-2">
-                                                        <ArrowRight className="w-4 h-4" /> Next Round
+                                                    <Button onClick={() => {
+                                                        if (room.max_rounds && room.max_rounds > 0 && room.round_number >= room.max_rounds) {
+                                                            onEndGame();
+                                                        } else {
+                                                            onNextRound();
+                                                        }
+                                                    }} className="btn-game gap-2">
+                                                        <ArrowRight className="w-4 h-4" /> {(room.max_rounds && room.max_rounds > 0 && room.round_number >= room.max_rounds) ? "Finish Game" : "Next Round"}
                                                     </Button>
                                                 </div>
                                             );
