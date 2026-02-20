@@ -69,7 +69,7 @@ export function PaywallModal({ isOpen, onClose, message }: PaywallModalProps) {
                             </div>
                             <h3 className="text-lg md:text-xl font-bold mb-1 md:mb-2">Unlimited Access</h3>
                             <div className="text-slate-400 text-sm md:text-base">
-                                <p className="mb-1">Create unlimited games. <span className="text-pink-200 font-medium">Your pro status<br />unlocks unlimited rounds for everyone in<br />your party.</span></p>
+                                <p className="mb-1">Create unlimited mini game rooms. <span className="text-pink-200 font-medium">Your pro status<br />unlocks exclusive decks for everyone in<br />your party.</span></p>
                             </div>
                         </div>
                     </div>
@@ -138,14 +138,7 @@ export function PaywallModal({ isOpen, onClose, message }: PaywallModalProps) {
                                 <td className="py-3 px-4 text-center text-slate-500">3 / day</td>
                                 <td className="py-3 px-4 text-center text-green-400 font-bold">Unlimited</td>
                             </tr>
-                            <tr className="border-b border-slate-800/50">
-                                <td className="py-3 px-4 text-slate-300">
-                                    <div>Wavelength Rounds</div>
-                                    <div className="text-xs text-slate-500 font-normal">Per game</div>
-                                </td>
-                                <td className="py-3 px-4 text-center text-slate-500">4 rounds</td>
-                                <td className="py-3 px-4 text-center text-green-400 font-bold">Up to ∞</td>
-                            </tr>
+
                             <tr className="border-b border-slate-800/50">
                                 <td className="py-3 px-4 text-slate-300">
                                     <div>Mini Games</div>

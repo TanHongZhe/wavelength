@@ -63,8 +63,8 @@ export function ProUpgradeCard({ className }: ProUpgradeCardProps) {
                     <div className="p-3 rounded-xl bg-slate-900 border border-slate-800 flex flex-row md:flex-col items-center md:items-start gap-3 md:gap-0">
                         <InfinityIcon className="w-5 h-5 text-pink-400 md:mb-2 shrink-0" />
                         <div>
-                            <h4 className="font-bold text-white text-sm mb-0.5 md:mb-1">Unlimited Rounds</h4>
-                            <p className="text-xs text-slate-400">Play without interruptions.</p>
+                            <h4 className="font-bold text-white text-sm mb-0.5 md:mb-1">Unlimited Mini Games</h4>
+                            <p className="text-xs text-slate-400">Create unlimited game rooms.</p>
                         </div>
                     </div>
                     <div className="p-3 rounded-xl bg-slate-900 border border-slate-800 flex flex-row md:flex-col items-center md:items-start gap-3 md:gap-0">

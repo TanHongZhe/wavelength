@@ -249,7 +249,7 @@ export function GameOverScreen({ room, playerId, onLeave }: GameOverScreenProps)
                             <div className="space-y-3 mb-6 text-left">
                                 <div className="flex items-center gap-2">
                                     <Star className="w-4 h-4 text-orange-500" />
-                                    <span className="text-sm">Unlimited Daily Games</span>
+                                    <span className="text-sm">Unlimited Mini Game Rooms</span>
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <Star className="w-4 h-4 text-orange-500" />
@@ -257,7 +257,7 @@ export function GameOverScreen({ room, playerId, onLeave }: GameOverScreenProps)
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <Star className="w-4 h-4 text-orange-500" />
-                                    <span className="text-sm">Unlock Decks for Party</span>
+                                    <span className="text-sm">Exclusive Decks & 2000+ Cards</span>
                                 </div>
                             </div>
 

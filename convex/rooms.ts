@@ -367,41 +367,25 @@ export const updateRoom = mutation({
         ip_hash: v.optional(v.string()),
     },
     handler: async (ctx, args) => {
-        // Enforce Round Limits for Free Users
+        // Enforce Round Limits (Mini Games only — Wavelength classic/party is unlimited)
         if (args.updates.round_number !== undefined) {
             const room = await ctx.db.get(args.roomId);
 
+            // Classic/Party Wavelength: max_rounds is always 0 (unlimited), skip check
+            // Mini Games: enforce card_count limit
+            if (room?.card_count !== undefined && room.card_count > 0) {
+                const roundLimit = room.card_count;
+                const newRoundNumber = args.updates.round_number;
 
-
-
-            // Limit Enforcement Logic
-            // Trust the limits set at creation time (guarded by UI)
-            let roundLimit = 4; // Default fallback
-
-            // 1. Check max_rounds (Classic/Party)
-            if (room?.max_rounds !== undefined && room.max_rounds !== null) {
-                if (room.max_rounds === 0) {
-                    // Unlimited - skip check
-                    return;
+                if (typeof newRoundNumber === "number" && newRoundNumber > roundLimit) {
+                    console.log("LIMIT REACHED! New Round:", newRoundNumber, "> Limit:", roundLimit, "- ENDING GAME");
+                    await ctx.db.patch(args.roomId, {
+                        phase: "ended",
+                        clue: "Game Over! Thanks for playing.",
+                        updated_at: Date.now()
+                    });
+                    return; // Game over
                 }
-                roundLimit = room.max_rounds;
-            }
-            // 2. Check card_count (Mini Games)
-            else if (room?.card_count !== undefined) {
-                roundLimit = room.card_count;
-            }
-
-            // Start checking limits
-            const newRoundNumber = args.updates.round_number;
-
-            if (typeof newRoundNumber === "number" && newRoundNumber > roundLimit) {
-                console.log("LIMIT REACHED! New Round:", newRoundNumber, "> Limit:", roundLimit, "- ENDING GAME");
-                await ctx.db.patch(args.roomId, {
-                    phase: "ended",
-                    clue: "Game Over! Thanks for playing.",
-                    updated_at: Date.now()
-                });
-                return; // Game over
             }
         }
 

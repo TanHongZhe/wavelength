@@ -49,9 +49,9 @@ export default function PricingPage() {
         {
             name: "Wavelength Rounds",
             desc: "Per game",
-            guest: "4 rounds",
-            free: "4 rounds",
-            pro: "Up to ∞",
+            guest: "Unlimited",
+            free: "Unlimited",
+            pro: "Unlimited",
             guestCheck: true,
             freeCheck: true,
             proCheck: true,
@@ -198,7 +198,7 @@ export default function PricingPage() {
                             </div>
                             <div className="flex items-start gap-2.5">
                                 <Check className="w-4 h-4 text-green-400 mt-0.5 shrink-0" />
-                                <span className="text-sm">4 rounds per Wavelength game</span>
+                                <span className="text-sm">Unlimited Wavelength rounds</span>
                             </div>
                             <div className="flex items-start gap-2.5">
                                 <X className="w-4 h-4 text-red-400/60 mt-0.5 shrink-0" />
@@ -246,7 +246,7 @@ export default function PricingPage() {
                             </div>
                             <div className="flex items-start gap-2.5">
                                 <Check className="w-4 h-4 text-green-400 mt-0.5 shrink-0" />
-                                <span className="text-sm">4 rounds per Wavelength game</span>
+                                <span className="text-sm">Unlimited Wavelength rounds</span>
                             </div>
                             <div className="flex items-start gap-2.5">
                                 <Check className="w-4 h-4 text-green-400 mt-0.5 shrink-0" />
@@ -260,10 +260,7 @@ export default function PricingPage() {
                                 <X className="w-4 h-4 text-red-400/60 mt-0.5 shrink-0" />
                                 <span className="text-sm text-muted-foreground">Limited to 1 deck (Fun)</span>
                             </div>
-                            <div className="flex items-start gap-2.5">
-                                <X className="w-4 h-4 text-red-400/60 mt-0.5 shrink-0" />
-                                <span className="text-sm text-muted-foreground">Limited rounds</span>
-                            </div>
+
                         </div>
 
                         {isSignedIn ? (
@@ -332,7 +329,7 @@ export default function PricingPage() {
                             </div>
                             <div className="flex items-start gap-2.5">
                                 <Check className="w-4 h-4 text-green-400 mt-0.5 shrink-0" />
-                                <span className="text-sm"><strong>Unlimited</strong> Wavelength rounds</span>
+                                <span className="text-sm"><strong>Unlimited</strong> mini game rooms</span>
                             </div>
                             <div className="flex items-start gap-2.5">
                                 <Check className="w-4 h-4 text-green-400 mt-0.5 shrink-0" />

@@ -144,7 +144,7 @@ export function PartyGameScreen({
 
                         <div className="font-display text-sm text-muted-foreground">
                             Round: <span className="font-bold text-primary">
-                                {room.max_rounds === 0 ? room.round_number : `${room.round_number}/${room.max_rounds ?? 4}`}
+                                {room.round_number}
                             </span>
                         </div>
                     </div>
