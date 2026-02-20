@@ -306,9 +306,9 @@ export default function PricingPage() {
                         <div className="mb-6">
                             <div className="flex items-baseline gap-2 mb-1">
                                 <span className="text-3xl font-bold">$0.99</span>
-                                <span className="text-muted-foreground text-sm">/month</span>
+                                <span className="text-muted-foreground text-sm">/ 1 month</span>
                             </div>
-                            <p className="text-sm text-muted-foreground">Cancel anytime</p>
+                            <p className="text-sm text-muted-foreground">One-time payment</p>
                             <div className="mt-2 flex items-center gap-2">
                                 <span className="text-xs text-muted-foreground line-through">$9.99</span>
                                 <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-gradient-to-r from-red-600 to-rose-600 text-white text-[10px] font-bold animate-pulse">
@@ -360,7 +360,7 @@ export default function PricingPage() {
                                     className="w-full bg-gradient-to-r from-pink-600 to-violet-600 hover:from-pink-500 hover:to-violet-500 text-white border-0 shadow-lg shadow-pink-500/20 py-5 transition-all hover:scale-[1.02]"
                                 >
                                     <Sparkles className="w-4 h-4 mr-2" />
-                                    Upgrade to Pro — $0.99/mo
+                                    Upgrade to Pro — $0.99 for 1 month
                                 </Button>
                                 <Button
                                     onClick={handleLifetime}
@@ -453,7 +453,9 @@ export default function PricingPage() {
                     </div>
                 </motion.div>
             </div>
-            <Footer />
+            <div className="container mx-auto px-4 max-w-4xl">
+                <Footer />
+            </div>
         </div>
     );
 }

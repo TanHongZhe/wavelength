@@ -320,17 +320,19 @@ export function GameOverScreen({ room, playerId, onLeave }: GameOverScreenProps)
             {/* Overlay Component */}
             {showUpgradeOverlay && !isPro && (
                 <div
-                    className="fixed inset-0 z-[60] flex items-center justify-center p-4"
+                    className="fixed inset-0 z-[60] overflow-y-auto"
                     style={{ backgroundColor: "rgba(0,0,0,0.85)" }}
                 >
-                    <div className="relative w-full max-w-4xl">
-                        <button
-                            onClick={() => setShowUpgradeOverlay(false)}
-                            className="absolute -top-3 -right-3 z-[70] bg-white text-black rounded-full w-10 h-10 flex items-center justify-center shadow-xl text-xl font-bold hover:bg-gray-200 transition-colors border-2 border-gray-300"
-                        >
-                            ✕
-                        </button>
-                        <ProUpgradeCard className="mt-0" />
+                    <div className="flex min-h-full items-center justify-center p-4">
+                        <div className="relative w-full max-w-4xl">
+                            <button
+                                onClick={() => setShowUpgradeOverlay(false)}
+                                className="absolute -top-3 -right-3 z-[70] bg-white text-black rounded-full w-10 h-10 flex items-center justify-center shadow-xl text-xl font-bold hover:bg-gray-200 transition-colors border-2 border-gray-300"
+                            >
+                                ✕
+                            </button>
+                            <ProUpgradeCard className="mt-0" />
+                        </div>
                     </div>
                 </div>
             )}

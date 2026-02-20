@@ -92,7 +92,7 @@ export function ProUpgradeCard({ className }: ProUpgradeCardProps) {
                             >
                                 <div className="flex flex-col items-center">
                                     <span className="font-bold">Upgrade to Pro</span>
-                                    <span className="text-[10px] opacity-90">$0.99/mo • Cancel anytime</span>
+                                    <span className="text-[10px] opacity-90">$0.99 for 1 month</span>
                                 </div>
                             </Button>
                             <Button
@@ -121,7 +121,7 @@ export function ProUpgradeCard({ className }: ProUpgradeCardProps) {
                 </div>
 
                 <p className="mt-3 text-[10px] text-slate-500">
-                    Secure payment via Stripe. Cancel anytime.
+                    Secure payment via Stripe. One-time payment.
                 </p>
             </div>
         </motion.div>

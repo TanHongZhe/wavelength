@@ -38,8 +38,8 @@ export function PaywallModal({ isOpen, onClose, message }: PaywallModalProps) {
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className="max-w-lg md:max-w-4xl bg-slate-950 border-slate-800 text-slate-100 p-0 overflow-hidden max-h-[90vh] my-4 w-[95vw]">
-                <div className="p-4 md:p-8 overflow-y-auto max-h-[90vh]">
+            <DialogContent className="max-w-lg md:max-w-4xl bg-slate-950 border-slate-800 text-slate-100 p-0 overflow-hidden max-h-[85dvh] w-[95vw]">
+                <div className="p-4 md:p-8 overflow-y-auto max-h-[85dvh]">
                     <DialogHeader className="mb-8 text-center">
                         <DialogTitle className="flex items-center justify-center gap-2 text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-pink-400 to-violet-400">
                             <Sparkles className="w-8 h-8 text-pink-400" />
@@ -190,7 +190,7 @@ export function PaywallModal({ isOpen, onClose, message }: PaywallModalProps) {
                             <Button onClick={handleUpgrade} className="w-full bg-gradient-to-r from-pink-600 to-violet-600 hover:from-pink-500 hover:to-violet-500 text-white border-0 shadow-lg shadow-pink-500/20 py-6 text-lg transition-all hover:scale-[1.02]">
                                 <div className="flex flex-col items-center">
                                     <span className="font-bold text-lg">Upgrade to Pro</span>
-                                    <span className="text-xs opacity-90">$0.99/mo • Cancel anytime</span>
+                                    <span className="text-xs opacity-90">$0.99 for 1 month</span>
                                 </div>
                             </Button>
                             <Button onClick={handleLifetime} variant="outline" className="w-full border-pink-500/30 hover:bg-pink-900/20 hover:text-pink-200 hover:border-pink-500/60 py-6 text-lg bg-transparent text-pink-300 transition-all hover:scale-[1.02] relative overflow-visible group">
