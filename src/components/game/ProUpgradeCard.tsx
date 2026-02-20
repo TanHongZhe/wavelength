@@ -55,25 +55,31 @@ export function ProUpgradeCard({ className }: ProUpgradeCardProps) {
                     Take Your Game Night to the Next Level
                 </h3>
 
-                <p className="text-slate-400 max-w-lg mx-auto mb-5 text-sm md:text-base">
+                <p className="text-slate-400 max-w-lg mx-auto mb-5 text-xs md:text-base px-2">
                     Unlock unlimited access for your entire party. Only one person needs to be Pro!
                 </p>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-5 text-left">
-                    <div className="p-3 rounded-xl bg-slate-900 border border-slate-800">
-                        <InfinityIcon className="w-5 h-5 text-pink-400 mb-2" />
-                        <h4 className="font-bold text-white text-sm mb-1">Unlimited Rounds</h4>
-                        <p className="text-xs text-slate-400">Play as long as you want without interruptions.</p>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-3 mb-4 md:mb-5 text-left">
+                    <div className="p-3 rounded-xl bg-slate-900 border border-slate-800 flex flex-row md:flex-col items-center md:items-start gap-3 md:gap-0">
+                        <InfinityIcon className="w-5 h-5 text-pink-400 md:mb-2 shrink-0" />
+                        <div>
+                            <h4 className="font-bold text-white text-sm mb-0.5 md:mb-1">Unlimited Rounds</h4>
+                            <p className="text-xs text-slate-400">Play without interruptions.</p>
+                        </div>
                     </div>
-                    <div className="p-3 rounded-xl bg-slate-900 border border-slate-800">
-                        <Layers className="w-5 h-5 text-violet-400 mb-2" />
-                        <h4 className="font-bold text-white text-sm mb-1">All Decks Unlocked</h4>
-                        <p className="text-xs text-slate-400">Access over 2000+ cards across all game modes.</p>
+                    <div className="p-3 rounded-xl bg-slate-900 border border-slate-800 flex flex-row md:flex-col items-center md:items-start gap-3 md:gap-0">
+                        <Layers className="w-5 h-5 text-violet-400 md:mb-2 shrink-0" />
+                        <div>
+                            <h4 className="font-bold text-white text-sm mb-0.5 md:mb-1">All Decks Unlocked</h4>
+                            <p className="text-xs text-slate-400">Access 2000+ cards.</p>
+                        </div>
                     </div>
-                    <div className="p-3 rounded-xl bg-slate-900 border border-slate-800">
-                        <Gamepad2 className="w-5 h-5 text-blue-400 mb-2" />
-                        <h4 className="font-bold text-white text-sm mb-1">5+ Mini Games</h4>
-                        <p className="text-xs text-slate-400">Full access to all Rapid Fire awaiting games.</p>
+                    <div className="p-3 rounded-xl bg-slate-900 border border-slate-800 flex flex-row md:flex-col items-center md:items-start gap-3 md:gap-0">
+                        <Gamepad2 className="w-5 h-5 text-blue-400 md:mb-2 shrink-0" />
+                        <div>
+                            <h4 className="font-bold text-white text-sm mb-0.5 md:mb-1">5+ Mini Games</h4>
+                            <p className="text-xs text-slate-400">All games included.</p>
+                        </div>
                     </div>
                 </div>
 
@@ -85,8 +91,8 @@ export function ProUpgradeCard({ className }: ProUpgradeCardProps) {
                                 className="w-full flex-1 bg-gradient-to-r from-pink-600 to-violet-600 hover:from-pink-500 hover:to-violet-500 text-white border-0 shadow-lg shadow-pink-500/20 py-5 text-sm transition-all hover:scale-[1.02]"
                             >
                                 <div className="flex flex-col items-center">
-                                    <span className="font-bold">Start 1-Day Free Trial</span>
-                                    <span className="text-[10px] opacity-90">$0.99/mo after • Cancel anytime</span>
+                                    <span className="font-bold">Upgrade to Pro</span>
+                                    <span className="text-[10px] opacity-90">$0.99/mo • Cancel anytime</span>
                                 </div>
                             </Button>
                             <Button

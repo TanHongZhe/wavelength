@@ -308,7 +308,7 @@ export default function PricingPage() {
                                 <span className="text-3xl font-bold">$0.99</span>
                                 <span className="text-muted-foreground text-sm">/month</span>
                             </div>
-                            <p className="text-sm text-muted-foreground">1-day free trial • Cancel anytime</p>
+                            <p className="text-sm text-muted-foreground">Cancel anytime</p>
                             <div className="mt-2 flex items-center gap-2">
                                 <span className="text-xs text-muted-foreground line-through">$9.99</span>
                                 <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-gradient-to-r from-red-600 to-rose-600 text-white text-[10px] font-bold animate-pulse">
@@ -360,7 +360,7 @@ export default function PricingPage() {
                                     className="w-full bg-gradient-to-r from-pink-600 to-violet-600 hover:from-pink-500 hover:to-violet-500 text-white border-0 shadow-lg shadow-pink-500/20 py-5 transition-all hover:scale-[1.02]"
                                 >
                                     <Sparkles className="w-4 h-4 mr-2" />
-                                    Start Free Trial — $0.99/mo
+                                    Upgrade to Pro — $0.99/mo
                                 </Button>
                                 <Button
                                     onClick={handleLifetime}

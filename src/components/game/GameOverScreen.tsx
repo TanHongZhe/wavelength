@@ -242,7 +242,7 @@ export function GameOverScreen({ room, playerId, onLeave }: GameOverScreenProps)
                                 <Crown className="w-10 h-10 text-white fill-white/20 mb-3" />
                                 <h3 className="text-2xl font-bold font-display mb-2">Unlock Unlimited Play</h3>
                                 <p className="text-white/90 text-sm">
-                                    Try Pro free for 24 hours! <span className="font-bold underline text-white">Only the host needs Pro for the whole party.</span>
+                                    Get unlimited access! <span className="font-bold underline text-white">Only the host needs Pro for the whole party.</span>
                                 </p>
                             </div>
 
@@ -267,7 +267,7 @@ export function GameOverScreen({ room, playerId, onLeave }: GameOverScreenProps)
                                     className="w-full h-12 text-lg font-bold bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-500 hover:to-orange-600 text-white shadow-lg"
                                 >
                                     <Sparkles className="w-4 h-4 mr-2" />
-                                    Start 1-Day Free Trial
+                                    Upgrade to Pro
                                 </Button>
                             ) : (
                                 <SignInButton mode="modal">
