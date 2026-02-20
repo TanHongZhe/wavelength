@@ -353,19 +353,20 @@ export default function PricingPage() {
                         ) : isSignedIn ? (
                             <div className="space-y-2">
                                 <Button
-                                    onClick={handleUpgrade}
+                                    onClick={handleLifetime}
                                     className="w-full bg-gradient-to-r from-pink-600 to-violet-600 hover:from-pink-500 hover:to-violet-500 text-white border-0 shadow-lg shadow-pink-500/20 py-5 transition-all hover:scale-[1.02]"
                                 >
                                     <Sparkles className="w-4 h-4 mr-2" />
-                                    Upgrade to Pro — $0.99 for 1 month
+                                    Lifetime Pro — $2.99
+                                    <span className="text-xs ml-2 line-through opacity-60">$9.99</span>
                                 </Button>
                                 <Button
-                                    onClick={handleLifetime}
+                                    onClick={handleUpgrade}
                                     variant="outline"
                                     className="w-full border-pink-500/30 hover:bg-pink-900/20 hover:text-pink-200 hover:border-pink-500/60 py-5 bg-transparent text-pink-300 transition-all hover:scale-[1.02]"
                                 >
-                                    <span className="font-bold">Lifetime $2.99</span>
-                                    <span className="text-xs ml-2 line-through text-muted-foreground">$9.99</span>
+                                    <span className="font-bold">Monthly $0.99</span>
+                                    <span className="text-xs ml-1 text-muted-foreground">/ 1 month</span>
                                 </Button>
                             </div>
                         ) : (

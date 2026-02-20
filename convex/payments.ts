@@ -7,7 +7,7 @@ export const updateSubscription = internalMutation({
         email: v.string(),
         subscriptionId: v.string(),
         endsOn: v.number(),
-        status: v.string(), // "active", "canceled", "past_due", "lifetime", etc.
+        status: v.string(), // "active", "canceled", "past_due", "lifetime", "monthly", etc.
     },
     handler: async (ctx, args) => {
         // 1. Try to find user by Stripe Customer ID
@@ -27,14 +27,27 @@ export const updateSubscription = internalMutation({
         }
 
         if (user) {
-            const isPro = args.status === "active" || args.status === "trialing" || args.status === "lifetime";
+            // Compute isPro based on status and expiration
+            // - "lifetime": always Pro
+            // - "active" / "trialing": always Pro (subscription managed by Stripe)
+            // - "monthly": Pro only if endsOn is in the future
+            // - "canceled" / "past_due" / other: not Pro
+            let isPro = false;
+            if (args.status === "lifetime") {
+                isPro = true;
+            } else if (args.status === "active" || args.status === "trialing") {
+                isPro = true;
+            } else if (args.status === "monthly") {
+                isPro = args.endsOn > Date.now();
+            }
+
             await ctx.db.patch(user._id, {
                 stripeCustomerId: args.stripeCustomerId || user.stripeCustomerId,
                 subscriptionId: args.subscriptionId,
                 endsOn: args.endsOn,
                 isPro: isPro,
             });
-            console.log(`Updated user ${user.email}: isPro=${isPro}, status=${args.status}`);
+            console.log(`Updated user ${user.email}: isPro=${isPro}, status=${args.status}, endsOn=${new Date(args.endsOn).toISOString()}`);
         } else {
             console.warn(`No user found for stripeCustomerId=${args.stripeCustomerId}, email=${args.email}`);
         }

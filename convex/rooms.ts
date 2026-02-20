@@ -12,6 +12,14 @@ function getTodayDate() {
 // Daily room creation limit for free users
 const DAILY_ROOM_LIMIT = 3;
 
+// Helper: time-aware isPro check (handles monthly expiration)
+function isUserPro(user: { isPro: boolean; endsOn?: number } | null): boolean {
+    if (!user || !user.isPro) return false;
+    // If endsOn is set and in the past, the monthly plan has expired
+    if (user.endsOn && user.endsOn > 0 && user.endsOn < Date.now()) return false;
+    return true;
+}
+
 // Get current user's daily room creation usage
 export const getDailyRoomCreations = query({
     args: {},
@@ -26,7 +34,7 @@ export const getDailyRoomCreations = query({
             .withIndex("by_token", (q) => q.eq("tokenIdentifier", identity.tokenIdentifier))
             .unique();
 
-        const isPro = user?.isPro ?? false;
+        const isPro = isUserPro(user);
 
         if (isPro) {
             return { roomsCreated: 0, limit: Infinity, isPro: true, isSignedIn: true };
@@ -109,7 +117,7 @@ export const createRoom = mutation({
                 user = await ctx.db.get(userId);
             }
 
-            isPro = user?.isPro ?? false;
+            isPro = isUserPro(user);
 
             // 3. Enforce daily room creation limit ONLY for minigames (not classic/party)
             if (!isPro && !isWavelengthMode) {
