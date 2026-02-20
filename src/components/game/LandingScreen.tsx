@@ -138,6 +138,7 @@ export function LandingScreen({ onCreateGame, onJoinGame, isLoading, error }: La
     const [selectedRounds, setSelectedRounds] = useState(4);
     const [mode, setMode] = useState<"initial" | "wavelength" | "create" | "join">("initial");
     const [isAvatarExpanded, setIsAvatarExpanded] = useState(false);
+    const [isFireHovered, setIsFireHovered] = useState(false);
 
     // Filter State: "2P" -> 2 Players (Everything), "MP" -> Multiplayer (Subset)
     const [filter, setFilter] = useState<"2P" | "MP">("2P");
@@ -171,7 +172,7 @@ export function LandingScreen({ onCreateGame, onJoinGame, isLoading, error }: La
     return (
         <div className="min-h-screen flex flex-col items-center pt-24 pb-12 px-6 sm:py-24 bg-background text-foreground transition-colors duration-300">
             {/* Animated Background Elements */}
-            <div className="fixed inset-0 overflow-hidden pointer-events-none">
+            <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
                 <motion.div
                     className="absolute -top-40 -right-40 w-80 h-80 rounded-full bg-wedge-teal/20 blur-3xl"
                     animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
@@ -183,6 +184,49 @@ export function LandingScreen({ onCreateGame, onJoinGame, isLoading, error }: La
                     transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
                 />
             </div>
+
+            {/* Fire Animation Overlay - Behind Content */}
+            <AnimatePresence>
+                {isFireHovered && (
+                    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+                        {[...Array(25)].map((_, i) => {
+                            const randomScale = 0.5 + Math.random() * 2; // More variation: 0.5x to 2.5x
+                            const randomRotateStart = Math.random() * 60 - 30; // -30 to 30 deg start
+                            const randomRotateEnd = Math.random() * 180 - 90; // -90 to 90 deg end
+                            const duration = 1.5 + Math.random() * 3; // 1.5s to 4.5s
+
+                            return (
+                                <motion.div
+                                    key={i}
+                                    initial={{
+                                        y: "110vh",
+                                        x: Math.random() * 100 + "vw",
+                                        opacity: 0,
+                                        scale: randomScale * 0.5,
+                                        rotate: randomRotateStart
+                                    }}
+                                    animate={{
+                                        y: -100,
+                                        opacity: [0, 1, 1, 0],
+                                        scale: [randomScale * 0.5, randomScale, randomScale * 0.8],
+                                        rotate: [randomRotateStart, randomRotateEnd]
+                                    }}
+                                    transition={{
+                                        duration: duration,
+                                        repeat: Infinity,
+                                        delay: Math.random() * 0.5,
+                                        ease: "easeOut"
+                                    }}
+                                    className="absolute text-5xl origin-center"
+                                    style={{ fontSize: `${2 + Math.random() * 3}rem` }} // Varied base font size
+                                >
+                                    🔥
+                                </motion.div>
+                            );
+                        })}
+                    </div>
+                )}
+            </AnimatePresence>
 
             {/* Logo & Title */}
             <motion.div
@@ -245,43 +289,58 @@ export function LandingScreen({ onCreateGame, onJoinGame, isLoading, error }: La
                         {/* Games List */}
                         <div className="space-y-3">
                             <AnimatePresence mode="popLayout">
-                                {filteredGames.map((game) => (
-                                    <motion.button
-                                        key={game.id}
-                                        layout
-                                        initial={{ opacity: 0, scale: 0.95 }}
-                                        animate={{ opacity: 1, scale: 1 }}
-                                        exit={{ opacity: 0, scale: 0.95 }}
-                                        className="game-card w-full text-left group hover:scale-[1.02] transition-transform"
-                                        onClick={() => handleGameClick(game)}
-                                        whileTap={{ scale: 0.98 }}
-                                    >
-                                        <div className="flex items-start gap-4">
-                                            <div className={`p-3 rounded-xl transition-all ${game.style}`}>
-                                                <game.icon className={`w-6 h-6 ${game.iconStyle}`} />
-                                            </div>
-                                            <div className="flex-1">
-                                                <h3 className="font-display text-lg font-semibold text-primary mb-1">
-                                                    {game.name}
-                                                </h3>
-                                                <div className="flex items-center flex-wrap gap-2 mb-1">
-                                                    <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-secondary text-primary border border-border">
-                                                        {game.players}
-                                                    </span>
-                                                    {game.tags?.map((tag, i) => (
-                                                        <span key={i} className={`text-[10px] font-bold px-2 py-0.5 rounded-full border flex items-center gap-1 ${tag.style}`}>
-                                                            <span>{tag.emoji}</span>
-                                                            <span>{tag.label}</span>
-                                                        </span>
-                                                    ))}
+                                {filteredGames.map((game) => {
+                                    const isHighlight = game.id === "whos-most-likely";
+                                    return (
+                                        <motion.button
+                                            key={game.id}
+                                            layout
+                                            initial={{ opacity: 0, scale: 0.95 }}
+                                            animate={{ opacity: 1, scale: 1 }}
+                                            exit={{ opacity: 0, scale: 0.95 }}
+                                            className={`w-full text-left group hover:scale-[1.02] transition-transform ${isHighlight
+                                                ? "relative rounded-2xl p-[3px] bg-gradient-to-r from-amber-400 to-orange-500 shadow-xl"
+                                                : "game-card"
+                                                }`}
+                                            onClick={() => handleGameClick(game)}
+                                            onMouseEnter={() => isHighlight && setIsFireHovered(true)}
+                                            onMouseLeave={() => isHighlight && setIsFireHovered(false)}
+                                            whileTap={{ scale: 0.98 }}
+                                        >
+                                            <div className={isHighlight ? "bg-card rounded-[calc(1rem-3px)] p-6 h-full w-full relative" : ""}>
+                                                {isHighlight && (
+                                                    <div className="absolute -top-3 -left-2 bg-gradient-to-r from-amber-400 to-orange-500 text-white text-[10px] font-bold px-2 py-1 rounded-full shadow-md flex items-center gap-1 z-10">
+                                                        <span>🔥</span> Most Played This Week
+                                                    </div>
+                                                )}
+                                                <div className="flex items-start gap-4">
+                                                    <div className={`p-3 rounded-xl transition-all ${game.style}`}>
+                                                        <game.icon className={`w-6 h-6 ${game.iconStyle}`} />
+                                                    </div>
+                                                    <div className="flex-1">
+                                                        <h3 className="font-display text-lg font-semibold text-primary mb-1">
+                                                            {game.name}
+                                                        </h3>
+                                                        <div className="flex items-center flex-wrap gap-2 mb-1">
+                                                            <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-secondary text-primary border border-border">
+                                                                {game.players}
+                                                            </span>
+                                                            {game.tags?.map((tag, i) => (
+                                                                <span key={i} className={`text-[10px] font-bold px-2 py-0.5 rounded-full border flex items-center gap-1 ${tag.style}`}>
+                                                                    <span>{tag.emoji}</span>
+                                                                    <span>{tag.label}</span>
+                                                                </span>
+                                                            ))}
+                                                        </div>
+                                                        <p className="text-sm text-muted-foreground leading-snug">
+                                                            {game.description}
+                                                        </p>
+                                                    </div>
                                                 </div>
-                                                <p className="text-sm text-muted-foreground leading-snug">
-                                                    {game.description}
-                                                </p>
                                             </div>
-                                        </div>
-                                    </motion.button>
-                                ))}
+                                        </motion.button>
+                                    );
+                                })}
                             </AnimatePresence>
                         </div>
                     </div>
