@@ -65,13 +65,13 @@ export function Navbar() {
                             <span>PRO USER</span>
                         </div>
                     ) : (
-                        <button
-                            onClick={() => setShowPaywall(true)}
+                        <Link
+                            href="/pricing/"
                             className="ml-2 flex items-center gap-1.5 px-3 py-1 bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-500 hover:to-orange-600 text-white rounded-full text-[10px] font-bold shadow-sm transition-all hover:scale-105"
                         >
                             <Crown className="w-3 h-3" fill="currentColor" />
                             <span>GET PRO</span>
-                        </button>
+                        </Link>
                     )}
                 </motion.div>
 
