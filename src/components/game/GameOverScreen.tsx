@@ -48,7 +48,9 @@ export function GameOverScreen({ room, playerId, onLeave }: GameOverScreenProps)
     const amIPlayer1 = room.psychic_id === playerId || (!room.guesser_id);
     const iWon = (amIPlayer1 && player1Wins) || (!amIPlayer1 && player2Wins);
 
-    const isLimitReached = room.clue?.includes("Daily Limit");
+    const isDailyLimitReached = room.clue?.includes("Daily Limit");
+    const isRoundLimitReached = !!room.max_rounds && room.max_rounds > 0 && room.round_number >= room.max_rounds;
+    const isLimitReached = isDailyLimitReached || isRoundLimitReached;
 
     const handleUpgrade = () => {
         if (!isSignedIn) return;
@@ -147,7 +149,7 @@ export function GameOverScreen({ room, playerId, onLeave }: GameOverScreenProps)
                     transition={{ delay: 0.3 }}
                     className="font-display text-4xl md:text-5xl font-bold text-primary mb-2"
                 >
-                    {isLimitReached ? "Daily Limit Reached!" : "Game Over!"}
+                    {isDailyLimitReached ? "Daily Limit Reached!" : isRoundLimitReached ? "Round Limit Reached!" : "Game Over!"}
                 </motion.h1>
 
                 <motion.p
@@ -156,7 +158,7 @@ export function GameOverScreen({ room, playerId, onLeave }: GameOverScreenProps)
                     transition={{ delay: 0.4 }}
                     className="text-lg text-muted-foreground mb-8"
                 >
-                    {room.round_number} rounds played
+                    {isRoundLimitReached ? "Upgrade to Pro to unlock unlimited rounds!" : `${room.round_number} rounds played`}
                 </motion.p>
 
                 <div className="flex flex-col md:flex-row gap-6 justify-center items-start">

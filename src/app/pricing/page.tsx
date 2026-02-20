@@ -49,8 +49,8 @@ export default function PricingPage() {
         {
             name: "Wavelength Rounds",
             desc: "Per game",
-            guest: "Unlimited",
-            free: "Unlimited",
+            guest: "5 rounds",
+            free: "5 rounds",
             pro: "Unlimited",
             guestCheck: true,
             freeCheck: true,
@@ -120,7 +120,7 @@ export default function PricingPage() {
             name: "Total Cards Available",
             desc: "Across all games",
             guest: "100+",
-            free: "100+",
+            free: "300+",
             pro: "2000+",
             guestCheck: true,
             freeCheck: true,
@@ -197,8 +197,8 @@ export default function PricingPage() {
                                 <span className="text-sm">Join any mini game room</span>
                             </div>
                             <div className="flex items-start gap-2.5">
-                                <Check className="w-4 h-4 text-green-400 mt-0.5 shrink-0" />
-                                <span className="text-sm">Unlimited Wavelength rounds</span>
+                                <X className="w-4 h-4 text-red-400/60 mt-0.5 shrink-0" />
+                                <span className="text-sm text-muted-foreground">Limited to 5 rounds per game</span>
                             </div>
                             <div className="flex items-start gap-2.5">
                                 <X className="w-4 h-4 text-red-400/60 mt-0.5 shrink-0" />
@@ -245,8 +245,8 @@ export default function PricingPage() {
                                 <span className="text-sm">Join any mini game room</span>
                             </div>
                             <div className="flex items-start gap-2.5">
-                                <Check className="w-4 h-4 text-green-400 mt-0.5 shrink-0" />
-                                <span className="text-sm">Unlimited Wavelength rounds</span>
+                                <X className="w-4 h-4 text-red-400/60 mt-0.5 shrink-0" />
+                                <span className="text-sm text-muted-foreground">Limited to 5 rounds per game</span>
                             </div>
                             <div className="flex items-start gap-2.5">
                                 <Check className="w-4 h-4 text-green-400 mt-0.5 shrink-0" />
