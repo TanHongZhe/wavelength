@@ -8,20 +8,21 @@ export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: {
-    absolute: "Wavelength Game Online | Free Couple Card Games",
+    absolute: "Wavelength Online | Free Multiplayer Browser Party Game",
   },
   description:
-    "Play Wavelength Game Online free! The viral telepathic party game perfect for long distance relationships and couple card games. Instant play in browser.",
+    "Play Wavelength Online free! The viral telepathic browser party game perfect for friends, long distance relationships, and couples. Start playing now!",
   openGraph: {
     type: "website",
     locale: "en_US",
     url: "https://wavelength.lol/",
-    siteName: "Wavelength Game Online",
-    title: "Wavelength Game Online | Free Couple Card Games",
+    siteName: "Wavelength Online",
+    title: "Wavelength Online | Free Multiplayer Browser Party Game",
     description:
-      "Play Wavelength Game Online free! The viral telepathic party game perfect for long distance relationships and couple card games. Instant play in browser.",
+      "Play Wavelength Online free! The viral telepathic browser party game perfect for friends, long distance relationships, and couples. Start playing now!",
   },
   keywords: [
+    "Wavelength Online",
     "Wavelength Game Online",
     "Couple Card Games",
     "Play Wavelength Online",
@@ -56,7 +57,7 @@ export default function HomePage() {
   return (
     <main className="flex flex-col min-h-screen">
       {/* Interactive Game Component - Client-side rendered */}
-      <h1 className="sr-only">Wavelength Game Online - Free Multiplayer Couple Card Games</h1>
+      <h1 className="sr-only">Wavelength Online - Free Multiplayer Browser Party Game</h1>
       <GameLoader />
 
       {/* Visible SEO Content - Placed below the game, visible to crawlers and users */}
