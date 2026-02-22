@@ -45,7 +45,7 @@ export const metadata: Metadata = {
   creator: "Wavelength Game",
   publisher: "Wavelength Game",
   alternates: {
-    canonical: "./",
+    canonical: "/",
   },
   openGraph: {
     type: "website",
