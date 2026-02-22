@@ -28,14 +28,14 @@ export function Navbar() {
     const router = useRouter();
     const { userId } = useAuth();
 
-    // Trigger router.refresh() when user signs out to clear Next.js client-side cache
+    // Trigger hard refresh to clear static cache when user signs out
     const prevUserId = useRef<string | null | undefined>(userId);
     useEffect(() => {
         if (prevUserId.current && !userId) {
-            router.refresh();
+            window.location.href = "/";
         }
         prevUserId.current = userId;
-    }, [userId, router]);
+    }, [userId]);
 
     // Close mobile menu on route change
     useEffect(() => {
