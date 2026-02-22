@@ -4,7 +4,7 @@ import Link from "next/link";
 import { AudioWaveform, Menu, X } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
 import { motion, AnimatePresence } from "framer-motion";
-import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
+import { SignedIn, SignedOut, SignInButton, UserButton, useClerk } from "@clerk/nextjs";
 import { useState, useEffect } from "react";
 import { PaywallModal } from "./PaywallModal";
 import { Crown } from "lucide-react";
@@ -25,6 +25,13 @@ export function Navbar() {
     const myUser = useQuery(api.rooms.getMyUser);
     const isPro = myUser?.isPro ?? false;
     const pathname = usePathname();
+    const { signOut } = useClerk();
+
+    const handleSignOut = () => {
+        signOut(() => {
+            window.location.href = "/";
+        });
+    };
 
     // Close mobile menu on route change
     useEffect(() => {
@@ -108,7 +115,17 @@ export function Navbar() {
 
                     <div className="hidden md:block">
                         <SignedIn>
-                            <UserButton afterSignOutUrl="/logout" />
+                            <UserButton
+                                appearance={{
+                                    elements: {
+                                        userButtonPopoverActionButton__signOut: "hidden",
+                                    },
+                                }}
+                            >
+                                <UserButton.MenuItems>
+                                    <UserButton.Action label="Sign Out" labelIcon={<AudioWaveform className="w-4 h-4" />} onClick={handleSignOut} />
+                                </UserButton.MenuItems>
+                            </UserButton>
                         </SignedIn>
                     </div>
 
@@ -223,7 +240,17 @@ export function Navbar() {
 
                                 <SignedIn>
                                     <div className="flex items-center gap-3 px-2">
-                                        <UserButton afterSignOutUrl="/logout" />
+                                        <UserButton
+                                            appearance={{
+                                                elements: {
+                                                    userButtonPopoverActionButton__signOut: "hidden",
+                                                },
+                                            }}
+                                        >
+                                            <UserButton.MenuItems>
+                                                <UserButton.Action label="Sign Out" labelIcon={<AudioWaveform className="w-4 h-4" />} onClick={handleSignOut} />
+                                            </UserButton.MenuItems>
+                                        </UserButton>
                                         <span className="text-sm text-muted-foreground">Account</span>
                                     </div>
                                 </SignedIn>
