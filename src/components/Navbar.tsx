@@ -115,17 +115,9 @@ export function Navbar() {
 
                     <div className="hidden md:block">
                         <SignedIn>
-                            <UserButton
-                                appearance={{
-                                    elements: {
-                                        userButtonPopoverActionButton__signOut: "hidden",
-                                    },
-                                }}
-                            >
-                                <UserButton.MenuItems>
-                                    <UserButton.Action label="Sign Out" labelIcon={<AudioWaveform className="w-4 h-4" />} onClick={handleSignOut} />
-                                </UserButton.MenuItems>
-                            </UserButton>
+                            <button onClick={handleSignOut} className="text-sm font-medium bg-secondary text-foreground px-4 py-2 rounded-full border border-border/50 hover:bg-secondary/80 transition-all shadow-sm">
+                                Sign Out
+                            </button>
                         </SignedIn>
                     </div>
 
@@ -239,20 +231,9 @@ export function Navbar() {
                                 </SignedOut>
 
                                 <SignedIn>
-                                    <div className="flex items-center gap-3 px-2">
-                                        <UserButton
-                                            appearance={{
-                                                elements: {
-                                                    userButtonPopoverActionButton__signOut: "hidden",
-                                                },
-                                            }}
-                                        >
-                                            <UserButton.MenuItems>
-                                                <UserButton.Action label="Sign Out" labelIcon={<AudioWaveform className="w-4 h-4" />} onClick={handleSignOut} />
-                                            </UserButton.MenuItems>
-                                        </UserButton>
-                                        <span className="text-sm text-muted-foreground">Account</span>
-                                    </div>
+                                    <button onClick={handleSignOut} className="w-full text-sm font-medium bg-secondary text-foreground px-4 py-3 rounded-xl border border-border/50 hover:bg-secondary/80 transition-all shadow-sm">
+                                        Sign Out
+                                    </button>
                                 </SignedIn>
                             </div>
                         </motion.div>
