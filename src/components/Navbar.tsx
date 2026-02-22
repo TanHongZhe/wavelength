@@ -4,7 +4,7 @@ import Link from "next/link";
 import { AudioWaveform, Menu, X } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
 import { motion, AnimatePresence } from "framer-motion";
-import { SignedIn, SignedOut, SignInButton, UserButton, useClerk } from "@clerk/nextjs";
+import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 import { useState, useEffect } from "react";
 import { PaywallModal } from "./PaywallModal";
 import { Crown } from "lucide-react";
@@ -25,13 +25,7 @@ export function Navbar() {
     const myUser = useQuery(api.rooms.getMyUser);
     const isPro = myUser?.isPro ?? false;
     const pathname = usePathname();
-    const { signOut } = useClerk();
 
-    const handleSignOut = () => {
-        signOut(() => {
-            window.location.href = "/";
-        });
-    };
 
     // Close mobile menu on route change
     useEffect(() => {
@@ -115,9 +109,7 @@ export function Navbar() {
 
                     <div className="hidden md:block">
                         <SignedIn>
-                            <button onClick={handleSignOut} className="text-sm font-medium bg-secondary text-foreground px-4 py-2 rounded-full border border-border/50 hover:bg-secondary/80 transition-all shadow-sm">
-                                Sign Out
-                            </button>
+                            <UserButton afterSignOutUrl="/" />
                         </SignedIn>
                     </div>
 
@@ -231,9 +223,10 @@ export function Navbar() {
                                 </SignedOut>
 
                                 <SignedIn>
-                                    <button onClick={handleSignOut} className="w-full text-sm font-medium bg-secondary text-foreground px-4 py-3 rounded-xl border border-border/50 hover:bg-secondary/80 transition-all shadow-sm">
-                                        Sign Out
-                                    </button>
+                                    <div className="flex items-center gap-3 px-2">
+                                        <UserButton afterSignOutUrl="/" />
+                                        <span className="text-sm text-muted-foreground">Account</span>
+                                    </div>
                                 </SignedIn>
                             </div>
                         </motion.div>
