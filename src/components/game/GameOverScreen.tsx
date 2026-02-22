@@ -45,7 +45,7 @@ export function GameOverScreen({ room, playerId, onLeave }: GameOverScreenProps)
     const [showUpgradeOverlay, setShowUpgradeOverlay] = useState(true);
 
     // Am I the winner?
-    const amIPlayer1 = room.psychic_id === playerId || (!room.guesser_id);
+    const amIPlayer1 = room.creator_id ? (playerId === room.creator_id || room.creator_id.includes(playerId) || playerId.includes(room.creator_id)) : false;
     const iWon = (amIPlayer1 && player1Wins) || (!amIPlayer1 && player2Wins);
 
     const isDailyLimitReached = room.clue?.includes("Daily Limit");

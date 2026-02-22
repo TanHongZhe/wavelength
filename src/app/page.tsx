@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { GameLoader } from "../components/game/GameLoader";
+import { GameEngine } from "../components/game/GameEngine";
 import { Footer } from "@/components/Footer";
 import Link from "next/link";
 
@@ -7,6 +7,7 @@ export const runtime = "edge";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
+  // ... existing metadata ...
   title: {
     absolute: "Wavelength Online | Free Multiplayer Browser Party Game",
   },
@@ -58,7 +59,7 @@ export default function HomePage() {
     <main className="flex flex-col min-h-screen">
       {/* Interactive Game Component - Client-side rendered */}
       <h1 className="sr-only">Wavelength Online - Free Multiplayer Browser Party Game</h1>
-      <GameLoader />
+      <GameEngine />
 
       {/* Visible SEO Content - Placed below the game, visible to crawlers and users */}
       <section className="container mx-auto px-4 py-12 text-muted-foreground/80 max-w-4xl space-y-8">

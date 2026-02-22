@@ -24,6 +24,7 @@ export interface Room {
     player2_name: string;
     player1_avatar: string;
     player2_avatar: string;
+    creator_id?: string;
     deck_type?: DeckType;
     max_rounds?: number;
 }
@@ -33,7 +34,6 @@ export function useGameRoom() {
     const [roomId, setRoomId] = useState<Id<"rooms"> | null>(null);
     const [playerId, setPlayerId] = useState<string>("");
     const [playerName, setPlayerName] = useState<string>("");
-    const [player1Id, setPlayer1Id] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [authInitialized, setAuthInitialized] = useState(false);
@@ -66,6 +66,7 @@ export function useGameRoom() {
         player2_name: convexRoom.player2_name ?? "Player 2",
         player1_avatar: convexRoom.player1_avatar ?? "🐼",
         player2_avatar: convexRoom.player2_avatar ?? "🐯",
+        creator_id: convexRoom.creator_id as string | undefined,
         deck_type: convexRoom.deck_type as DeckType | undefined,
         max_rounds: convexRoom.max_rounds,
     } : null;
@@ -115,7 +116,6 @@ export function useGameRoom() {
         setError(null);
         const trimmedName = name.trim();
         setPlayerName(trimmedName);
-        setPlayer1Id(playerId);
         setIsGameFinished(false);
 
         const roomCode = generateRoomCode();
@@ -177,9 +177,6 @@ export function useGameRoom() {
             if (result.error) {
                 setError(result.error);
             } else if (result.roomId) {
-                if (result.room) {
-                    setPlayer1Id(result.room.psychic_id ?? null);
-                }
                 setRoomId(result.roomId);
             }
         } catch (err) {
@@ -241,15 +238,18 @@ export function useGameRoom() {
     }, [room, roomId, currentDeck, updateRoomMutation, playerId]);
 
     const updateScore = useCallback(async (points: number) => {
-        if (!roomId || !room) return;
-        const guesserIsPlayer1 = room.guesser_id === player1Id;
+        if (!roomId || !room || !room.creator_id) return;
+
+        // determine if the current guesser is player 1 (creator)
+        const currentGuesserId = room.guesser_id ?? "";
+        const guesserIsPlayer1 = currentGuesserId === room.creator_id || room.creator_id.includes(currentGuesserId) || currentGuesserId.includes(room.creator_id);
 
         if (guesserIsPlayer1) {
             await updateRoomMutation({ roomId, updates: { psychic_score: room.psychic_score + points } });
         } else {
             await updateRoomMutation({ roomId, updates: { guesser_score: room.guesser_score + points } });
         }
-    }, [room, roomId, player1Id, updateRoomMutation]);
+    }, [room, roomId, updateRoomMutation]);
 
     const endGame = useCallback(async () => {
         if (!roomId) return;
@@ -286,17 +286,19 @@ export function useGameRoom() {
             await updateRoomMutation({ roomId, updates: { phase: "ended" } });
         }
         setRoomId(null);
-        setPlayer1Id(null);
         setPlayerName("");
         setIsGameFinished(false);
     }, [roomId, updateRoomMutation]);
 
     const clearError = useCallback(() => setError(null), []);
 
+    const isPlayer1 = room?.creator_id ? (playerId === room.creator_id || room.creator_id.includes(playerId) || playerId.includes(room.creator_id)) : false;
+
     return {
         room,
         playerId,
         playerName,
+        isPlayer1,
         isPsychic: room?.psychic_id === playerId,
         isGuesser: room?.guesser_id === playerId,
         isGameFinished,
