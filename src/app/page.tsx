@@ -79,7 +79,6 @@ export default function HomePage() {
                 <li><Link href="/rules/" className="hover:text-primary transition-colors">Read Official Rules & Scoring</Link></li>
                 <li><Link href="/faq/" className="hover:text-primary transition-colors">Frequently Asked Questions</Link></li>
                 <li><Link href="/about/" className="hover:text-primary transition-colors">About the Project</Link></li>
-                <li><Link href="/long-distance-games/" className="hover:text-primary transition-colors">Games for Long Distance Couples</Link></li>
               </ul>
             </div>
 
