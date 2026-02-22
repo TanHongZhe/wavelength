@@ -13,12 +13,12 @@ export function getSitemapItems(): MetadataRoute.Sitemap {
             changeFrequency: 'daily',
             priority: 1.0,
         },
-        {
-            url: `${baseUrl}/blog/`,
-            lastModified: currentDate,
-            changeFrequency: 'daily',
-            priority: 0.95,
-        },
+        // {
+        //     url: `${baseUrl}/blog/`,
+        //     lastModified: currentDate,
+        //     changeFrequency: 'daily',
+        //     priority: 0.95,
+        // },
         {
             url: `${baseUrl}/rules/`,
             lastModified: currentDate,
@@ -111,12 +111,12 @@ export function getSitemapItems(): MetadataRoute.Sitemap {
         },
     ]
 
-    const blogRoutes: MetadataRoute.Sitemap = BLOG_POSTS.map((post) => ({
-        url: `${baseUrl}/blog/${post.slug}/`,
-        lastModified: new Date(post.date).toISOString(),
-        changeFrequency: 'monthly',
-        priority: 0.8,
-    }))
+    // const blogRoutes: MetadataRoute.Sitemap = BLOG_POSTS.map((post) => ({
+    //     url: `${baseUrl}/blog/${post.slug}/`,
+    //     lastModified: new Date(post.date).toISOString(),
+    //     changeFrequency: 'monthly',
+    //     priority: 0.8,
+    // }))
 
-    return [...staticRoutes, ...blogRoutes]
+    return [...staticRoutes] //, ...blogRoutes]
 }

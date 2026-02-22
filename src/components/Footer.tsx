@@ -11,9 +11,9 @@ export function Footer() {
                 <Link href="/refund-policy" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Refund Policy</Link>
 
                 {/* Blog Link */}
-                <Link href="/blog" className="text-sm font-semibold text-primary hover:text-primary/80 transition-colors">
+                {/* <Link href="/blog" className="text-sm font-semibold text-primary hover:text-primary/80 transition-colors">
                     Relationship Blog
-                </Link>
+                </Link> */}
 
                 <a
                     href="https://billing.stripe.com/p/login/bJe3cxgmr2kT8183KDfQI00"
