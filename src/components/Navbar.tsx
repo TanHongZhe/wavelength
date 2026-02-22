@@ -109,7 +109,7 @@ export function Navbar() {
 
                     <div className="hidden md:block">
                         <SignedIn>
-                            <UserButton afterSignOutUrl="/" />
+                            <UserButton />
                         </SignedIn>
                     </div>
 
@@ -224,7 +224,7 @@ export function Navbar() {
 
                                 <SignedIn>
                                     <div className="flex items-center gap-3 px-2">
-                                        <UserButton afterSignOutUrl="/" />
+                                        <UserButton />
                                         <span className="text-sm text-muted-foreground">Account</span>
                                     </div>
                                 </SignedIn>
