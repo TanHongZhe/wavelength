@@ -369,3 +369,6 @@ body {
 .animate-slide-up {
   animation: slide-up 0.4s ease-out forwards;
 }
+/* Hide default Clerk signout button */
+.clerk-hide-signout { display: none !important; }
+

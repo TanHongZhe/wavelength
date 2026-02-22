@@ -4,7 +4,7 @@ import Link from "next/link";
 import { AudioWaveform, Menu, X } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
 import { motion, AnimatePresence } from "framer-motion";
-import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
+import { SignedIn, SignedOut, SignInButton, UserButton, useClerk } from "@clerk/nextjs";
 import { useState, useEffect } from "react";
 import { PaywallModal } from "./PaywallModal";
 import { Crown } from "lucide-react";
@@ -25,8 +25,24 @@ export function Navbar() {
     const myUser = useQuery(api.rooms.getMyUser);
     const isPro = myUser?.isPro ?? false;
     const pathname = usePathname();
+    const { signOut } = useClerk();
 
+    // Check if we just redirected to homepage to sign out
+    useEffect(() => {
+        if (typeof window !== "undefined") {
+            const params = new URLSearchParams(window.location.search);
+            if (params.get("action") === "logout") {
+                signOut().then(() => {
+                    // Clean up URL without triggering a reload
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                });
+            }
+        }
+    }, [signOut]);
 
+    const handleRedirectLogout = () => {
+        window.location.href = "/?action=logout";
+    };
     // Close mobile menu on route change
     useEffect(() => {
         setMobileOpen(false);
@@ -109,7 +125,17 @@ export function Navbar() {
 
                     <div className="hidden md:block">
                         <SignedIn>
-                            <UserButton />
+                            <UserButton
+                                appearance={{
+                                    elements: {
+                                        userButtonPopoverActionButton__signOut: "clerk-hide-signout",
+                                    },
+                                }}
+                            >
+                                <UserButton.MenuItems>
+                                    <UserButton.Action label="Sign Out" labelIcon={<AudioWaveform className="w-4 h-4" />} onClick={handleRedirectLogout} />
+                                </UserButton.MenuItems>
+                            </UserButton>
                         </SignedIn>
                     </div>
 
@@ -224,7 +250,17 @@ export function Navbar() {
 
                                 <SignedIn>
                                     <div className="flex items-center gap-3 px-2">
-                                        <UserButton />
+                                        <UserButton
+                                            appearance={{
+                                                elements: {
+                                                    userButtonPopoverActionButton__signOut: "clerk-hide-signout",
+                                                },
+                                            }}
+                                        >
+                                            <UserButton.MenuItems>
+                                                <UserButton.Action label="Sign Out" labelIcon={<AudioWaveform className="w-4 h-4" />} onClick={handleRedirectLogout} />
+                                            </UserButton.MenuItems>
+                                        </UserButton>
                                         <span className="text-sm text-muted-foreground">Account</span>
                                     </div>
                                 </SignedIn>
