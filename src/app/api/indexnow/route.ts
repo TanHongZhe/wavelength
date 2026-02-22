@@ -18,8 +18,9 @@ export async function GET() {
     // So we just use exactly what items.ts returns.
 
     try {
-        // Send POST request to IndexNow API (which notifies Bing, Yandex, Seznam, etc.)
-        const response = await fetch('https://api.indexnow.org/indexnow', {
+        // Send POST request to Bing's specific IndexNow endpoint (which still propagates to Yandex/Seznam).
+        // Using bing.com directly often bypasses the strict rate-limiting of api.indexnow.org
+        const response = await fetch('https://www.bing.com/indexnow', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json; charset=utf-8',
