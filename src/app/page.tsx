@@ -9,18 +9,18 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   // ... existing metadata ...
   title: {
-    absolute: "Wavelength Online | Free Multiplayer Browser Party Game",
+    absolute: "Wavelength Game | Play Wavelength Online Free",
   },
   description:
-    "Play Wavelength Online free! The viral telepathic browser party game perfect for friends, long distance relationships, and couples. Start playing now!",
+    "Play the Wavelength game online for free! The viral telepathic browser party game perfect for friends, long distance relationships, and couples.",
   openGraph: {
     type: "website",
     locale: "en_US",
     url: "https://wavelength.lol/",
-    siteName: "Wavelength Online",
-    title: "Wavelength Online | Free Multiplayer Browser Party Game",
+    siteName: "Wavelength Game",
+    title: "Wavelength Game | Play Wavelength Online Free",
     description:
-      "Play Wavelength Online free! The viral telepathic browser party game perfect for friends, long distance relationships, and couples. Start playing now!",
+      "Play the Wavelength game online for free! The viral telepathic browser party game perfect for friends, long distance relationships, and couples.",
   },
   keywords: [
     "Wavelength Online",
@@ -58,15 +58,15 @@ export default function HomePage() {
   return (
     <main className="flex flex-col min-h-screen">
       {/* Interactive Game Component - Client-side rendered */}
-      <h1 className="sr-only">Wavelength Online - Free Multiplayer Browser Party Game</h1>
+      <h1 className="sr-only">Wavelength Game - Free Multiplayer Browser Party Game</h1>
       <GameEngine />
 
       {/* Visible SEO Content - Placed below the game, visible to crawlers and users */}
       <section className="container mx-auto px-4 py-12 text-muted-foreground/80 max-w-4xl space-y-8">
         <div className="prose prose-invert max-w-none">
-          <h2 className="text-2xl font-bold text-foreground mb-4">About Wavelength Online</h2>
+          <h2 className="text-2xl font-bold text-foreground mb-4">About the Wavelength Game</h2>
           <p className="mb-4">
-            Wavelength Online is the best free telepathic party game to play in your browser.
+            The Wavelength game online is the best free telepathic party game to play in your browser.
             Perfect for long distance relationships, couples bonding, and connecting with friends anywhere.
             Challenge your partner or friends to guess where a hidden target lies on a spectrum.
             The ultimate LDR game with instant multiplayer - no downloads or registration required.

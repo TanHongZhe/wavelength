@@ -8,7 +8,7 @@ export const metadata: Metadata = {
         absolute: "Couple Games Online | Free Top Mini Games",
     },
     description:
-        "Play top couple games online! Features Wavelength, Red Flag Green Flag & more. Free 2-player mini games perfect for date nights. No download needed.",
+        "Play top couple games online! Features the Wavelength Game, Red Flag Green Flag & more. Free 2-player mini games perfect for date nights.",
     keywords: [
         "Wavelength Game Online",
         "Couple Card Games",
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     openGraph: {
         title: "Couple Games Online | Free Top Mini Games",
         description:
-            "Play top couple games online! Features Wavelength, Red Flag Green Flag & more. Free 2-player mini games perfect for date nights. No download needed.",
+            "Play top couple games online! Features the Wavelength Game, Red Flag Green Flag & more. Free 2-player mini games perfect for date nights.",
         url: "https://wavelength.lol/couple-games/",
     },
 };
@@ -46,9 +46,9 @@ export const metadata: Metadata = {
 const coupleGamesSchema = {
     "@context": "https://schema.org",
     "@type": "VideoGame",
-    name: "Wavelength - Couple Games Collection",
+    name: "Wavelength Game - Couple Games Collection",
     description:
-        "A collection of fun couple games including Wavelength, Rapid Fire This or That, and Red Flag Green Flag. Perfect for date nights, LDR couples, and bonding with your partner.",
+        "A collection of fun couple games including the Wavelength Game, Rapid Fire This or That, and Red Flag Green Flag. Perfect for date nights, LDR couples, and bonding with your partner.",
     url: "https://wavelength.lol/couple-games/",
     image: "https://wavelength.lol/og-image.png",
     operatingSystem: "Web Browser",
@@ -83,7 +83,7 @@ const faqSchema = {
             name: "What are good online games for couples?",
             acceptedAnswer: {
                 "@type": "Answer",
-                text: "Wavelength offers several fun couple games including the main Wavelength game, Rapid Fire This or That, and Red Flag Green Flag. All games are free, require no download, and are perfect for date nights or LDR couples.",
+                text: "The Wavelength Game offers several fun couple games including the main Wavelength game, Rapid Fire This or That, and Red Flag Green Flag. All games are free, require no download, and are perfect for date nights or LDR couples.",
             },
         },
         {
@@ -99,7 +99,7 @@ const faqSchema = {
             name: "Can you play couple games online for free?",
             acceptedAnswer: {
                 "@type": "Answer",
-                text: "Yes! Wavelength games are free to start playing with no downloads required. Just share a room code with your partner and play instantly in your browser.",
+                text: "Yes! The Wavelength Game modes are free to start playing with no downloads required. Just share a room code with your partner and play instantly in your browser.",
             },
         },
         {
@@ -144,7 +144,7 @@ export default function CoupleGamesPage() {
                     <div className="grid md:grid-cols-3 gap-6 text-left">
                         <div className="bg-card/50 backdrop-blur-sm border border-border/50 rounded-xl p-6">
                             <div className="text-3xl mb-3">🌊</div>
-                            <h3 className="font-semibold mb-2">Wavelength</h3>
+                            <h3 className="font-semibold mb-2">The Wavelength Game</h3>
                             <p className="text-sm text-muted-foreground">
                                 The telepathic game! Give clues and guess on the dial. Are you on the same wavelength?
                             </p>
@@ -208,7 +208,7 @@ export default function CoupleGamesPage() {
                 <h2>Best Online Games for Couples FAQ</h2>
                 <p>
                     Looking for fun games to play with your boyfriend or girlfriend? Our collection
-                    of couple games includes Wavelength, Rapid Fire This or That, and Red Flag Green Flag.
+                    of couple games includes the Wavelength Game, Rapid Fire This or That, and Red Flag Green Flag.
                     All games are designed for 2 players and are perfect for date nights or LDR couples.
                 </p>
                 <p>

@@ -17,12 +17,13 @@ const siteUrl = process.env.NEXT_PUBLIC_APP_URL || "https://wavelength.lol";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Wavelength Online | Free Multiplayer Browser Party Game",
-    template: "%s | Wavelength Online",
+    default: "Wavelength Game | Play Wavelength Online Free",
+    template: "%s | Wavelength Game Online",
   },
   description:
-    "Play Wavelength Online free! The viral telepathic browser party game for long distance relationships & friends. No download required - play instantly.",
+    "Play the Wavelength game online for free! The viral telepathic browser party game for friends and long distance relationships. Play instantly now.",
   keywords: [
+    "Wavelength Game",
     "Wavelength Online",
     "Wavelength Game Online",
     "Play Wavelength Free",
@@ -40,9 +41,9 @@ export const metadata: Metadata = {
     "Browser games with friends",
     "Best web games 2026",
   ],
-  authors: [{ name: "Wavelength Online", url: "https://wavelength.lol/about/" }],
-  creator: "Wavelength Online",
-  publisher: "Wavelength Online",
+  authors: [{ name: "Wavelength Game", url: "https://wavelength.lol/about/" }],
+  creator: "Wavelength Game",
+  publisher: "Wavelength Game",
   alternates: {
     canonical: "./",
   },
@@ -50,10 +51,10 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: siteUrl,
-    siteName: "Wavelength Online",
-    title: "Wavelength Online | Free Multiplayer Browser Party Game",
+    siteName: "Wavelength Game",
+    title: "Wavelength Game | Play Wavelength Online Free",
     description:
-      "Play Wavelength Online free! The viral telepathic browser party game for long distance relationships & friends. No download required - play instantly.",
+      "Play the Wavelength game online for free! The viral telepathic browser party game for friends and long distance relationships. Play instantly now.",
     images: [
       {
         url: "/og-image.png",
@@ -65,9 +66,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Wavelength Online | Free Multiplayer Browser Party Game",
+    title: "Wavelength Game | Play Wavelength Online Free",
     description:
-      "Play Wavelength Online free! The viral telepathic browser party game for long distance relationships & friends. No download required - play instantly.",
+      "Play the Wavelength game online for free! The viral telepathic browser party game for friends and long distance relationships. Play instantly now.",
     images: ["/og-image.png"],
     creator: "@WavelengthGame",
   },
@@ -91,7 +92,7 @@ export const metadata: Metadata = {
 const organizationSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",
-  name: "Wavelength Online",
+  name: "Wavelength Game",
   url: "https://wavelength.lol/",
   logo: "https://wavelength.lol/icon-512.png",
   sameAs: ["https://github.com/TanHongZhe/wavelength-vibe"],
@@ -106,7 +107,7 @@ const organizationSchema = {
 const videoGameSchema = {
   "@context": "https://schema.org",
   "@type": "VideoGame",
-  name: "Wavelength Online",
+  name: "Wavelength Game",
   description:
     "A telepathic party game and couple card game where players try to read each other's minds by guessing where a hidden target falls on a spectrum.",
   url: "https://wavelength.lol/",
@@ -129,11 +130,11 @@ const videoGameSchema = {
   },
   author: {
     "@type": "Person",
-    name: "Wavelength Online",
+    name: "Wavelength Game",
   },
   publisher: {
     "@type": "Organization",
-    name: "Wavelength Online",
+    name: "Wavelength Game",
   },
   inLanguage: "en",
   isAccessibleForFree: true,
@@ -157,9 +158,9 @@ const breadcrumbSchema = {
 const webSiteSchema = {
   "@context": "https://schema.org",
   "@type": "WebSite",
-  name: "Wavelength Online",
+  name: "Wavelength Game",
   url: "https://wavelength.lol/",
-  description: "Play the viral Wavelength Online party game and couple card games in your browser!",
+  description: "Play the viral Wavelength game online and couple card games in your browser!",
   potentialAction: {
     "@type": "SearchAction",
     target: "https://wavelength.lol/?q={search_term_string}",
@@ -170,7 +171,7 @@ const webSiteSchema = {
 const speakableSchema = {
   "@context": "https://schema.org",
   "@type": "WebPage",
-  name: "Wavelength Online - Free Multiplayer Browser Party Game",
+  name: "Wavelength Game - Free Multiplayer Browser Party Game",
   url: "https://wavelength.lol/",
   speakable: {
     "@type": "SpeakableSpecification",
@@ -178,7 +179,7 @@ const speakableSchema = {
   },
   mainEntity: {
     "@type": "VideoGame",
-    name: "Wavelength Online",
+    name: "Wavelength Game",
   },
 };
 
@@ -186,7 +187,7 @@ const gameModesSchema = {
   "@context": "https://schema.org",
   "@type": "ItemList",
   name: "Wavelength Game Modes",
-  description: "Available game modes in Wavelength Online",
+  description: "Available game modes in Wavelength Game",
   itemListElement: [
     {
       "@type": "ListItem",

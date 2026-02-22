@@ -9,7 +9,7 @@ export const metadata: Metadata = {
         absolute: "Best LDR Games Online | Wavelength Game",
     },
     description:
-        "Play Wavelength Game Online! The top choice for LDR couples. Free, instant multiplayer fun perfect for long distance date nights and virtual bonding.",
+        "Play the Wavelength Game! The top choice for LDR couples. Free, instant multiplayer fun perfect for long distance date nights and virtual bonding.",
     keywords: [
         "Wavelength Game Online",
         "Couple Card Games",
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     openGraph: {
         title: "Best LDR Games Online | Wavelength Game",
         description:
-            "Play Wavelength Game Online! The top choice for LDR couples. Free, instant multiplayer fun perfect for long distance date nights and virtual bonding.",
+            "Play the Wavelength Game! The top choice for LDR couples. Free, instant multiplayer fun perfect for long distance date nights and virtual bonding.",
         url: "https://wavelength.lol/long-distance-games/",
     },
 };
@@ -78,7 +78,7 @@ const faqSchema = {
             name: "What are good games to play in a long distance relationship?",
             acceptedAnswer: {
                 "@type": "Answer",
-                text: "Wavelength is one of the best games for LDR couples. It's a telepathic guessing game where you and your partner try to get on the same wavelength by guessing where concepts fall on a spectrum. It's free, works in any browser, and creates meaningful conversations.",
+                text: "The Wavelength Game is one of the best games for LDR couples. It's a telepathic guessing game where you and your partner try to get on the same wavelength by guessing where concepts fall on a spectrum. It's free, works in any browser, and creates meaningful conversations.",
             },
         },
         {
@@ -91,10 +91,10 @@ const faqSchema = {
         },
         {
             "@type": "Question",
-            name: "Is Wavelength free to play online?",
+            name: "Is the Wavelength Game free to play online?",
             acceptedAnswer: {
                 "@type": "Answer",
-                text: "Yes! Wavelength Online is free to start playing. No downloads required - just open your browser and start playing with your partner instantly.",
+                text: "Yes! The Wavelength Game is free to start playing online. No downloads required - just open your browser and start playing with your partner instantly.",
             },
         },
     ],
@@ -116,7 +116,7 @@ export default function LongDistanceGamesPage() {
             {/* Landing Overlay */}
             <LandingOverlay
                 title="The Best Game for Long Distance Relationships"
-                description="Connect with your partner from miles away. Wavelength is the perfect LDR game for couples who want to bond, have fun, and discover how well they know each other."
+                description="Connect with your partner from miles away. The Wavelength Game is perfect for couples who want to bond, have fun, and discover how well they know each other."
                 emoji="💜"
                 gradient="from-purple-400 via-pink-400 to-purple-400"
             />
@@ -127,7 +127,7 @@ export default function LongDistanceGamesPage() {
             {/* LDR-focused content section */}
             <section className="max-w-4xl mx-auto px-4 py-12 space-y-8">
                 <div className="text-center">
-                    <h2 className="text-2xl font-semibold mb-4">Why Couples Love Wavelength for LDR</h2>
+                    <h2 className="text-2xl font-semibold mb-4">Why Couples Love the Wavelength Game for LDR</h2>
                     <div className="grid md:grid-cols-3 gap-6 text-left">
                         <div className="bg-card/50 backdrop-blur-sm border border-border/50 rounded-xl p-6">
                             <div className="text-3xl mb-3">💕</div>
@@ -185,8 +185,8 @@ export default function LongDistanceGamesPage() {
                 <h2>Long Distance Relationship Games FAQ</h2>
                 <p>
                     Looking for games to play with your boyfriend or girlfriend in a long distance relationship?
-                    Wavelength is one of the best LDR games available online. Unlike video games that require
-                    downloads or expensive subscriptions, Wavelength is completely free and works right in your browser.
+                    The Wavelength Game is one of the best LDR games available online. Unlike video games that require
+                    downloads or expensive subscriptions, the Wavelength Game is completely free and works right in your browser.
                 </p>
                 <p>
                     Perfect for virtual date nights, this couples bonding game helps you connect on a deeper level.

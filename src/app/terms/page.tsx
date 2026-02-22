@@ -4,8 +4,8 @@ import { Button } from "@/components/ui/button";
 
 
 export const metadata: Metadata = {
-    title: "Terms of Service | Wavelength Game Online",
-    description: "Read the Terms of Service for Wavelength Game Online. Understand our rules, user conduct, intellectual property rights, and disclaimers before playing.",
+    title: "Terms of Service | Wavelength Game",
+    description: "Read the Terms of Service for the Wavelength Game. Understand our rules, user conduct, intellectual property rights, and disclaimers before playing.",
     openGraph: {
         url: "https://wavelength.lol/terms/",
     },
@@ -17,7 +17,7 @@ export default function TermsPage() {
             <h1 className="text-3xl font-bold mb-6 text-foreground">Terms of Service</h1>
             <div className="prose prose-invert max-w-none text-muted-foreground">
                 <p className="mb-4">Last updated: {new Date().toLocaleDateString()}</p>
-                <p className="mb-4">Welcome to Wavelength Online. By accessing or using our website, you agree to be bound by these Terms of Service.</p>
+                <p className="mb-4">Welcome to the Wavelength Game. By accessing or using our website, you agree to be bound by these Terms of Service.</p>
 
                 <h2 className="text-xl font-semibold text-foreground mt-8 mb-4">1. Acceptance of Terms</h2>
                 <p className="mb-4">By accessing or using our services, you agree to comply with and be bound by these terms. If you do not agree to these terms, you may not access or use usage of our services.</p>
@@ -32,7 +32,7 @@ export default function TermsPage() {
                 <p className="mb-4">The content, organization, graphics, design, compilation, and other matters related to the Site are protected under applicable copyrights and trademarks. This is a fan-made project and is not affiliated with the official Wavelength board game creators.</p>
 
                 <h2 className="text-xl font-semibold text-foreground mt-8 mb-4">5. Disclaimer</h2>
-                <p className="mb-4">The materials on Wavelength Online are provided on an 'as is' basis. Wavelength Online makes no warranties, expressed or implied, and hereby disclaims and negates all other warranties including, without limitation, implied warranties or conditions of merchantability, fitness for a particular purpose, or non-infringement of intellectual property or other violation of rights.</p>
+                <p className="mb-4">The materials on the Wavelength Game are provided on an 'as is' basis. The Wavelength Game makes no warranties, expressed or implied, and hereby disclaims and negates all other warranties including, without limitation, implied warranties or conditions of merchantability, fitness for a particular purpose, or non-infringement of intellectual property or other violation of rights.</p>
             </div>
 
             <div className="mt-16 pt-8 border-t border-border/40 text-center">

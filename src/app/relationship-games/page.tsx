@@ -9,7 +9,7 @@ export const metadata: Metadata = {
         absolute: "Relationship Games | Wavelength Game Online",
     },
     description:
-        "Discover the best online relationship games for couples. Wavelength Game sparks deep conversations & fun bonding. Free to play instant browser game.",
+        "Discover the best online relationship games for couples. The Wavelength Game sparks deep conversations & fun bonding. Free to play instant browser game.",
     keywords: [
         "Wavelength Game Online",
         "Couple Card Games",
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     openGraph: {
         title: "Relationship Games | Wavelength Game Online",
         description:
-            "Discover the best online relationship games for couples. Wavelength Game sparks deep conversations & fun bonding. Free to play instant browser game.",
+            "Discover the best online relationship games for couples. The Wavelength Game sparks deep conversations & fun bonding. Free to play instant browser game.",
         url: "https://wavelength.lol/relationship-games/",
     },
 };
@@ -80,7 +80,7 @@ const faqSchema = {
             name: "What are good relationship games for couples?",
             acceptedAnswer: {
                 "@type": "Answer",
-                text: "Wavelength is one of the best relationship games for couples! It's a telepathic guessing game where partners try to get on the same wavelength by guessing where concepts fall on a spectrum. It naturally sparks conversations and helps you understand how your partner thinks.",
+                text: "The Wavelength Game is one of the best relationship games for couples! It's a telepathic guessing game where partners try to get on the same wavelength by guessing where concepts fall on a spectrum. It naturally sparks conversations and helps you understand how your partner thinks.",
             },
         },
         {
@@ -88,7 +88,7 @@ const faqSchema = {
             name: "How can games strengthen a relationship?",
             acceptedAnswer: {
                 "@type": "Answer",
-                text: "Playing games together creates shared experiences, encourages communication, and adds fun to your relationship. Wavelength specifically helps couples discover how aligned their thinking is, leading to deeper understanding and meaningful conversations.",
+                text: "Playing games together creates shared experiences, encourages communication, and adds fun to your relationship. The Wavelength Game specifically helps couples discover how aligned their thinking is, leading to deeper understanding and meaningful conversations.",
             },
         },
         {
@@ -96,7 +96,7 @@ const faqSchema = {
             name: "What games help couples communicate better?",
             acceptedAnswer: {
                 "@type": "Answer",
-                text: "Wavelength is excellent for couple communication! Each round requires you to give clues and interpret your partner's thinking. It reveals how you both view concepts differently and creates natural opportunities for discussion.",
+                text: "The Wavelength Game is excellent for couple communication! Each round requires you to give clues and interpret your partner's thinking. It reveals how you both view concepts differently and creates natural opportunities for discussion.",
             },
         },
     ],
@@ -118,7 +118,7 @@ export default function RelationshipGamesPage() {
             {/* Landing Overlay */}
             <LandingOverlay
                 title="The Best Relationship Game for Couples"
-                description="Strengthen your bond and have fun together. Wavelength helps couples connect through playful competition and meaningful conversations."
+                description="Strengthen your bond and have fun together. The Wavelength Game helps couples connect through playful competition and meaningful conversations."
                 emoji="💑"
                 gradient="from-rose-400 via-pink-400 to-rose-400"
             />
@@ -129,7 +129,7 @@ export default function RelationshipGamesPage() {
             {/* Relationship-focused content section */}
             <section className="max-w-4xl mx-auto px-4 py-12 space-y-8">
                 <div className="text-center">
-                    <h2 className="text-2xl font-semibold mb-4">Why Couples Love Wavelength</h2>
+                    <h2 className="text-2xl font-semibold mb-4">Why Couples Love the Wavelength Game</h2>
                     <div className="grid md:grid-cols-3 gap-6 text-left">
                         <div className="bg-card/50 backdrop-blur-sm border border-border/50 rounded-xl p-6">
                             <div className="text-3xl mb-3">🧠</div>
@@ -159,7 +159,7 @@ export default function RelationshipGamesPage() {
                 <div className="bg-gradient-to-r from-rose-500/5 via-pink-500/5 to-rose-500/5 rounded-2xl p-8 text-center">
                     <h2 className="text-2xl font-semibold mb-4">💝 Strengthen Your Relationship</h2>
                     <p className="text-muted-foreground max-w-xl mx-auto mb-6">
-                        Research shows that couples who play together stay together. Wavelength is perfect for:
+                        Research shows that couples who play together stay together. The Wavelength Game is perfect for:
                     </p>
                     <ul className="text-left max-w-md mx-auto space-y-2 text-muted-foreground">
                         <li className="flex items-center gap-2">
@@ -216,7 +216,7 @@ export default function RelationshipGamesPage() {
                 <h2>Relationship Games for Couples</h2>
                 <h2>Best Games for Couples FAQ</h2>
                 <p>
-                    Looking for relationship games to play with your partner? Wavelength is one of the best
+                    Looking for relationship games to play with your partner? The Wavelength Game is one of the best
                     bonding games for couples available online. This free game helps strengthen your relationship
                     by revealing how you and your partner think differently - and similarly!
                 </p>

@@ -8,8 +8,9 @@ export const metadata: Metadata = {
     title: {
         absolute: "Wavelength Game FAQ | Common Questions",
     },
-    description: "Find answers to common questions about Wavelength Game Online. Learn rules, scoring, and player limits for our free telepathic party game for couples.",
+    description: "Find answers to common questions about the Wavelength Game. Learn rules, scoring, and player limits for our free telepathic party game online.",
     keywords: [
+        "wavelength game faq",
         "wavelength faq",
         "wavelength questions",
         "how to play wavelength",
@@ -22,7 +23,7 @@ export const metadata: Metadata = {
     },
     openGraph: {
         title: "Wavelength Game FAQ | Common Questions",
-        description: "Find answers to common questions about Wavelength Game Online. Learn rules, scoring, and player limits for our free telepathic party game for couples.",
+        description: "Find answers to common questions about the Wavelength Game. Learn rules, scoring, and player limits for our free telepathic party game online.",
         url: "https://wavelength.lol/faq/",
     },
 };
@@ -30,16 +31,16 @@ export const metadata: Metadata = {
 // Comprehensive FAQ data
 const faqItems = [
     {
-        question: "What is Wavelength Online?",
-        answer: "Wavelength Online is a free, browser-based adaptation of the popular party game Wavelength. It's a telepathic game where one player (the Psychic) gives a clue to help others guess the position of a hidden target on a spectrum between two opposing concepts. For example, if the spectrum is 'Hot' to 'Cold' and the target is near 'Hot', the Psychic might give the clue 'Coffee' to hint at the position.",
+        question: "What is the Wavelength Game online?",
+        answer: "The Wavelength Game online is a free, browser-based adaptation of the popular party game Wavelength. It's a telepathic game where one player (the Psychic) gives a clue to help others guess the position of a hidden target on a spectrum between two opposing concepts. For example, if the spectrum is 'Hot' to 'Cold' and the target is near 'Hot', the Psychic might give the clue 'Coffee' to hint at the position.",
     },
     {
-        question: "How many players can play Wavelength?",
-        answer: "Wavelength Online supports 2 to 20 players. In Classic Mode, 2 players take turns being the Psychic and Guesser. In Party Mode, players are divided into two teams (2-10 players per team) that compete against each other.",
+        question: "How many players can play the Wavelength Game?",
+        answer: "The Wavelength Game online supports 2 to 20 players. In Classic Mode, 2 players take turns being the Psychic and Guesser. In Party Mode, players are divided into two teams (2-10 players per team) that compete against each other.",
     },
     {
-        question: "Is Wavelength Online free to play?",
-        answer: "Yes! Wavelength Online is free to start playing. There are no downloads required and no registration needed. Simply share a link with your friends and start playing instantly in your web browser. Optional premium features are available.",
+        question: "Is the Wavelength Game free to play online?",
+        answer: "Yes! The Wavelength Game is free to start playing online. There are no downloads required and no registration needed. Simply share a link with your friends and start playing instantly in your web browser. Optional premium features are available.",
     },
     {
         question: "How does scoring work in Wavelength?",
@@ -62,8 +63,8 @@ const faqItems = [
         answer: "A good clue clearly indicates the position on the spectrum. For example, if your spectrum is 'Good' to 'Evil' and the target is slightly toward 'Evil', you might say 'Politician' - something that's perceved as neither perfectly good nor completely evil. The best clues are ones where most people would agree on where they fall on the spectrum.",
     },
     {
-        question: "Can I play Wavelength with remote friends?",
-        answer: "Absolutely! Wavelength Online is designed for remote play. Create a room, share the room code or link with your friends no matter where they are, and everyone can join from their own device. The game synchronizes in real-time, so everyone sees the dial move as guesses are made.",
+        question: "Can I play the Wavelength Game with remote friends?",
+        answer: "Absolutely! The Wavelength Game online is designed for remote play. Create a room, share the room code or link with your friends no matter where they are, and everyone can join from their own device. The game synchronizes in real-time, so everyone sees the dial move as guesses are made.",
     },
     {
         question: "How long does a game of Wavelength take?",
@@ -71,7 +72,7 @@ const faqItems = [
     },
     {
         question: "Is this the official Wavelength game?",
-        answer: "No, Wavelength Online is a fan-made digital adaptation. It's inspired by the award-winning physical board game Wavelength designed by Wolfgang Warsch, Alex Hague, and Justin Vickers. We encourage everyone to support the original creators by purchasing the physical board game!",
+        answer: "No, the Wavelength Game online is a fan-made digital adaptation. It's inspired by the award-winning physical board game Wavelength designed by Wolfgang Warsch, Alex Hague, and Justin Vickers. We encourage everyone to support the original creators by purchasing the physical board game!",
     },
 ];
 
@@ -113,7 +114,7 @@ const breadcrumbSchema = {
 const speakableSchema = {
     "@context": "https://schema.org",
     "@type": "WebPage",
-    name: "Wavelength Online FAQ",
+    name: "Wavelength Game FAQ",
     url: "https://wavelength.lol/faq/",
     speakable: {
         "@type": "SpeakableSpecification",
@@ -144,7 +145,7 @@ export default function FAQPage() {
                             Frequently Asked Questions
                         </h1>
                         <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                            Everything you need to know about playing Wavelength Online. Can&apos;t find your answer? Check out our{" "}
+                            Everything you need to know about playing the Wavelength Game online. Can&apos;t find your answer? Check out our{" "}
                             <Link href="/rules/" className="text-primary hover:underline">
                                 rules page
                             </Link>{" "}

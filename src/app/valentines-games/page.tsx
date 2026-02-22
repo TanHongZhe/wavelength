@@ -9,7 +9,7 @@ export const metadata: Metadata = {
         absolute: "Valentine's Day Games | Couple Card Games",
     },
     description:
-        "Play Wavelength Game Online this Valentine's 2026! A romantic couple card game perfect for date nights. Free, fun, instant & no downloads required.",
+        "Play the Wavelength Game this Valentine's 2026! A romantic couple card game perfect for date nights. Free, fun, instant & no downloads required.",
     keywords: [
         "Wavelength Game Online",
         "Couple Card Games",
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     openGraph: {
         title: "Valentine's Day Games | Couple Card Games",
         description:
-            "Play Wavelength Game Online this Valentine's 2026! A romantic couple card game perfect for date nights. Free, fun, instant & no downloads required.",
+            "Play the Wavelength Game this Valentine's 2026! A romantic couple card game perfect for date nights. Free, fun, instant & no downloads required.",
         url: "https://wavelength.lol/valentines-games/",
     },
 };
@@ -80,7 +80,7 @@ const faqSchema = {
             name: "What are fun games to play on Valentine's Day?",
             acceptedAnswer: {
                 "@type": "Answer",
-                text: "Wavelength is one of the best Valentine's Day games for couples! It's a telepathic guessing game where you and your partner try to get on the same wavelength. It sparks fun conversations and helps you discover how well you know each other - perfect for a romantic date night.",
+                text: "The Wavelength Game is one of the best Valentine's Day games for couples! It's a telepathic guessing game where you and your partner try to get on the same wavelength. It sparks fun conversations and helps you discover how well you know each other - perfect for a romantic date night.",
             },
         },
         {
@@ -88,7 +88,7 @@ const faqSchema = {
             name: "What are good date night games for couples?",
             acceptedAnswer: {
                 "@type": "Answer",
-                text: "Wavelength is perfect for date nights! One person gives a clue about where a concept falls on a spectrum (like 'Hot to Cold'), and their partner guesses. It's simple to learn, creates natural conversation, and reveals fun insights about how you both think.",
+                text: "The Wavelength Game is perfect for date nights! One person gives a clue about where a concept falls on a spectrum (like 'Hot to Cold'), and their partner guesses. It's simple to learn, creates natural conversation, and reveals fun insights about how you both think.",
             },
         },
         {
@@ -96,7 +96,7 @@ const faqSchema = {
             name: "Are there free Valentine's Day games online?",
             acceptedAnswer: {
                 "@type": "Answer",
-                text: "Yes! Wavelength Online is free to start playing. No downloads, no registration required. Just open your browser, share a room code with your partner, and start playing together instantly. Perfect for a fun Valentine's Day activity!",
+                text: "Yes! The Wavelength Game is free to start playing. No downloads, no registration required. Just open your browser, share a room code with your partner, and start playing together instantly. Perfect for a fun Valentine's Day activity!",
             },
         },
     ],
@@ -106,7 +106,7 @@ const eventSchema = {
     "@context": "https://schema.org",
     "@type": "Event",
     name: "Valentine's Day 2026 Gaming",
-    description: "Play Wavelength with your partner this Valentine's Day 2026",
+    description: "Play the Wavelength Game with your partner this Valentine's Day 2026",
     startDate: "2026-02-14",
     endDate: "2026-02-14",
     eventStatus: "https://schema.org/EventScheduled",
@@ -117,7 +117,7 @@ const eventSchema = {
     },
     organizer: {
         "@type": "Organization",
-        name: "Wavelength Online",
+        name: "Wavelength Game",
         url: "https://wavelength.lol/",
     },
     offers: {
@@ -149,7 +149,7 @@ export default function ValentinesGamesPage() {
             {/* Landing Overlay */}
             <LandingOverlay
                 title="Valentine's Day Games for Couples 2026"
-                description="Make this Valentine's Day special with Wavelength - the perfect couples game to discover how well you know each other. Free, fun, and romantic!"
+                description="Make this Valentine's Day special with the Wavelength Game - the perfect couples game to discover how well you know each other. Free, fun, and romantic!"
                 emoji="💕"
                 gradient="from-pink-400 via-red-400 to-pink-400"
             />
@@ -160,13 +160,13 @@ export default function ValentinesGamesPage() {
             {/* Valentine's focused content section */}
             <section className="max-w-4xl mx-auto px-4 py-12 space-y-8">
                 <div className="text-center">
-                    <h2 className="text-2xl font-semibold mb-4">Why Wavelength is Perfect for Valentine&apos;s Day</h2>
+                    <h2 className="text-2xl font-semibold mb-4">Why the Wavelength Game is Perfect for Valentine&apos;s Day</h2>
                     <div className="grid md:grid-cols-3 gap-6 text-left">
                         <div className="bg-gradient-to-br from-pink-500/10 to-red-500/10 backdrop-blur-sm border border-pink-500/20 rounded-xl p-6">
                             <div className="text-3xl mb-3">💑</div>
                             <h3 className="font-semibold mb-2">Perfect for Date Night</h3>
                             <p className="text-sm text-muted-foreground">
-                                Whether you&apos;re celebrating at home or having a virtual date, Wavelength adds fun and laughter to your evening.
+                                Whether you&apos;re celebrating at home or having a virtual date, the Wavelength Game adds fun and laughter to your evening.
                             </p>
                         </div>
                         <div className="bg-gradient-to-br from-pink-500/10 to-red-500/10 backdrop-blur-sm border border-pink-500/20 rounded-xl p-6">
@@ -191,7 +191,7 @@ export default function ValentinesGamesPage() {
                     <h2 className="text-2xl font-semibold mb-4">💝 Valentine&apos;s Day 2026 Ideas</h2>
                     <p className="text-muted-foreground max-w-xl mx-auto mb-6">
                         Looking for something different this Valentine&apos;s Day? Instead of the usual dinner and movie,
-                        try a game night! Wavelength is perfect for:
+                        try a game night! The Wavelength Game is perfect for:
                     </p>
                     <ul className="text-left max-w-md mx-auto space-y-2 text-muted-foreground">
                         <li className="flex items-center gap-2">
@@ -249,7 +249,7 @@ export default function ValentinesGamesPage() {
                 <h2>Valentine&apos;s Day Games FAQ</h2>
                 <p>
                     Looking for Valentine&apos;s Day games to play with your boyfriend, girlfriend, husband, or wife?
-                    Wavelength is one of the best romantic games for couples in 2026. Unlike expensive date nights,
+                    The Wavelength Game is one of the best romantic games for couples in 2026. Unlike expensive date nights,
                     this free online game brings you closer together through fun, laughter, and discovering how well
                     you know each other.
                 </p>

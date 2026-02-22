@@ -6,7 +6,7 @@ import { BlogList } from "@/components/blog/BlogList";
 import { Footer } from "@/components/Footer";
 
 export const metadata: Metadata = {
-    title: "Relationship Blog | Wavelength Online",
+    title: "Relationship Blog | Wavelength Game",
     description: "Expert advice on long distance relationships, virtual date ideas, and communication games for couples.",
     openGraph: {
         url: "https://wavelength.lol/blog/",

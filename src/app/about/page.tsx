@@ -5,9 +5,10 @@ import { Button } from "@/components/ui/button";
 
 
 export const metadata: Metadata = {
-    title: "About Wavelength Online - The Project",
-    description: "About the Wavelength Online project. A web adaptation of the popular social guessing game. Learn about the technology and team behind it.",
+    title: "About the Wavelength Game | Project Info",
+    description: "About the Wavelength Game project. A free web adaptation of the popular social guessing game to play online. Learn about the technology and team.",
     keywords: [
+        "wavelength game about",
         "wavelength online about",
         "wavelength game creator",
         "wavelength web app",
@@ -16,8 +17,8 @@ export const metadata: Metadata = {
         canonical: "https://wavelength.lol/about/",
     },
     openGraph: {
-        title: "About Wavelength Online - The Project",
-        description: "Learn about the Wavelength Online project - a free, open-source web adaptation of the popular social guessing game.",
+        title: "About the Wavelength Game | Project Info",
+        description: "Learn about the Wavelength Game online project - a free, open-source web adaptation of the popular social guessing game.",
         url: "https://wavelength.lol/about/",
     },
 };
@@ -26,21 +27,21 @@ export const metadata: Metadata = {
 const webPageSchema = {
     "@context": "https://schema.org",
     "@type": "WebPage",
-    name: "About Wavelength Online",
-    description: "About the Wavelength Online project. A free, open-source web adaptation of the popular social guessing game.",
+    name: "About Wavelength Game",
+    description: "About the Wavelength Game project. A free, open-source web adaptation of the popular social guessing game.",
     url: "https://wavelength.lol/about/",
     isPartOf: {
         "@type": "WebSite",
-        name: "Wavelength Online",
+        name: "Wavelength Game",
         url: "https://wavelength.lol/",
     },
     about: {
         "@type": "VideoGame",
-        name: "Wavelength Online",
+        name: "Wavelength Game",
     },
     author: {
         "@type": "Person",
-        name: "Wavelength Online",
+        name: "Wavelength Game",
     },
     speakable: {
         "@type": "SpeakableSpecification",
@@ -85,7 +86,7 @@ export default function AboutPage() {
                     {/* Header */}
                     <header className="text-center mb-16">
                         <h1 className="font-display text-4xl md:text-5xl font-bold text-primary mb-6">
-                            About Wavelength Online
+                            About Wavelength Game Online
                         </h1>
                         <p className="text-xl text-muted-foreground leading-relaxed">
                             A digital tribute to the award-winning party game.
@@ -95,7 +96,7 @@ export default function AboutPage() {
                     {/* Content */}
                     <div className="prose prose-lg dark:prose-invert mx-auto mb-16">
                         <p>
-                            Wavelength Online is a web-based adaptation of <a href="https://www.wavelength.zone/" target="_blank" rel="noopener noreferrer" className="text-primary font-semibold hover:underline">Wavelength</a>,
+                            Wavelength Game Online is a web-based adaptation of <a href="https://www.wavelength.zone/" target="_blank" rel="noopener noreferrer" className="text-primary font-semibold hover:underline">Wavelength</a>,
                             the hit social guessing game designed by Wolfgang Warsch, Alex Hague, and Justin Vickers.
                         </p>
 
@@ -107,9 +108,9 @@ export default function AboutPage() {
 
                         <h2 className="font-display font-bold text-primary mt-12 mb-6 text-2xl">How It Works</h2>
                         <p>
-                            Using modern web technologies like Next.js, React, and Convex, Wavelength Online offers real-time synchronization
+                            Using modern web technologies like Next.js, React, and Convex, the Wavelength Game online offers real-time synchronization
                             across devices. This means when you spin the dial on your phone, your friends see it move on their screens instantly.
-                            No app downloads tailored for any specific platform—just share a link and play.
+                            No app downloads tailored for any specific platform—just share a link and play in your browser.
                         </p>
 
 

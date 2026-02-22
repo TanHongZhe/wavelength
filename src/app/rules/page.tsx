@@ -6,10 +6,11 @@ import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
     title: {
-        absolute: "How to Play Wavelength | Rules & Instructions",
+        absolute: "How to Play Wavelength Game | Rules & Instructions",
     },
-    description: "Your complete guide to Wavelength Online rules. Learn gameplay, scoring, and how to give the perfect clue in this social guessing game. Master it now!",
+    description: "Your complete guide to Wavelength Game rules online. Learn gameplay, scoring, and how to give the perfect clue in this social guessing game.",
     keywords: [
+        "wavelength game rules",
         "wavelength rules",
         "how to play wavelength",
         "wavelength game instructions",
@@ -20,8 +21,8 @@ export const metadata: Metadata = {
         canonical: "https://wavelength.lol/rules/",
     },
     openGraph: {
-        title: "How to Play Wavelength | Rules & Instructions",
-        description: "Your complete guide to Wavelength Online rules. Learn gameplay, scoring, and how to give the perfect clue in this social guessing game. Master it now!",
+        title: "How to Play Wavelength Game | Rules & Instructions",
+        description: "Your complete guide to Wavelength Game rules online. Learn gameplay, scoring, and how to give the perfect clue in this social guessing game. Master it now!",
         url: "https://wavelength.lol/rules/",
     },
 };
@@ -33,10 +34,10 @@ const faqSchema = {
     mainEntity: [
         {
             "@type": "Question",
-            name: "How many players can play Wavelength?",
+            name: "How many players can play the Wavelength Game?",
             acceptedAnswer: {
                 "@type": "Answer",
-                text: "Wavelength can be played with 2 to 20 players. Classic mode is designed for 2 players, while Party mode supports 2-6 players per team.",
+                text: "The Wavelength Game can be played with 2 to 20 players. Classic mode is designed for 2 players, while Party mode supports 2-6 players per team.",
             },
         },
         {
@@ -57,10 +58,10 @@ const faqSchema = {
         },
         {
             "@type": "Question",
-            name: "Is Wavelength free to play online?",
+            name: "Is the Wavelength Game free to play online?",
             acceptedAnswer: {
                 "@type": "Answer",
-                text: "Yes! Wavelength Online is completely free to play in your browser. No download or registration required - just share a link with friends and start playing.",
+                text: "Yes! The Wavelength Game is completely free to play online in your browser. No download or registration required - just share a link with friends and start playing.",
             },
         },
     ],
@@ -70,8 +71,8 @@ const faqSchema = {
 const howToSchema = {
     "@context": "https://schema.org",
     "@type": "HowTo",
-    name: "How to Play Wavelength Online",
-    description: "Learn how to play Wavelength, the telepathic party game where players guess positions on a spectrum.",
+    name: "How to Play Wavelength Game Online",
+    description: "Learn how to play the Wavelength Game, the telepathic party game where players guess positions on a spectrum.",
     totalTime: "PT5M",
     step: [
         {
@@ -141,7 +142,7 @@ export default function RulesPage() {
                             How to Play
                         </h1>
                         <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                            Wavelength is a social guessing game where two minds try to meet on the same frequency.
+                            The Wavelength Game is a social guessing game where two minds try to meet on the same frequency.
                         </p>
                     </header>
 
@@ -269,11 +270,11 @@ export default function RulesPage() {
                         <div className="space-y-6">
                             <details className="game-card p-6 group" open>
                                 <summary className="font-semibold text-lg cursor-pointer list-none flex justify-between items-center">
-                                    How many players can play Wavelength?
+                                    How many players can play the Wavelength Game?
                                     <span className="text-primary group-open:rotate-180 transition-transform">▼</span>
                                 </summary>
                                 <p className="mt-4 text-muted-foreground">
-                                    Wavelength can be played with 2 to 20 players. Classic mode is designed for 2 players, while Party mode supports 2-6 players per team.
+                                    The Wavelength Game can be played with 2 to 20 players. Classic mode is designed for 2 players, while Party mode supports 2-6 players per team.
                                 </p>
                             </details>
                             <details className="game-card p-6 group">
@@ -296,11 +297,11 @@ export default function RulesPage() {
                             </details>
                             <details className="game-card p-6 group">
                                 <summary className="font-semibold text-lg cursor-pointer list-none flex justify-between items-center">
-                                    Is Wavelength free to play online?
+                                    Is the Wavelength Game free to play online?
                                     <span className="text-primary group-open:rotate-180 transition-transform">▼</span>
                                 </summary>
                                 <p className="mt-4 text-muted-foreground">
-                                    Yes! Wavelength Online is completely free to play in your browser. No download or registration required - just share a link with friends and start playing.
+                                    Yes! The Wavelength Game is completely free to play online in your browser. No download or registration required - just share a link with friends and start playing.
                                 </p>
                             </details>
                         </div>
