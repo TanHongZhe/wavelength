@@ -138,7 +138,6 @@ export function LandingScreen({ onCreateGame, onJoinGame, isLoading, error }: La
 
     const [mode, setMode] = useState<"initial" | "wavelength" | "create" | "join">("initial");
     const [isAvatarExpanded, setIsAvatarExpanded] = useState(false);
-    const [isFireHovered, setIsFireHovered] = useState(false);
 
     // Filter State: "2P" -> 2 Players (Everything), "MP" -> Multiplayer (Subset)
     const [filter, setFilter] = useState<"2P" | "MP">("2P");
@@ -184,49 +183,6 @@ export function LandingScreen({ onCreateGame, onJoinGame, isLoading, error }: La
                     transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
                 />
             </div>
-
-            {/* Fire Animation Overlay - Behind Content */}
-            <AnimatePresence>
-                {isFireHovered && (
-                    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-                        {[...Array(25)].map((_, i) => {
-                            const randomScale = 0.5 + Math.random() * 2; // More variation: 0.5x to 2.5x
-                            const randomRotateStart = Math.random() * 60 - 30; // -30 to 30 deg start
-                            const randomRotateEnd = Math.random() * 180 - 90; // -90 to 90 deg end
-                            const duration = 1.5 + Math.random() * 3; // 1.5s to 4.5s
-
-                            return (
-                                <motion.div
-                                    key={i}
-                                    initial={{
-                                        y: "110vh",
-                                        x: Math.random() * 100 + "vw",
-                                        opacity: 0,
-                                        scale: randomScale * 0.5,
-                                        rotate: randomRotateStart
-                                    }}
-                                    animate={{
-                                        y: -100,
-                                        opacity: [0, 1, 1, 0],
-                                        scale: [randomScale * 0.5, randomScale, randomScale * 0.8],
-                                        rotate: [randomRotateStart, randomRotateEnd]
-                                    }}
-                                    transition={{
-                                        duration: duration,
-                                        repeat: Infinity,
-                                        delay: Math.random() * 0.5,
-                                        ease: "easeOut"
-                                    }}
-                                    className="absolute text-5xl origin-center"
-                                    style={{ fontSize: `${2 + Math.random() * 3}rem` }} // Varied base font size
-                                >
-                                    🔥
-                                </motion.div>
-                            );
-                        })}
-                    </div>
-                )}
-            </AnimatePresence>
 
             {/* Logo & Title */}
             <motion.div
@@ -303,8 +259,6 @@ export function LandingScreen({ onCreateGame, onJoinGame, isLoading, error }: La
                                                 : "game-card"
                                                 }`}
                                             onClick={() => handleGameClick(game)}
-                                            onMouseEnter={() => isHighlight && setIsFireHovered(true)}
-                                            onMouseLeave={() => isHighlight && setIsFireHovered(false)}
                                             whileTap={{ scale: 0.98 }}
                                         >
                                             <div className={isHighlight ? "bg-card rounded-[calc(1rem-3px)] p-6 h-full w-full relative" : ""}>

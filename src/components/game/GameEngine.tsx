@@ -4,9 +4,11 @@ import { useState } from "react";
 import { useMutation } from "convex/react";
 import { api } from "convex/_generated/api";
 import { LandingScreen } from "./LandingScreen";
-import { ClassicGameEngine } from "./ClassicGameEngine";
-import { PartyGameEngine } from "./party/PartyGameEngine";
 import { DeckType } from "@/lib/gameData";
+import dynamic from "next/dynamic";
+
+const ClassicGameEngine = dynamic(() => import("./ClassicGameEngine").then(mod => mod.ClassicGameEngine));
+const PartyGameEngine = dynamic(() => import("./party/PartyGameEngine").then(mod => mod.PartyGameEngine));
 
 export function GameEngine() {
     const [gameState, setGameState] = useState<{

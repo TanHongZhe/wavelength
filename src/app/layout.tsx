@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
+import { Fredoka, Space_Grotesk } from "next/font/google";
 import Script from "next/script";
+
+const fredoka = Fredoka({ subsets: ['latin'], variable: '--font-fredoka', display: 'swap' });
+const spaceGrotesk = Space_Grotesk({ subsets: ['latin'], variable: '--font-space-grotesk', display: 'swap' });
 import "./globals.css";
 import { Navbar } from "@/components/Navbar";
 import { Toaster } from "@/components/ui/toaster";
@@ -209,8 +213,6 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="//convex.cloud" />
         <link rel="icon" href="/logo.png" sizes="any" />
         <link rel="icon" href="/logo.png" type="image/png" />
@@ -230,12 +232,12 @@ export default function RootLayout({
           />
         ))}
       </head>
-      <body className="min-h-screen">
+      <body className={`min-h-screen ${spaceGrotesk.variable} ${fredoka.variable}`}>
         <Script
-          strategy="afterInteractive"
+          strategy="lazyOnload"
           src="https://www.googletagmanager.com/gtag/js?id=G-VH26VEY5X0"
         />
-        <Script id="google-analytics" strategy="afterInteractive">
+        <Script id="google-analytics" strategy="lazyOnload">
           {`
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
@@ -243,7 +245,7 @@ export default function RootLayout({
             gtag('config', 'G-VH26VEY5X0');
           `}
         </Script>
-        <Script id="microsoft-clarity" strategy="afterInteractive">
+        <Script id="microsoft-clarity" strategy="lazyOnload">
           {`
             (function(c,l,a,r,i,t,y){
                 c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
