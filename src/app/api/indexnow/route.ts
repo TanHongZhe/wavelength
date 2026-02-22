@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server'
 import { getSitemapItems } from '@/app/sitemap/items'
 import { BLOG_POSTS } from '@/lib/blogData'
 
+export const runtime = 'edge';
+
 export async function GET() {
     const host = 'wavelength.lol' // Ensure this matches your live domain
     const key = '4c07156266644b1b9cd3993878f96ff1'
