@@ -4,13 +4,13 @@ import Link from "next/link";
 import { AudioWaveform, Menu, X } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
 import { motion, AnimatePresence } from "framer-motion";
-import { SignedIn, SignedOut, SignInButton, UserButton, useAuth } from "@clerk/nextjs";
-import { useState, useEffect, useRef } from "react";
+import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
+import { useState, useEffect } from "react";
 import { PaywallModal } from "./PaywallModal";
 import { Crown } from "lucide-react";
 import { useQuery } from "convex/react";
 import { api } from "convex/_generated/api";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 const NAV_LINKS = [
     { href: "/pricing/", label: "Pricing" },
@@ -25,17 +25,6 @@ export function Navbar() {
     const myUser = useQuery(api.rooms.getMyUser);
     const isPro = myUser?.isPro ?? false;
     const pathname = usePathname();
-    const router = useRouter();
-    const { userId } = useAuth();
-
-    // Trigger hard refresh to clear static cache when user signs out
-    const prevUserId = useRef<string | null | undefined>(userId);
-    useEffect(() => {
-        if (prevUserId.current && !userId) {
-            window.location.href = "/";
-        }
-        prevUserId.current = userId;
-    }, [userId]);
 
     // Close mobile menu on route change
     useEffect(() => {
