@@ -203,9 +203,9 @@ export function LandingScreen({ onCreateGame, onJoinGame, isLoading, error }: La
                     <AudioWaveform className="w-10 h-10 text-primary-foreground" />
                 </motion.div>
 
-                <h1 className="font-display text-4xl md:text-5xl font-bold text-primary mb-2">
+                <h2 className="font-display text-4xl md:text-5xl font-bold text-primary mb-2">
                     Wavelength
-                </h1>
+                </h2>
                 <p className="text-lg text-muted-foreground font-medium">
                     Are you on the same wavelength?
                 </p>
