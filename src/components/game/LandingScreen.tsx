@@ -37,7 +37,7 @@ const GAMES = [
         action: "mode",
         path: "",
         tags: [
-            { label: "18+ Mode Available", emoji: "🔞", style: "bg-rose-500/10 text-rose-600 border-rose-500/20 shadow-sm" }
+            { label: "18+ Mode", emoji: "🔞", style: "bg-rose-500/10 text-rose-600 border-rose-500/20 shadow-sm" }
         ]
     },
     {
