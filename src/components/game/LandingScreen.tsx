@@ -172,15 +172,11 @@ export function LandingScreen({ onCreateGame, onJoinGame, isLoading, error }: La
         <div className="min-h-screen flex flex-col items-center pt-24 pb-12 px-6 sm:py-24 bg-background text-foreground transition-colors duration-300">
             {/* Animated Background Elements */}
             <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
-                <motion.div
-                    className="absolute -top-40 -right-40 w-80 h-80 rounded-full bg-wedge-teal/20 blur-3xl"
-                    animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
-                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                <div
+                    className="absolute -top-40 -right-40 w-80 h-80 rounded-full bg-wedge-teal/20 blur-3xl animate-blob-1"
                 />
-                <motion.div
-                    className="absolute -bottom-40 -left-40 w-80 h-80 rounded-full bg-wedge-orange/20 blur-3xl"
-                    animate={{ scale: [1.2, 1, 1.2], opacity: [0.3, 0.5, 0.3] }}
-                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                <div
+                    className="absolute -bottom-40 -left-40 w-80 h-80 rounded-full bg-wedge-orange/20 blur-3xl animate-blob-2"
                 />
             </div>
 
@@ -238,18 +234,13 @@ export function LandingScreen({ onCreateGame, onJoinGame, isLoading, error }: La
                                 {filteredGames.map((game) => {
                                     const isHighlight = game.id === "whos-most-likely";
                                     return (
-                                        <motion.button
+                                        <div
                                             key={game.id}
-                                            layout
-                                            initial={false}
-                                            animate={{ opacity: 1, scale: 1 }}
-                                            exit={{ opacity: 0, scale: 0.95 }}
-                                            className={`w-full text-left group hover:scale-[1.02] transition-transform ${isHighlight
+                                            className={`w-full text-left group hover:scale-[1.02] active:scale-[0.98] transition-transform cursor-pointer ${isHighlight
                                                 ? "relative rounded-2xl p-[3px] bg-gradient-to-r from-amber-400 to-orange-500 shadow-xl"
                                                 : "game-card"
                                                 }`}
                                             onClick={() => handleGameClick(game)}
-                                            whileTap={{ scale: 0.98 }}
                                         >
                                             <div className={isHighlight ? "bg-card rounded-[calc(1rem-3px)] p-6 h-full w-full relative" : ""}>
                                                 {isHighlight && (
@@ -282,7 +273,7 @@ export function LandingScreen({ onCreateGame, onJoinGame, isLoading, error }: La
                                                     </div>
                                                 </div>
                                             </div>
-                                        </motion.button>
+                                        </div>
                                     );
                                 })}
                             </AnimatePresence>

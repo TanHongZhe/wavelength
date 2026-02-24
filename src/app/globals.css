@@ -369,6 +369,38 @@ body {
 .animate-slide-up {
   animation: slide-up 0.4s ease-out forwards;
 }
+
+/* Blob animation */
+@keyframes blob-1 {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.3;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.5;
+  }
+}
+
+@keyframes blob-2 {
+  0%, 100% {
+    transform: scale(1.2);
+    opacity: 0.3;
+  }
+  50% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+}
+
+.animate-blob-1 {
+  animation: blob-1 4s ease-in-out infinite;
+}
+
+.animate-blob-2 {
+  animation: blob-2 4s ease-in-out infinite;
+}
+
 /* Hide default Clerk signout button */
 .clerk-hide-signout { display: none !important; }
 
