@@ -12,6 +12,41 @@ const nextConfig: NextConfig = {
 
   // Trailing slashes for better static hosting compatibility
   trailingSlash: true,
+
+  async redirects() {
+    return [
+      {
+        source: '/blog',
+        destination: '/',
+        permanent: false,
+      },
+      {
+        source: '/blog/:path*',
+        destination: '/',
+        permanent: false,
+      },
+      {
+        source: '/valentines-games',
+        destination: '/',
+        permanent: false,
+      },
+      {
+        source: '/long-distance-games',
+        destination: '/',
+        permanent: false,
+      },
+      {
+        source: '/relationship-games',
+        destination: '/',
+        permanent: false,
+      },
+      {
+        source: '/couple-games',
+        destination: '/',
+        permanent: false,
+      },
+    ];
+  },
 };
 
 export default nextConfig;
