@@ -62,11 +62,8 @@ export function Navbar() {
         <>
             <nav className="fixed top-0 left-0 right-0 z-50 px-4 md:px-6 py-4 flex items-center justify-between pointer-events-none">
                 <PaywallModal isOpen={showPaywall} onClose={() => setShowPaywall(false)} />
-                <motion.div
+                <div
                     className="flex items-center gap-2 pointer-events-auto bg-background/80 backdrop-blur-md p-2 pl-3 pr-4 rounded-full border border-border/50 shadow-sm"
-                    initial={{ opacity: 0, y: -20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5 }}
                 >
                     <Link href="/" className="flex items-center gap-2">
                         <div className="bg-primary text-primary-foreground p-1.5 rounded-full">
@@ -90,13 +87,10 @@ export function Navbar() {
                             <span>GET PRO</span>
                         </Link>
                     )}
-                </motion.div>
+                </div>
 
-                <motion.div
+                <div
                     className="pointer-events-auto flex items-center gap-3"
-                    initial={{ opacity: 0, y: -20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: 0.1 }}
                 >
                     {/* Desktop nav links */}
                     {NAV_LINKS.map((link) => (
@@ -155,7 +149,7 @@ export function Navbar() {
                             <Menu className="w-5 h-5" />
                         )}
                     </button>
-                </motion.div>
+                </div>
             </nav>
 
             {/* Mobile menu overlay */}

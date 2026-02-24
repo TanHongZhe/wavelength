@@ -185,12 +185,7 @@ export function LandingScreen({ onCreateGame, onJoinGame, isLoading, error }: La
             </div>
 
             {/* Logo & Title */}
-            <motion.div
-                initial={{ opacity: 0, y: -30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-                className="text-center mb-8"
-            >
+            <div className="text-center mb-8">
                 <motion.div
                     className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-primary mb-6"
                     whileHover={{ rotate: 10, scale: 1.05 }}
@@ -209,15 +204,10 @@ export function LandingScreen({ onCreateGame, onJoinGame, isLoading, error }: La
                 <p className="text-lg text-muted-foreground font-medium">
                     Are you on the same wavelength?
                 </p>
-            </motion.div>
+            </div>
 
             {/* Main Content */}
-            <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-                className="w-full max-w-md"
-            >
+            <div className="w-full max-w-md">
                 {mode === "initial" ? (
                     <div className="space-y-4">
                         {/* Filter Toggle */}
@@ -251,7 +241,7 @@ export function LandingScreen({ onCreateGame, onJoinGame, isLoading, error }: La
                                         <motion.button
                                             key={game.id}
                                             layout
-                                            initial={{ opacity: 0, scale: 0.95 }}
+                                            initial={false}
                                             animate={{ opacity: 1, scale: 1 }}
                                             exit={{ opacity: 0, scale: 0.95 }}
                                             className={`w-full text-left group hover:scale-[1.02] transition-transform ${isHighlight
@@ -641,7 +631,7 @@ export function LandingScreen({ onCreateGame, onJoinGame, isLoading, error }: La
                         )}
                     </motion.div>
                 )}
-            </motion.div>
+            </div>
         </div>
     );
 }
