@@ -162,16 +162,16 @@ export default function FAQPage() {
                         {faqItems.map((item, index) => (
                             <details
                                 key={index}
-                                className="game-card p-6 group"
+                                className="bg-slate-900/40 backdrop-blur-md border border-white/10 rounded-2xl p-6 group transition-all hover:border-white/20"
                                 open={index === 0}
                             >
-                                <summary className="font-semibold text-lg cursor-pointer list-none flex justify-between items-center gap-4">
+                                <summary className="font-bold text-lg text-white cursor-pointer list-none flex justify-between items-center gap-4">
                                     <span>{item.question}</span>
                                     <span className="text-primary group-open:rotate-180 transition-transform flex-shrink-0">
                                         ▼
                                     </span>
                                 </summary>
-                                <p className="mt-4 text-muted-foreground leading-relaxed">
+                                <p className="mt-4 text-slate-400 leading-relaxed">
                                     {item.answer}
                                 </p>
                             </details>
@@ -183,28 +183,28 @@ export default function FAQPage() {
                         <h2 id="quick-links" className="sr-only">Quick Links</h2>
                         <Link
                             href="/rules/"
-                            className="flex items-center p-6 bg-card rounded-2xl border border-border hover:border-primary/50 transition-colors group"
+                            className="flex items-center p-6 bg-slate-900/40 backdrop-blur-md border border-white/10 rounded-2xl transition-all hover:-translate-y-1 hover:border-white/20 group hover:shadow-[0_0_20px_rgba(255,255,255,0.05)]"
                         >
                             <div>
-                                <h3 className="font-semibold text-primary text-lg">Learn the Rules</h3>
-                                <p className="text-sm text-muted-foreground">
+                                <h3 className="font-bold text-white text-lg">Learn the Rules</h3>
+                                <p className="text-sm text-slate-400">
                                     Step-by-step guide on how to play
                                 </p>
                             </div>
-                            <ArrowRight className="ml-auto w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" aria-hidden="true" />
+                            <ArrowRight className="ml-auto w-5 h-5 text-slate-400 group-hover:text-primary transition-colors" aria-hidden="true" />
                         </Link>
 
                         <Link
                             href="/"
-                            className="flex items-center p-6 bg-card rounded-2xl border border-border hover:border-primary/50 transition-colors group"
+                            className="flex items-center p-6 bg-slate-900/40 backdrop-blur-md border border-white/10 rounded-2xl transition-all hover:-translate-y-1 hover:border-white/20 group hover:shadow-[0_0_20px_rgba(255,255,255,0.05)]"
                         >
                             <div>
-                                <h3 className="font-semibold text-primary text-lg">Start Playing</h3>
-                                <p className="text-sm text-muted-foreground">
+                                <h3 className="font-bold text-white text-lg">Start Playing</h3>
+                                <p className="text-sm text-slate-400">
                                     Create or join a game instantly
                                 </p>
                             </div>
-                            <ArrowRight className="ml-auto w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" aria-hidden="true" />
+                            <ArrowRight className="ml-auto w-5 h-5 text-slate-400 group-hover:text-primary transition-colors" aria-hidden="true" />
                         </Link>
                     </section>
 

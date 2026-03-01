@@ -63,13 +63,13 @@ export function Navbar() {
             <nav className="fixed top-0 left-0 right-0 z-50 px-4 md:px-6 py-4 flex items-center justify-between pointer-events-none">
                 <PaywallModal isOpen={showPaywall} onClose={() => setShowPaywall(false)} />
                 <div
-                    className="flex items-center gap-2 pointer-events-auto bg-background/80 backdrop-blur-md p-2 pl-3 pr-4 rounded-full border border-border/50 shadow-sm"
+                    className="flex items-center gap-2 pointer-events-auto bg-slate-900/40 backdrop-blur-md p-2 pl-3 pr-4 rounded-full border border-white/10 shadow-sm transition-all duration-300 hover:border-white/20"
                 >
                     <Link href="/" className="flex items-center gap-2">
-                        <div className="bg-primary text-primary-foreground p-1.5 rounded-full">
+                        <div className="bg-primary text-primary-foreground p-1.5 rounded-full shadow-[0_0_15px_rgba(255,255,255,0.1)]">
                             <AudioWaveform className="w-5 h-5" />
                         </div>
-                        <span className="font-display font-bold text-lg tracking-tight">
+                        <span className="font-display font-bold text-lg tracking-tight bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">
                             Wavelength
                         </span>
                     </Link>

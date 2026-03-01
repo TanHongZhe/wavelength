@@ -174,7 +174,7 @@ export default function PricingPage() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: 0.1 }}
-                        className="relative rounded-2xl border border-border/60 bg-card/50 backdrop-blur-sm p-6 flex flex-col"
+                        className="relative rounded-2xl border border-white/10 bg-slate-900/40 backdrop-blur-md p-6 flex flex-col transition-all duration-300 hover:border-white/20 hover:-translate-y-1"
                     >
                         <div className="mb-6">
                             <div className="w-12 h-12 rounded-xl bg-slate-500/10 flex items-center justify-center mb-4">
@@ -222,7 +222,7 @@ export default function PricingPage() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: 0.2 }}
-                        className="relative rounded-2xl border border-border/60 bg-card/50 backdrop-blur-sm p-6 flex flex-col"
+                        className="relative rounded-2xl border border-white/10 bg-slate-900/40 backdrop-blur-md p-6 flex flex-col transition-all duration-300 hover:border-white/20 hover:-translate-y-1"
                     >
                         <div className="mb-6">
                             <div className="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center mb-4">
@@ -281,7 +281,7 @@ export default function PricingPage() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: 0.3 }}
-                        className="relative rounded-2xl border-2 border-pink-500/40 bg-gradient-to-b from-pink-500/5 via-card/80 to-card/50 backdrop-blur-sm p-6 flex flex-col shadow-[0_0_30px_rgba(236,72,153,0.1)]"
+                        className="relative rounded-2xl border-2 border-pink-500/40 bg-slate-900/40 backdrop-blur-md p-6 flex flex-col shadow-[0_0_30px_rgba(236,72,153,0.1)] transition-all duration-300 hover:-translate-y-1 hover:border-pink-500/60 hover:shadow-[0_0_40px_rgba(236,72,153,0.2)]"
                     >
                         {/* Popular badge */}
                         <div className="absolute -top-3 left-1/2 -translate-x-1/2">
@@ -386,11 +386,11 @@ export default function PricingPage() {
                     transition={{ duration: 0.5, delay: 0.4 }}
                     className="max-w-4xl mx-auto mb-20"
                 >
-                    <h2 className="font-display text-2xl md:text-3xl font-bold text-center mb-8">
+                    <h2 className="font-display text-2xl md:text-3xl font-bold text-center text-white drop-shadow-sm mb-8">
                         Full Feature Comparison
                     </h2>
 
-                    <div className="rounded-2xl border border-border/60 overflow-hidden bg-card/30 backdrop-blur-sm">
+                    <div className="rounded-2xl border border-white/10 overflow-hidden bg-slate-900/40 backdrop-blur-md">
                         <div className="overflow-x-auto">
                             <table className="w-full text-left border-collapse">
                                 <thead>

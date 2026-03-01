@@ -26,10 +26,10 @@ export default function ThisOrThatPage() {
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
                     <div className="lg:col-span-2 space-y-12">
                         <section>
-                            <h2 className="text-2xl font-bold text-foreground mb-4">
+                            <h2 className="text-2xl font-bold text-white drop-shadow-sm mb-4">
                                 The Fast-Paced Compatibility Game
                             </h2>
-                            <p className="text-base text-muted-foreground leading-relaxed">
+                            <p className="text-base text-slate-400 leading-relaxed">
                                 **This or That** is the classic rapid-fire game reimagined for couples online.
                                 You're presented with two options—like "Coffee or Tea", "Beach or Mountains", "Cuddling or Making Out"—and
                                 you have just 10 seconds to lock in your answer.
@@ -37,18 +37,18 @@ export default function ThisOrThatPage() {
                         </section>
 
                         <section className="grid md:grid-cols-2 gap-8">
-                            <div className="bg-card p-6 rounded-2xl border border-border/50">
-                                <h3 className="text-xl font-bold text-foreground mb-4">How to Play</h3>
-                                <ul className="space-y-3 list-disc list-inside text-muted-foreground text-sm">
-                                    <li><strong>Step 1:</strong> Start a game and invite your partner.</li>
-                                    <li><strong>Step 2:</strong> A "This or That" question appears.</li>
-                                    <li><strong>Step 3:</strong> You have 10 seconds to tap your choice.</li>
-                                    <li><strong>Step 4:</strong> Matches earn points!</li>
+                            <div className="bg-slate-900/40 backdrop-blur-md border border-white/10 p-6 rounded-2xl">
+                                <h3 className="text-xl font-bold text-white mb-4">How to Play</h3>
+                                <ul className="space-y-3 list-disc list-inside text-slate-400 text-sm">
+                                    <li><strong className="text-white">Step 1:</strong> Start a game and invite your partner.</li>
+                                    <li><strong className="text-white">Step 2:</strong> A "This or That" question appears.</li>
+                                    <li><strong className="text-white">Step 3:</strong> You have 10 seconds to tap your choice.</li>
+                                    <li><strong className="text-white">Step 4:</strong> Matches earn points!</li>
                                 </ul>
                             </div>
-                            <div className="bg-card p-6 rounded-2xl border border-border/50">
-                                <h3 className="text-xl font-bold text-foreground mb-4">Why It's Fun</h3>
-                                <p className="text-muted-foreground text-sm">
+                            <div className="bg-slate-900/40 backdrop-blur-md border border-white/10 p-6 rounded-2xl">
+                                <h3 className="text-xl font-bold text-white mb-4">Why It's Fun</h3>
+                                <p className="text-slate-400 text-sm">
                                     It's simple, fast, and surprisingly revealing. It forces you to go with your gut instinct
                                     and sparks fun debates about your choices afterward. Perfect for killing time or LDR date nights.
                                 </p>

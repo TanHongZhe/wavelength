@@ -86,7 +86,7 @@ export default function AboutPage() {
                     {/* Header */}
                     <header className="text-center mb-16">
                         <h1 className="font-display text-4xl md:text-5xl font-bold text-primary mb-6">
-                            About Wavelength Game Online
+                            About the Wavelength Game
                         </h1>
                         <p className="text-xl text-muted-foreground leading-relaxed">
                             A digital tribute to the award-winning party game.
@@ -122,32 +122,32 @@ export default function AboutPage() {
                             href="https://github.com/TanHongZhe/wavelength-vibe"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center p-6 bg-card rounded-2xl border border-border hover:border-primary/50 transition-colors group"
+                            className="flex items-center p-6 bg-slate-900/40 backdrop-blur-md border border-white/10 rounded-2xl transition-all hover:-translate-y-1 hover:border-white/20 group hover:shadow-[0_0_20px_rgba(255,255,255,0.05)]"
                         >
                             <div className="w-12 h-12 bg-secondary rounded-full flex items-center justify-center mr-4 group-hover:scale-110 transition-transform">
-                                <Github className="w-6 h-6 text-primary" aria-hidden="true" />
+                                <Github className="w-6 h-6 text-white" aria-hidden="true" />
                             </div>
                             <div>
-                                <h3 className="font-semibold text-primary">GitHub</h3>
-                                <p className="text-sm text-muted-foreground">View the source code</p>
+                                <h3 className="font-bold text-white">GitHub</h3>
+                                <p className="text-sm text-slate-400">View the source code</p>
                             </div>
-                            <ArrowRight className="ml-auto w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" aria-hidden="true" />
+                            <ArrowRight className="ml-auto w-5 h-5 text-slate-400 group-hover:text-primary transition-colors" aria-hidden="true" />
                         </a>
 
                         <a
                             href="https://www.wavelength.zone/"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center p-6 bg-card rounded-2xl border border-border hover:border-primary/50 transition-colors group"
+                            className="flex items-center p-6 bg-slate-900/40 backdrop-blur-md border border-white/10 rounded-2xl transition-all hover:-translate-y-1 hover:border-white/20 group hover:shadow-[0_0_20px_rgba(255,255,255,0.05)]"
                         >
                             <div className="w-12 h-12 bg-secondary rounded-full flex items-center justify-center mr-4 group-hover:scale-110 transition-transform">
-                                <Heart className="w-6 h-6 text-primary" aria-hidden="true" />
+                                <Heart className="w-6 h-6 text-rose-400" aria-hidden="true" />
                             </div>
                             <div>
-                                <h3 className="font-semibold text-primary">Original Game</h3>
-                                <p className="text-sm text-muted-foreground">Support the creators</p>
+                                <h3 className="font-bold text-white">Original Game</h3>
+                                <p className="text-sm text-slate-400">Support the creators</p>
                             </div>
-                            <ArrowRight className="ml-auto w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" aria-hidden="true" />
+                            <ArrowRight className="ml-auto w-5 h-5 text-slate-400 group-hover:text-primary transition-colors" aria-hidden="true" />
                         </a>
                     </nav>
 

@@ -129,26 +129,26 @@ export default function RelationshipGamesPage() {
             {/* Relationship-focused content section */}
             <section className="max-w-4xl mx-auto px-4 py-12 space-y-8">
                 <div className="text-center">
-                    <h2 className="text-2xl font-semibold mb-4">Why Couples Love the Wavelength Game</h2>
+                    <h2 className="text-2xl font-bold mb-4 text-white drop-shadow-sm">Why Couples Love the Wavelength Game</h2>
                     <div className="grid md:grid-cols-3 gap-6 text-left">
-                        <div className="bg-card/50 backdrop-blur-sm border border-border/50 rounded-xl p-6">
+                        <div className="bg-slate-900/40 backdrop-blur-md border border-white/10 rounded-2xl p-6 transition-all duration-300 ease-out hover:-translate-y-1 hover:border-white/20">
                             <div className="text-3xl mb-3">🧠</div>
-                            <h3 className="font-semibold mb-2">Understand Each Other</h3>
-                            <p className="text-sm text-muted-foreground">
+                            <h3 className="font-bold mb-2 text-white">Understand Each Other</h3>
+                            <p className="text-sm text-slate-400">
                                 Discover how your partner thinks. Each round reveals whether you&apos;re truly on the same wavelength.
                             </p>
                         </div>
-                        <div className="bg-card/50 backdrop-blur-sm border border-border/50 rounded-xl p-6">
+                        <div className="bg-slate-900/40 backdrop-blur-md border border-white/10 rounded-2xl p-6 transition-all duration-300 ease-out hover:-translate-y-1 hover:border-white/20">
                             <div className="text-3xl mb-3">💬</div>
-                            <h3 className="font-semibold mb-2">Spark Conversations</h3>
-                            <p className="text-sm text-muted-foreground">
+                            <h3 className="font-bold mb-2 text-white">Spark Conversations</h3>
+                            <p className="text-sm text-slate-400">
                                 Every spectrum creates natural discussion. &quot;Why did you think that was more hot than cold?&quot;
                             </p>
                         </div>
-                        <div className="bg-card/50 backdrop-blur-sm border border-border/50 rounded-xl p-6">
+                        <div className="bg-slate-900/40 backdrop-blur-md border border-white/10 rounded-2xl p-6 transition-all duration-300 ease-out hover:-translate-y-1 hover:border-white/20">
                             <div className="text-3xl mb-3">😂</div>
-                            <h3 className="font-semibold mb-2">Laugh Together</h3>
-                            <p className="text-sm text-muted-foreground">
+                            <h3 className="font-bold mb-2 text-white">Laugh Together</h3>
+                            <p className="text-sm text-slate-400">
                                 The surprising mismatches are often the funniest moments. Build memories through playful competition.
                             </p>
                         </div>
@@ -156,9 +156,9 @@ export default function RelationshipGamesPage() {
                 </div>
 
                 {/* Benefits Section */}
-                <div className="bg-gradient-to-r from-rose-500/5 via-pink-500/5 to-rose-500/5 rounded-2xl p-8 text-center">
-                    <h2 className="text-2xl font-semibold mb-4">💝 Strengthen Your Relationship</h2>
-                    <p className="text-muted-foreground max-w-xl mx-auto mb-6">
+                <div className="bg-slate-900/40 backdrop-blur-md border border-white/10 rounded-2xl p-8 text-center transition-all duration-300 hover:border-rose-500/30 hover:shadow-[0_0_30px_rgba(244,63,94,0.1)]">
+                    <h2 className="text-2xl font-bold mb-4 text-white drop-shadow-sm">💝 Strengthen Your Relationship</h2>
+                    <p className="text-slate-400 max-w-xl mx-auto mb-6">
                         Research shows that couples who play together stay together. The Wavelength Game is perfect for:
                     </p>
                     <ul className="text-left max-w-md mx-auto space-y-2 text-muted-foreground">
@@ -187,8 +187,8 @@ export default function RelationshipGamesPage() {
 
                 {/* How to play section */}
                 <div className="text-center pt-8">
-                    <h2 className="text-2xl font-semibold mb-4">How to Play with Your Partner</h2>
-                    <ol className="text-left max-w-xl mx-auto space-y-3 text-muted-foreground">
+                    <h2 className="text-2xl font-bold mb-4 text-white drop-shadow-sm">How to Play with Your Partner</h2>
+                    <ol className="text-left max-w-xl mx-auto space-y-3 text-slate-400">
                         <li className="flex gap-3">
                             <span className="font-bold text-rose-400">1.</span>
                             <span>Create a game room and share the code with your partner</span>

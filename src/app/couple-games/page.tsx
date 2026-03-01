@@ -140,26 +140,26 @@ export default function CoupleGamesPage() {
             {/* Couple games content section */}
             <section className="max-w-4xl mx-auto px-4 py-12 space-y-8">
                 <div className="text-center">
-                    <h2 className="text-2xl font-semibold mb-4">Our Couple Games Collection</h2>
+                    <h2 className="text-2xl font-bold mb-4 text-white drop-shadow-sm">Our Couple Games Collection</h2>
                     <div className="grid md:grid-cols-3 gap-6 text-left">
-                        <div className="bg-card/50 backdrop-blur-sm border border-border/50 rounded-xl p-6">
+                        <div className="bg-slate-900/40 backdrop-blur-md border border-white/10 rounded-2xl p-6 transition-all duration-300 ease-out hover:-translate-y-1 hover:border-white/20">
                             <div className="text-3xl mb-3">🌊</div>
-                            <h3 className="font-semibold mb-2">The Wavelength Game</h3>
-                            <p className="text-sm text-muted-foreground">
+                            <h3 className="font-bold mb-2 text-white">The Wavelength Game</h3>
+                            <p className="text-sm text-slate-400">
                                 The telepathic game! Give clues and guess on the dial. Are you on the same wavelength?
                             </p>
                         </div>
-                        <div className="bg-card/50 backdrop-blur-sm border border-border/50 rounded-xl p-6">
+                        <div className="bg-slate-900/40 backdrop-blur-md border border-white/10 rounded-2xl p-6 transition-all duration-300 ease-out hover:-translate-y-1 hover:border-white/20">
                             <div className="text-3xl mb-3">⚡</div>
-                            <h3 className="font-semibold mb-2">Rapid Fire: This or That</h3>
-                            <p className="text-sm text-muted-foreground">
+                            <h3 className="font-bold mb-2 text-white">Rapid Fire: This or That</h3>
+                            <p className="text-sm text-slate-400">
                                 10 seconds to choose! Pick between two options and see if you match with your partner.
                             </p>
                         </div>
-                        <div className="bg-card/50 backdrop-blur-sm border border-border/50 rounded-xl p-6">
+                        <div className="bg-slate-900/40 backdrop-blur-md border border-white/10 rounded-2xl p-6 transition-all duration-300 ease-out hover:-translate-y-1 hover:border-white/20">
                             <div className="text-3xl mb-3">🚩</div>
-                            <h3 className="font-semibold mb-2">Red Flag, Green Flag</h3>
-                            <p className="text-sm text-muted-foreground">
+                            <h3 className="font-bold mb-2 text-white">Red Flag, Green Flag</h3>
+                            <p className="text-sm text-slate-400">
                                 Rate dating behaviors! Is it a red flag, green flag, or beige flag? Find out if you agree!
                             </p>
                         </div>
@@ -168,34 +168,34 @@ export default function CoupleGamesPage() {
 
                 {/* Why couples love it section */}
                 <div className="text-center pt-8">
-                    <h2 className="text-2xl font-semibold mb-4">Why Couples Love Our Games</h2>
-                    <div className="grid md:grid-cols-2 gap-6 text-left max-w-2xl mx-auto">
+                    <h2 className="text-2xl font-bold mb-4 text-white drop-shadow-sm">Why Couples Love Our Games</h2>
+                    <div className="grid md:grid-cols-2 gap-6 text-left max-w-2xl mx-auto bg-slate-900/40 backdrop-blur-md border border-white/10 rounded-2xl p-8">
                         <div className="flex gap-4">
                             <span className="text-2xl">🆓</span>
                             <div>
-                                <h3 className="font-semibold">Free to Play</h3>
-                                <p className="text-sm text-muted-foreground">No downloads required, play instantly in browser.</p>
+                                <h3 className="font-bold text-white">Free to Play</h3>
+                                <p className="text-sm text-slate-400">No downloads required, play instantly in browser.</p>
                             </div>
                         </div>
                         <div className="flex gap-4">
                             <span className="text-2xl">🌍</span>
                             <div>
-                                <h3 className="font-semibold">Play Anywhere</h3>
-                                <p className="text-sm text-muted-foreground">Perfect for long distance couples on any device.</p>
+                                <h3 className="font-bold text-white">Play Anywhere</h3>
+                                <p className="text-sm text-slate-400">Perfect for long distance couples on any device.</p>
                             </div>
                         </div>
                         <div className="flex gap-4">
                             <span className="text-2xl">⚡</span>
                             <div>
-                                <h3 className="font-semibold">Quick & Fun</h3>
-                                <p className="text-sm text-muted-foreground">Games take 5-15 minutes. Perfect for a quick date!</p>
+                                <h3 className="font-bold text-white">Quick & Fun</h3>
+                                <p className="text-sm text-slate-400">Games take 5-15 minutes. Perfect for a quick date!</p>
                             </div>
                         </div>
                         <div className="flex gap-4">
                             <span className="text-2xl">💬</span>
                             <div>
-                                <h3 className="font-semibold">Spark Conversations</h3>
-                                <p className="text-sm text-muted-foreground">Each game creates natural talking points and debates.</p>
+                                <h3 className="font-bold text-white">Spark Conversations</h3>
+                                <p className="text-sm text-slate-400">Each game creates natural talking points and debates.</p>
                             </div>
                         </div>
                     </div>

@@ -149,30 +149,30 @@ export default function RulesPage() {
                     {/* Core Concept */}
                     <section aria-labelledby="core-concepts" className="grid md:grid-cols-3 gap-8 mb-16">
                         <h2 id="core-concepts" className="sr-only">Core Game Concepts</h2>
-                        <div className="game-card text-center p-8">
+                        <div className="bg-slate-900/40 backdrop-blur-md border border-white/10 rounded-2xl text-center p-8 transition-all hover:border-white/20">
                             <div className="w-16 h-16 bg-wedge-teal/20 text-wedge-teal rounded-2xl flex items-center justify-center mx-auto mb-4">
                                 <Brain className="w-8 h-8" aria-hidden="true" />
                             </div>
-                            <h3 className="font-display text-xl font-semibold mb-2">Read Minds</h3>
-                            <p className="text-muted-foreground">
+                            <h3 className="font-display text-xl font-bold mb-2 text-white">Read Minds</h3>
+                            <p className="text-slate-400">
                                 One player is the Psychic. They know where the target is.
                             </p>
                         </div>
-                        <div className="game-card text-center p-8">
+                        <div className="bg-slate-900/40 backdrop-blur-md border border-white/10 rounded-2xl text-center p-8 transition-all hover:border-white/20">
                             <div className="w-16 h-16 bg-wedge-orange/20 text-wedge-orange rounded-2xl flex items-center justify-center mx-auto mb-4">
                                 <HelpCircle className="w-8 h-8" aria-hidden="true" />
                             </div>
-                            <h3 className="font-display text-xl font-semibold mb-2">Give a Clue</h3>
-                            <p className="text-muted-foreground">
+                            <h3 className="font-display text-xl font-bold mb-2 text-white">Give a Clue</h3>
+                            <p className="text-slate-400">
                                 The Psychic gives a clue on a spectrum between two concepts.
                             </p>
                         </div>
-                        <div className="game-card text-center p-8">
+                        <div className="bg-slate-900/40 backdrop-blur-md border border-white/10 rounded-2xl text-center p-8 transition-all hover:border-white/20">
                             <div className="w-16 h-16 bg-wedge-yellow/20 text-wedge-yellow rounded-2xl flex items-center justify-center mx-auto mb-4">
                                 <Target className="w-8 h-8" aria-hidden="true" />
                             </div>
-                            <h3 className="font-display text-xl font-semibold mb-2">Find the Spot</h3>
-                            <p className="text-muted-foreground">
+                            <h3 className="font-display text-xl font-bold mb-2 text-white">Find the Spot</h3>
+                            <p className="text-slate-400">
                                 The Guesser moves the dial to where they think the target is.
                             </p>
                         </div>
@@ -268,39 +268,39 @@ export default function RulesPage() {
                             Frequently Asked Questions
                         </h2>
                         <div className="space-y-6">
-                            <details className="game-card p-6 group" open>
-                                <summary className="font-semibold text-lg cursor-pointer list-none flex justify-between items-center">
+                            <details className="bg-slate-900/40 backdrop-blur-md border border-white/10 rounded-2xl p-6 group transition-all hover:border-white/20" open>
+                                <summary className="font-bold text-lg text-white cursor-pointer list-none flex justify-between items-center">
                                     How many players can play the Wavelength Game?
                                     <span className="text-primary group-open:rotate-180 transition-transform">▼</span>
                                 </summary>
-                                <p className="mt-4 text-muted-foreground">
+                                <p className="mt-4 text-slate-400">
                                     The Wavelength Game can be played with 2 to 20 players. Classic mode is designed for 2 players, while Party mode supports 2-6 players per team.
                                 </p>
                             </details>
-                            <details className="game-card p-6 group">
-                                <summary className="font-semibold text-lg cursor-pointer list-none flex justify-between items-center">
+                            <details className="bg-slate-900/40 backdrop-blur-md border border-white/10 rounded-2xl p-6 group transition-all hover:border-white/20">
+                                <summary className="font-bold text-lg text-white cursor-pointer list-none flex justify-between items-center">
                                     How does scoring work in Wavelength?
                                     <span className="text-primary group-open:rotate-180 transition-transform">▼</span>
                                 </summary>
-                                <p className="mt-4 text-muted-foreground">
+                                <p className="mt-4 text-slate-400">
                                     Points are awarded based on how close your guess is to the target: 4 points for a bullseye (dead center), 3 points for a near miss, 2 points for a close call, and 0 points if you miss the target zone entirely.
                                 </p>
                             </details>
-                            <details className="game-card p-6 group">
-                                <summary className="font-semibold text-lg cursor-pointer list-none flex justify-between items-center">
+                            <details className="bg-slate-900/40 backdrop-blur-md border border-white/10 rounded-2xl p-6 group transition-all hover:border-white/20">
+                                <summary className="font-bold text-lg text-white cursor-pointer list-none flex justify-between items-center">
                                     What is the role of the Psychic?
                                     <span className="text-primary group-open:rotate-180 transition-transform">▼</span>
                                 </summary>
-                                <p className="mt-4 text-muted-foreground">
+                                <p className="mt-4 text-slate-400">
                                     The Psychic sees the hidden target location on the dial and must give a one-word clue to help their teammates guess where it is on the spectrum between two opposing concepts.
                                 </p>
                             </details>
-                            <details className="game-card p-6 group">
-                                <summary className="font-semibold text-lg cursor-pointer list-none flex justify-between items-center">
+                            <details className="bg-slate-900/40 backdrop-blur-md border border-white/10 rounded-2xl p-6 group transition-all hover:border-white/20">
+                                <summary className="font-bold text-lg text-white cursor-pointer list-none flex justify-between items-center">
                                     Is the Wavelength Game free to play online?
                                     <span className="text-primary group-open:rotate-180 transition-transform">▼</span>
                                 </summary>
-                                <p className="mt-4 text-muted-foreground">
+                                <p className="mt-4 text-slate-400">
                                     Yes! The Wavelength Game is completely free to play online in your browser. No download or registration required - just share a link with friends and start playing.
                                 </p>
                             </details>

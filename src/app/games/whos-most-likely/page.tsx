@@ -26,44 +26,44 @@ export default function WhosMostLikelyPage() {
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
                     <div className="lg:col-span-2 space-y-12">
                         <section>
-                            <h2 className="text-2xl font-bold text-foreground mb-4">
+                            <h2 className="text-2xl font-bold text-white drop-shadow-sm mb-4">
                                 The Classic 'Most Likely To' Game
                             </h2>
-                            <p className="text-base text-muted-foreground leading-relaxed">
+                            <p className="text-base text-slate-400 leading-relaxed">
                                 It's the game that reveals what you *really* think about each other.
                                 **Who's Most Likely** is a fast-paced game where you have just 10 seconds to decide which player fits the description best.
                             </p>
                         </section>
 
                         <section className="grid md:grid-cols-2 gap-8">
-                            <div className="bg-card p-6 rounded-2xl border border-border/50">
-                                <h3 className="text-xl font-bold text-foreground mb-4">How to Play</h3>
-                                <ul className="space-y-3 list-disc list-inside text-muted-foreground text-sm">
-                                    <li><strong>Step 1:</strong> Create a room and invite a friend or partner.</li>
-                                    <li><strong>Step 2:</strong> A question appears (e.g., "Who is most likely to forget their anniversary?").</li>
-                                    <li><strong>Step 3:</strong> You have 10 seconds to vote for Player 1 or Player 2.</li>
-                                    <li><strong>Step 4:</strong> Matches score points!</li>
+                            <div className="bg-slate-900/40 backdrop-blur-md border border-white/10 p-6 rounded-2xl">
+                                <h3 className="text-xl font-bold text-white mb-4">How to Play</h3>
+                                <ul className="space-y-3 list-disc list-inside text-slate-400 text-sm">
+                                    <li><strong className="text-white">Step 1:</strong> Create a room and invite a friend or partner.</li>
+                                    <li><strong className="text-white">Step 2:</strong> A question appears (e.g., "Who is most likely to forget their anniversary?").</li>
+                                    <li><strong className="text-white">Step 3:</strong> You have 10 seconds to vote for Player 1 or Player 2.</li>
+                                    <li><strong className="text-white">Step 4:</strong> Matches score points!</li>
                                 </ul>
                             </div>
-                            <div className="bg-card p-6 rounded-2xl border border-border/50">
-                                <h3 className="text-xl font-bold text-foreground mb-4">Decks Available</h3>
-                                <ul className="mt-2 text-muted-foreground space-y-3 text-sm">
+                            <div className="bg-slate-900/40 backdrop-blur-md border border-white/10 p-6 rounded-2xl">
+                                <h3 className="text-xl font-bold text-white mb-4">Decks Available</h3>
+                                <ul className="mt-2 text-slate-400 space-y-3 text-sm">
                                     <li>
-                                        😇 <strong>Normal Mode:</strong> Fun, lighthearted questions safe for everyone.
+                                        😇 <strong className="text-white">Normal Mode:</strong> Fun, lighthearted questions safe for everyone.
                                     </li>
                                     <li>
-                                        😬 <strong>Awkward Mode:</strong> Questions designed to stir the pot and create funny tension.
+                                        😬 <strong className="text-white">Awkward Mode:</strong> Questions designed to stir the pot and create funny tension.
                                     </li>
                                     <li>
-                                        😈 <strong>Lust Mode:</strong> Strictly for couples. 18+ questions to heat things up.
+                                        😈 <strong className="text-white">Lust Mode:</strong> Strictly for couples. 18+ questions to heat things up.
                                     </li>
                                 </ul>
                             </div>
                         </section>
 
                         <section>
-                            <h2 className="text-2xl font-bold text-foreground mb-6">Why Play Online?</h2>
-                            <p className="text-muted-foreground mb-4 text-sm">
+                            <h2 className="text-2xl font-bold text-white drop-shadow-sm mb-6">Why Play Online?</h2>
+                            <p className="text-slate-400 mb-4 text-sm">
                                 Wavelength makes it easy to play "Who's Most Likely" even if you aren't in the same room.
                                 Whether you're in a long-distance relationship or just hanging out on Discord, our real-time sync makes it feel like you're together.
                             </p>

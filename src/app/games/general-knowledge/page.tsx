@@ -26,10 +26,10 @@ export default function GeneralKnowledgePage() {
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
                     <div className="lg:col-span-2 space-y-12">
                         <section>
-                            <h2 className="text-2xl font-bold text-foreground mb-4">
+                            <h2 className="text-2xl font-bold text-white drop-shadow-sm mb-4">
                                 The Ultimate General Knowledge Challenge
                             </h2>
-                            <p className="text-base text-muted-foreground leading-relaxed">
+                            <p className="text-base text-slate-400 leading-relaxed">
                                 Put your random knowledge to the test with our **General Knowledge Quiz**.
                                 From pop culture and history to science and literature, cover all bases in this fast-paced
                                 showdown. You have just 10 seconds per question—no time for Googling!
@@ -37,18 +37,18 @@ export default function GeneralKnowledgePage() {
                         </section>
 
                         <section className="grid md:grid-cols-2 gap-8">
-                            <div className="bg-card p-6 rounded-2xl border border-border/50">
-                                <h3 className="text-xl font-bold text-foreground mb-4">How It Works</h3>
-                                <ul className="space-y-3 list-disc list-inside text-muted-foreground text-sm">
-                                    <li><strong>Pick a Topic:</strong> Choose from 8 decks like History, Science, or Random.</li>
-                                    <li><strong>Beat the Clock:</strong> You have 10 seconds to answer each question.</li>
-                                    <li><strong>Score Points:</strong> Get it right to earn points. First to the top wins!</li>
-                                    <li><strong>Multiplayer:</strong> Up to 6 players can join a room.</li>
+                            <div className="bg-slate-900/40 backdrop-blur-md border border-white/10 p-6 rounded-2xl">
+                                <h3 className="text-xl font-bold text-white mb-4">How It Works</h3>
+                                <ul className="space-y-3 list-disc list-inside text-slate-400 text-sm">
+                                    <li><strong className="text-white">Pick a Topic:</strong> Choose from 8 decks like History, Science, or Random.</li>
+                                    <li><strong className="text-white">Beat the Clock:</strong> You have 10 seconds to answer each question.</li>
+                                    <li><strong className="text-white">Score Points:</strong> Get it right to earn points. First to the top wins!</li>
+                                    <li><strong className="text-white">Multiplayer:</strong> Up to 6 players can join a room.</li>
                                 </ul>
                             </div>
-                            <div className="bg-card p-6 rounded-2xl border border-border/50">
-                                <h3 className="text-xl font-bold text-foreground mb-4">Why Play?</h3>
-                                <p className="text-muted-foreground mb-4 text-sm">
+                            <div className="bg-slate-900/40 backdrop-blur-md border border-white/10 p-6 rounded-2xl">
+                                <h3 className="text-xl font-bold text-white mb-4">Why Play?</h3>
+                                <p className="text-slate-400 mb-4 text-sm">
                                     Whether you're hosting a game night, killing time with friends, or just want to prove you're the
                                     smartest person in the room, this quiz delivers instant fun and friendly competition.
                                 </p>
@@ -56,8 +56,8 @@ export default function GeneralKnowledgePage() {
                         </section>
 
                         <section>
-                            <h2 className="text-2xl font-bold text-foreground mb-6">Topics Included</h2>
-                            <ul className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-muted-foreground">
+                            <h2 className="text-2xl font-bold text-white drop-shadow-sm mb-6">Topics Included</h2>
+                            <ul className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-slate-400">
                                 <li className="flex items-center gap-2">🧠 Classic</li>
                                 <li className="flex items-center gap-2">🎬 Pop Culture</li>
                                 <li className="flex items-center gap-2">📜 History</li>

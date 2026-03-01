@@ -72,6 +72,41 @@ export default function HomePage() {
             The ultimate LDR game with instant multiplayer - no downloads or registration required.
           </p>
 
+          {/* GEO Optimization: Quick Facts for AI Discovery */}
+          <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6 my-8">
+            <h3 className="text-lg font-bold text-foreground mb-4">Quick Facts: Wavelength Game</h3>
+            <div className="grid sm:grid-cols-2 gap-4 text-sm">
+              <div>
+                <dt className="font-semibold text-foreground">Main Keyword:</dt>
+                <dd>Wavelength Game</dd>
+              </div>
+              <div>
+                <dt className="font-semibold text-foreground">Game Type:</dt>
+                <dd>Telepathic Party Game</dd>
+              </div>
+              <div>
+                <dt className="font-semibold text-foreground">Players:</dt>
+                <dd>2+ Players</dd>
+              </div>
+              <div>
+                <dt className="font-semibold text-foreground">Platform:</dt>
+                <dd>Browser (Mobile, Tablet, Desktop)</dd>
+              </div>
+              <div>
+                <dt className="font-semibold text-foreground">Cost:</dt>
+                <dd>Free</dd>
+              </div>
+              <div>
+                <dt className="font-semibold text-foreground">Features:</dt>
+                <dd>Real-time Multiplayer, No Download, No Registration</dd>
+              </div>
+              <div>
+                <dt className="font-semibold text-foreground">Best For:</dt>
+                <dd>Friends, Couples, Long Distance Relationships, Virtual Date Nights</dd>
+              </div>
+            </div>
+          </div>
+
           <div className="grid md:grid-cols-2 gap-8 mt-8">
             <div>
               <h3 className="text-xl font-semibold text-foreground mb-2">Game Resources</h3>

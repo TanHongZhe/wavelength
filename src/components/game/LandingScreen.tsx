@@ -194,10 +194,10 @@ export function LandingScreen({ onCreateGame, onJoinGame, isLoading, error }: La
                     <AudioWaveform className="w-10 h-10 text-primary-foreground" />
                 </motion.div>
 
-                <h2 className="font-display text-4xl md:text-5xl font-bold text-primary mb-2">
+                <h2 className="font-display text-5xl md:text-6xl font-bold bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent mb-2 drop-shadow-sm pb-1">
                     Wavelength
                 </h2>
-                <p className="text-lg text-muted-foreground font-medium">
+                <p className="text-lg text-slate-400 font-medium">
                     Are you on the same wavelength?
                 </p>
             </div>
@@ -242,7 +242,7 @@ export function LandingScreen({ onCreateGame, onJoinGame, isLoading, error }: La
                                                 }`}
                                             onClick={() => handleGameClick(game)}
                                         >
-                                            <div className={isHighlight ? "bg-card rounded-[calc(1rem-3px)] p-6 h-full w-full relative" : ""}>
+                                            <div className={isHighlight ? "bg-card rounded-[calc(1rem-3px)] p-6 h-full w-full relative" : "bg-slate-900/40 backdrop-blur-md border border-white/10 rounded-2xl p-6 h-full w-full transition-all duration-300 ease-out hover:border-white/20 hover:shadow-[0_0_20px_rgba(255,255,255,0.05)]"}>
                                                 {isHighlight && (
                                                     <div className="absolute -top-3 -left-2 bg-gradient-to-r from-amber-400 to-orange-500 text-white text-[10px] font-bold px-2 py-1 rounded-full shadow-md flex items-center gap-1 z-10">
                                                         <span>🔥</span> Most Played This Week
@@ -253,11 +253,11 @@ export function LandingScreen({ onCreateGame, onJoinGame, isLoading, error }: La
                                                         <game.icon className={`w-6 h-6 ${game.iconStyle}`} />
                                                     </div>
                                                     <div className="flex-1">
-                                                        <h3 className="font-display text-lg font-semibold text-primary mb-1">
+                                                        <h3 className="font-display text-lg font-bold text-white mb-1 drop-shadow-sm">
                                                             {game.name}
                                                         </h3>
                                                         <div className="flex items-center flex-wrap gap-2 mb-1">
-                                                            <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-secondary text-primary border border-border">
+                                                            <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-secondary/50 text-slate-300 border border-white/10">
                                                                 {game.players}
                                                             </span>
                                                             {game.tags?.map((tag, i) => (
@@ -267,7 +267,7 @@ export function LandingScreen({ onCreateGame, onJoinGame, isLoading, error }: La
                                                                 </span>
                                                             ))}
                                                         </div>
-                                                        <p className="text-sm text-muted-foreground leading-snug">
+                                                        <p className="text-sm text-slate-400 leading-snug">
                                                             {game.description}
                                                         </p>
                                                     </div>
@@ -286,7 +286,7 @@ export function LandingScreen({ onCreateGame, onJoinGame, isLoading, error }: La
                         className="space-y-3"
                     >
                         <motion.button
-                            className="game-card w-full text-left group hover:scale-[1.02] transition-transform"
+                            className="bg-slate-900/40 backdrop-blur-md border border-white/10 rounded-2xl p-6 w-full text-left group hover:-translate-y-1 hover:border-white/20 transition-all duration-300 ease-out hover:shadow-[0_0_20px_rgba(255,255,255,0.05)]"
                             onClick={() => setMode("create")}
                             whileTap={{ scale: 0.98 }}
                         >
@@ -306,7 +306,7 @@ export function LandingScreen({ onCreateGame, onJoinGame, isLoading, error }: La
                         </motion.button>
 
                         <motion.button
-                            className="game-card w-full text-left group hover:scale-[1.02] transition-transform"
+                            className="bg-slate-900/40 backdrop-blur-md border border-white/10 rounded-2xl p-6 w-full text-left group hover:-translate-y-1 hover:border-white/20 transition-all duration-300 ease-out hover:shadow-[0_0_20px_rgba(255,255,255,0.05)]"
                             onClick={() => setMode("join")}
                             whileTap={{ scale: 0.98 }}
                         >
@@ -337,7 +337,7 @@ export function LandingScreen({ onCreateGame, onJoinGame, isLoading, error }: La
                     <motion.div
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        className="game-card"
+                        className="bg-slate-900/40 backdrop-blur-md border border-white/10 rounded-2xl p-6 shadow-xl"
                     >
                         <h3 className="font-display text-xl font-semibold text-primary mb-4">
                             Create New Room
@@ -511,7 +511,7 @@ export function LandingScreen({ onCreateGame, onJoinGame, isLoading, error }: La
                     <motion.div
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        className="game-card"
+                        className="bg-slate-900/40 backdrop-blur-md border border-white/10 rounded-2xl p-6 shadow-xl"
                     >
                         {/* Join Room UI - Almost same as before */}
                         <h3 className="font-display text-xl font-semibold text-primary mb-4">

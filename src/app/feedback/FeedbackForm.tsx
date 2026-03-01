@@ -141,7 +141,7 @@ export default function FeedbackForm() {
                     <div className="inline-flex items-center justify-center w-20 h-20 bg-wedge-teal/20 text-wedge-teal rounded-3xl mb-6">
                         <MessageSquare className="w-10 h-10" />
                     </div>
-                    <h1 className="font-display text-4xl md:text-5xl font-bold text-primary mb-4">
+                    <h1 className="font-display text-4xl md:text-5xl font-bold text-white drop-shadow-sm mb-4">
                         Send Feedback
                     </h1>
                     <p className="text-xl text-muted-foreground max-w-xl mx-auto">
@@ -162,10 +162,10 @@ export default function FeedbackForm() {
                             <div className="inline-flex items-center justify-center w-20 h-20 bg-wedge-teal/20 text-wedge-teal rounded-full mb-6">
                                 <CheckCircle className="w-10 h-10" />
                             </div>
-                            <h2 className="font-display text-3xl font-bold text-primary mb-4">
+                            <h2 className="font-display text-3xl font-bold text-white drop-shadow-sm mb-4">
                                 Thank You! 🎉
                             </h2>
-                            <p className="text-lg text-muted-foreground mb-8 max-w-md mx-auto">
+                            <p className="text-lg text-slate-400 mb-8 max-w-md mx-auto">
                                 Your feedback has been received. We truly appreciate you taking the time to help us improve!
                             </p>
                             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -194,10 +194,10 @@ export default function FeedbackForm() {
                             <div className="inline-flex items-center justify-center w-20 h-20 bg-wedge-orange/20 text-wedge-orange rounded-full mb-6">
                                 <AlertCircle className="w-10 h-10" />
                             </div>
-                            <h2 className="font-display text-3xl font-bold text-primary mb-4">
+                            <h2 className="font-display text-3xl font-bold text-white drop-shadow-sm mb-4">
                                 Slow Down! ⏰
                             </h2>
-                            <p className="text-lg text-muted-foreground mb-8 max-w-md mx-auto">
+                            <p className="text-lg text-slate-400 mb-8 max-w-md mx-auto">
                                 You&apos;ve submitted a lot of feedback recently. Please wait a bit before sending more. We appreciate your enthusiasm!
                             </p>
                             <Link href="/">
@@ -231,9 +231,9 @@ export default function FeedbackForm() {
                             )}
 
                             {/* Category Selection */}
-                            <div className="game-card">
-                                <label className="block font-display font-semibold text-lg mb-4">
-                                    What type of feedback? <span className="text-destructive">*</span>
+                            <div className="bg-slate-900/40 backdrop-blur-md border border-white/10 rounded-2xl p-6">
+                                <label className="block font-display font-semibold text-white drop-shadow-sm text-lg mb-4">
+                                    What type of feedback? <span className="text-pink-500">*</span>
                                 </label>
                                 <div className="grid grid-cols-2 gap-3">
                                     {categoryOptions.map((option) => (
@@ -242,11 +242,11 @@ export default function FeedbackForm() {
                                             type="button"
                                             onClick={() => setFormData({ ...formData, category: option.value })}
                                             className={`
-                                                p-4 rounded-xl border-2 text-left transition-all duration-200
+                                                p-4 rounded-xl border-2 text-left transition-all duration-300
                                                 hover:scale-[1.02] cursor-pointer
                                                 ${formData.category === option.value
-                                                    ? "border-primary bg-primary/5 shadow-md"
-                                                    : "border-border/50 hover:border-primary/50"
+                                                    ? "border-pink-500/50 bg-pink-500/10 shadow-[0_0_20px_rgba(236,72,153,0.1)] text-white"
+                                                    : "border-white/10 hover:border-white/30 text-slate-400"
                                                 }
                                             `}
                                         >
@@ -259,9 +259,9 @@ export default function FeedbackForm() {
                             </div>
 
                             {/* Message */}
-                            <div className="game-card">
-                                <label htmlFor="message" className="block font-display font-semibold text-lg mb-4">
-                                    Your Message <span className="text-destructive">*</span>
+                            <div className="bg-slate-900/40 backdrop-blur-md border border-white/10 rounded-2xl p-6">
+                                <label htmlFor="message" className="block font-display font-semibold text-white drop-shadow-sm text-lg mb-4">
+                                    Your Message <span className="text-pink-500">*</span>
                                 </label>
                                 <div className="relative">
                                     <textarea
@@ -279,18 +279,18 @@ export default function FeedbackForm() {
                                         }
                                         required
                                         rows={5}
-                                        className="w-full px-4 py-3 bg-background border-2 border-border/50 rounded-xl 
-                                            focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20
-                                            resize-none transition-all duration-200 placeholder:text-muted-foreground/60"
+                                        className="w-full px-4 py-3 bg-slate-950/50 border-2 border-white/10 rounded-xl text-white
+                                            focus:outline-none focus:border-pink-500/50 focus:ring-2 focus:ring-pink-500/20
+                                            resize-none transition-all duration-300 placeholder:text-slate-500"
                                     />
-                                    <Sparkles className="absolute right-3 bottom-3 w-5 h-5 text-muted-foreground/30" />
+                                    <Sparkles className="absolute right-3 bottom-3 w-5 h-5 text-slate-500" />
                                 </div>
                             </div>
 
                             {/* Optional: Rating */}
-                            <div className="game-card">
-                                <label className="block font-display font-semibold text-lg mb-4">
-                                    How would you rate Wavelength? <span className="text-muted-foreground text-sm font-normal">(optional)</span>
+                            <div className="bg-slate-900/40 backdrop-blur-md border border-white/10 rounded-2xl p-6">
+                                <label className="block font-display font-semibold text-white drop-shadow-sm text-lg mb-4">
+                                    How would you rate Wavelength? <span className="text-slate-500 text-sm font-normal">(optional)</span>
                                 </label>
                                 <div className="flex gap-2 justify-center">
                                     {[1, 2, 3, 4, 5].map((star) => (
@@ -304,8 +304,8 @@ export default function FeedbackForm() {
                                         >
                                             <Star
                                                 className={`w-10 h-10 transition-colors duration-200 ${(hoveredRating || formData.rating) >= star
-                                                    ? "fill-wedge-yellow text-wedge-yellow"
-                                                    : "text-border"
+                                                    ? "fill-pink-500 text-pink-500"
+                                                    : "text-white/20"
                                                     }`}
                                             />
                                         </button>
@@ -327,11 +327,11 @@ export default function FeedbackForm() {
                             </div>
 
                             {/* Optional: Contact Info */}
-                            <div className="game-card">
-                                <label className="block font-display font-semibold text-lg mb-4">
-                                    Contact Info <span className="text-muted-foreground text-sm font-normal">(optional)</span>
+                            <div className="bg-slate-900/40 backdrop-blur-md border border-white/10 rounded-2xl p-6">
+                                <label className="block font-display font-semibold text-white drop-shadow-sm text-lg mb-4">
+                                    Contact Info <span className="text-slate-500 text-sm font-normal">(optional)</span>
                                 </label>
-                                <p className="text-sm text-muted-foreground mb-4">
+                                <p className="text-sm text-slate-400 mb-4">
                                     Leave your info if you&apos;d like us to follow up!
                                 </p>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -343,9 +343,9 @@ export default function FeedbackForm() {
                                             value={formData.name}
                                             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                                             placeholder="Your name"
-                                            className="w-full px-4 py-3 bg-background border-2 border-border/50 rounded-xl 
-                                                focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20
-                                                transition-all duration-200 placeholder:text-muted-foreground/60"
+                                            className="w-full px-4 py-3 bg-slate-950/50 border-2 border-white/10 rounded-xl text-white
+                                                focus:outline-none focus:border-pink-500/50 focus:ring-2 focus:ring-pink-500/20
+                                                transition-all duration-300 placeholder:text-slate-500"
                                         />
                                     </div>
                                     <div>
@@ -356,9 +356,9 @@ export default function FeedbackForm() {
                                             value={formData.email}
                                             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                             placeholder="your@email.com"
-                                            className="w-full px-4 py-3 bg-background border-2 border-border/50 rounded-xl 
-                                                focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20
-                                                transition-all duration-200 placeholder:text-muted-foreground/60"
+                                            className="w-full px-4 py-3 bg-slate-950/50 border-2 border-white/10 rounded-xl text-white
+                                                focus:outline-none focus:border-pink-500/50 focus:ring-2 focus:ring-pink-500/20
+                                                transition-all duration-300 placeholder:text-slate-500"
                                         />
                                     </div>
                                 </div>

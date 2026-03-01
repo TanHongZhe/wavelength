@@ -160,26 +160,26 @@ export default function ValentinesGamesPage() {
             {/* Valentine's focused content section */}
             <section className="max-w-4xl mx-auto px-4 py-12 space-y-8">
                 <div className="text-center">
-                    <h2 className="text-2xl font-semibold mb-4">Why the Wavelength Game is Perfect for Valentine&apos;s Day</h2>
+                    <h2 className="text-2xl font-bold mb-4 text-white drop-shadow-sm">Why the Wavelength Game is Perfect for Valentine&apos;s Day</h2>
                     <div className="grid md:grid-cols-3 gap-6 text-left">
-                        <div className="bg-gradient-to-br from-pink-500/10 to-red-500/10 backdrop-blur-sm border border-pink-500/20 rounded-xl p-6">
+                        <div className="bg-slate-900/40 backdrop-blur-md border border-white/10 rounded-2xl p-6 transition-all duration-300 ease-out hover:-translate-y-1 hover:border-white/20">
                             <div className="text-3xl mb-3">💑</div>
-                            <h3 className="font-semibold mb-2">Perfect for Date Night</h3>
-                            <p className="text-sm text-muted-foreground">
+                            <h3 className="font-bold mb-2 text-white">Perfect for Date Night</h3>
+                            <p className="text-sm text-slate-400">
                                 Whether you&apos;re celebrating at home or having a virtual date, the Wavelength Game adds fun and laughter to your evening.
                             </p>
                         </div>
-                        <div className="bg-gradient-to-br from-pink-500/10 to-red-500/10 backdrop-blur-sm border border-pink-500/20 rounded-xl p-6">
+                        <div className="bg-slate-900/40 backdrop-blur-md border border-white/10 rounded-2xl p-6 transition-all duration-300 ease-out hover:-translate-y-1 hover:border-white/20">
                             <div className="text-3xl mb-3">💭</div>
-                            <h3 className="font-semibold mb-2">Discover Each Other</h3>
-                            <p className="text-sm text-muted-foreground">
+                            <h3 className="font-bold mb-2 text-white">Discover Each Other</h3>
+                            <p className="text-sm text-slate-400">
                                 Find out how aligned your thoughts are! Each round reveals new insights about how you both see the world.
                             </p>
                         </div>
-                        <div className="bg-gradient-to-br from-pink-500/10 to-red-500/10 backdrop-blur-sm border border-pink-500/20 rounded-xl p-6">
+                        <div className="bg-slate-900/40 backdrop-blur-md border border-white/10 rounded-2xl p-6 transition-all duration-300 ease-out hover:-translate-y-1 hover:border-white/20">
                             <div className="text-3xl mb-3">🎁</div>
-                            <h3 className="font-semibold mb-2">Perfect Digital Gift</h3>
-                            <p className="text-sm text-muted-foreground">
+                            <h3 className="font-bold mb-2 text-white">Perfect Digital Gift</h3>
+                            <p className="text-sm text-slate-400">
                                 Instant access, no downloads, no signup. The perfect activity to share with your special someone.
                             </p>
                         </div>
@@ -187,9 +187,9 @@ export default function ValentinesGamesPage() {
                 </div>
 
                 {/* Valentine's Day Ideas Section */}
-                <div className="bg-gradient-to-r from-pink-500/5 via-red-500/5 to-pink-500/5 rounded-2xl p-8 text-center">
-                    <h2 className="text-2xl font-semibold mb-4">💝 Valentine&apos;s Day 2026 Ideas</h2>
-                    <p className="text-muted-foreground max-w-xl mx-auto mb-6">
+                <div className="bg-slate-900/40 backdrop-blur-md border border-white/10 rounded-2xl p-8 text-center transition-all duration-300 hover:border-pink-500/30 hover:shadow-[0_0_30px_rgba(236,72,153,0.1)]">
+                    <h2 className="text-2xl font-bold mb-4 text-white drop-shadow-sm">💝 Valentine&apos;s Day 2026 Ideas</h2>
+                    <p className="text-slate-400 max-w-xl mx-auto mb-6">
                         Looking for something different this Valentine&apos;s Day? Instead of the usual dinner and movie,
                         try a game night! The Wavelength Game is perfect for:
                     </p>
@@ -219,8 +219,8 @@ export default function ValentinesGamesPage() {
 
                 {/* How to play section */}
                 <div className="text-center pt-8">
-                    <h2 className="text-2xl font-semibold mb-4">How to Play on Valentine&apos;s Day</h2>
-                    <ol className="text-left max-w-xl mx-auto space-y-3 text-muted-foreground">
+                    <h2 className="text-2xl font-bold mb-4 text-white drop-shadow-sm">How to Play on Valentine&apos;s Day</h2>
+                    <ol className="text-left max-w-xl mx-auto space-y-3 text-slate-400">
                         <li className="flex gap-3">
                             <span className="font-bold text-pink-400">1.</span>
                             <span>Create a game room and share the code with your date</span>
