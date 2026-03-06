@@ -44,9 +44,6 @@ export const metadata: Metadata = {
   authors: [{ name: "Wavelength Game", url: "https://wavelength.lol/about/" }],
   creator: "Wavelength Game",
   publisher: "Wavelength Game",
-  alternates: {
-    canonical: "/",
-  },
   openGraph: {
     type: "website",
     locale: "en_US",

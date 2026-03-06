@@ -9,10 +9,14 @@ export const metadata: Metadata = {
     },
     description: "Point fingers in this rapid-fire 'Who is most likely to' game. Perfect for couples, friends, and parties. Play online for free.",
     keywords: ["who's most likely game", "couples most likely to", "fun party games for friends", "online drinking game", "zoom party games"],
+    alternates: {
+        canonical: "https://wavelength.lol/games/whos-most-likely/",
+    },
     openGraph: {
         title: "Who's Most Likely? - The Couples & Friends Party Game",
         description: "Point fingers and find out what your friends really think of you!",
         type: "website",
+        url: "https://wavelength.lol/games/whos-most-likely/",
     },
 };
 

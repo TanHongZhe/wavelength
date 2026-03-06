@@ -9,10 +9,14 @@ export const metadata: Metadata = {
     },
     description: "Use Red, Green, and Beige flags to rate dating behaviors. The viral TikTok trend made into a multiplayer game. Play now with friends or partners.",
     keywords: ["red flag quiz", "green flag game", "beige flags", "dating quiz game", "relationship red flags", "viral tiktok game", "online multiplayer game"],
+    alternates: {
+        canonical: "https://wavelength.lol/games/flag-game/",
+    },
     openGraph: {
         title: "Red Flag or Green Flag Game - Rate Dating Scenarios",
         description: "Is owning a snake a Red Flag or Green Flag? You decide with friends!",
         type: "website",
+        url: "https://wavelength.lol/games/flag-game/",
     },
 };
 

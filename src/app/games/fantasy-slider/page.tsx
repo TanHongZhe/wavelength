@@ -9,10 +9,14 @@ export const metadata: Metadata = {
     },
     description: "Rate your spicy fantasies from 0-10 and see if you match! The perfect lust mini-game for couples to explore desires. Play for free online.",
     keywords: ["lust mini games", "spicy couple games", "online couples games", "fantasy rating game", "18+ couple games", "relationship games"],
+    alternates: {
+        canonical: "https://wavelength.lol/games/fantasy-slider/",
+    },
     openGraph: {
         title: "Fantasy Slider: The Ultimate Couples Lust & Romance Game",
         description: "How well do your fantasies align? Rate them and find out!",
         type: "website",
+        url: "https://wavelength.lol/games/fantasy-slider/",
     },
 };
 

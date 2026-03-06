@@ -9,10 +9,14 @@ export const metadata: Metadata = {
     },
     description: "The ultimate 'This or That' rapid fire game for couples. Choose between two options in 10 seconds and see if you match!",
     keywords: ["this or that game", "couples rapid fire", "relationship quiz", "online date night game", "compatibility test"],
+    alternates: {
+        canonical: "https://wavelength.lol/games/this-or-that/",
+    },
     openGraph: {
         title: "This or That: Rapid Fire Couples Game",
         description: "10 seconds. 2 options. Can you match your partner's choice?",
         type: "website",
+        url: "https://wavelength.lol/games/this-or-that/",
     },
 };
 
