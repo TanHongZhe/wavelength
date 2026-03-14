@@ -94,7 +94,7 @@ const GAMES = [
     },
     {
         id: "flag-game",
-        name: "Red, Green, Beige",
+        name: "Red Flag Game",
         description: "Rate dating behaviors as red, green, or beige flags.",
         players: "2 players",
         icon: Flag,
@@ -111,7 +111,7 @@ const GAMES = [
     {
         id: "general-knowledge",
         name: "General Knowledge",
-        description: "Test your smarts across 8 topics. 10s to answer!",
+        description: "Test your smarts across 15 topics. 10s to answer!",
         players: "2-6 players",
         icon: GraduationCap,
         style: "bg-gradient-to-br from-blue-400/20 to-indigo-400/20 text-indigo-500 group-hover:from-blue-400 group-hover:to-indigo-400 group-hover:text-white",

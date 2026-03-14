@@ -194,7 +194,7 @@ export function MiniGamesModal({ isOpen, onClose }: MiniGamesModalProps) {
                                             🎓 Rapid Fire: General Knowledge Quiz
                                         </h3>
                                         <p className="text-xs md:text-sm text-muted-foreground mb-2">
-                                            10 seconds to answer! Test your smarts across 8 topics.
+                                            10 seconds to answer! Test your smarts across 15 topics.
                                         </p>
                                         <div className="flex gap-2 flex-wrap">
                                             <span className="px-2 py-1 rounded-md bg-secondary text-xs font-medium">

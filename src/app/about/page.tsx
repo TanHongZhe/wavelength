@@ -113,6 +113,13 @@ export default function AboutPage() {
                             No app downloads tailored for any specific platform—just share a link and play in your browser.
                         </p>
 
+                        <h2 className="font-display font-bold text-primary mt-12 mb-6 text-2xl">More Than Just The Basic Game</h2>
+                        <p>
+                            We have taken the core concept of the <strong>Wavelength Game</strong> and expanded it into the ultimate online party experience.
+                            Not only can you play the classic Wavelength game online, but we have also introduced specialized decks for every occasion.
+                            Whether you need hilarious General Knowledge and Pop Culture questions for your friend group, or you're looking for our spicy 18+ Lust mode designed perfectly to spice up date nights for couples—the Wavelength game online has something for everyone.
+                        </p>
+
 
                     </div>
 

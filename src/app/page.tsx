@@ -65,12 +65,25 @@ export default function HomePage() {
       <section className="container mx-auto px-4 py-12 text-muted-foreground/80 max-w-4xl space-y-8">
         <div className="prose prose-invert max-w-none">
           <h2 className="text-2xl font-bold text-foreground mb-4">About the Wavelength Game</h2>
-          <p className="mb-4">
-            The Wavelength game online is the best free telepathic party game to play in your browser.
-            Perfect for long distance relationships, couples bonding, and connecting with friends anywhere.
-            Challenge your partner or friends to guess where a hidden target lies on a spectrum.
+          <p className="mb-4 text-lg">
+            The <strong>Wavelength game online</strong> is the best free telepathic party game to play natively in your browser.
+            Perfect for long-distance relationships, couples bonding, and connecting with friends anywhere.
+            Challenge your partner or friends to guess exactly where a hidden target lies on a spectrum.
             The ultimate LDR game with instant multiplayer - no downloads or registration required.
           </p>
+
+          <div className="mt-8 mb-8 border-l-4 border-primary pl-4">
+            <h3 className="text-xl font-bold text-foreground mb-3">Explore Multiple Wavelength Game Modes</h3>
+            <p className="mb-3">
+              When you play <strong>Wavelength online</strong>, you aren't just limited to the standard questions. We have expanded the Wavelength game to include a massive variety of categories to suit any vibe:
+            </p>
+            <ul className="list-disc pl-5 space-y-2">
+              <li><strong>Classic Wavelength Game:</strong> The standard mode you know and love, perfect for friends and family gatherings.</li>
+              <li><strong>General Knowledge:</strong> Test your alignment on pop culture, movies, music, and science with hundreds of custom cards.</li>
+              <li><strong>Couples & Date Night:</strong> Relationship-focused questions designed to see how well you and your partner actually align.</li>
+              <li><strong>18+ Lust & Spicy Modes:</strong> Looking to spice up your virtual date nights? Our adult-themed game modes (like the 18+ Lust deck) add a hilarious, spicy twist to the traditional Wavelength game, making it the perfect late-night activity.</li>
+            </ul>
+          </div>
 
           {/* GEO Optimization: Quick Facts for AI Discovery */}
           <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6 my-8">

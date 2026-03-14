@@ -1,4 +1,4 @@
-export type DeckType = "normal" | "lust";
+export type DeckType = "normal" | "lust" | "bucketlist";
 
 export interface FantasyCard {
     id: string;
@@ -16,6 +16,11 @@ export const DECKS: Record<DeckType, { name: string; emoji: string; description:
         name: "Lust 😈",
         emoji: "😈",
         description: "Spicy 18+ fantasies to heat things up.",
+    },
+    bucketlist: {
+        name: "Bucket List 🌍",
+        emoji: "🌍",
+        description: "Dream experiences and adventures to share together.",
     },
 };
 
@@ -125,6 +130,78 @@ const normalDeck: FantasyCard[] = [
     { id: "n88", question: "Getting snowed in together with no responsibilities", deck: "normal" },
     { id: "n89", question: "Having a stranger think you just fell in love", deck: "normal" },
     { id: "n90", question: "Creating something together that outlasts you both", deck: "normal" },
+
+    // ✨ Dream Dates & Simple Pleasures
+    { id: "n91", question: "Getting lost together in a massive museum", deck: "normal" },
+    { id: "n92", question: "Painting each other's portraits terribly on purpose", deck: "normal" },
+    { id: "n93", question: "Sharing a tiny umbrella in a sudden downpour", deck: "normal" },
+    { id: "n94", question: "Being the last two people on the dancefloor at a wedding", deck: "normal" },
+    { id: "n95", question: "Staying up late just to watch a meteor shower", deck: "normal" },
+    { id: "n96", question: "Building a ridiculous blanket fort on a rainy Sunday", deck: "normal" },
+    { id: "n97", question: "Leaving a fancy party early to eat fast food in the car", deck: "normal" },
+    { id: "n98", question: "Having a deeply philosophical conversation at 3 AM", deck: "normal" },
+    { id: "n99", question: "Losing power during a storm and lighting candles everywhere", deck: "normal" },
+    { id: "n100", question: "Curating a dedicated playlist just for road trips together", deck: "normal" },
+
+    // 🌍 Shared Adventures & Milestones
+    { id: "n101", question: "Going to a drive-in movie and sitting on the hood of the car", deck: "normal" },
+    { id: "n102", question: "Renting a tandem bicycle and failing miserably but laughing", deck: "normal" },
+    { id: "n103", question: "Sneaking a secret love note into their luggage before a trip", deck: "normal" },
+    { id: "n104", question: "Learning a new language together just for a future vacation", deck: "normal" },
+    { id: "n105", question: "Getting matching, very subtle tattoos", deck: "normal" },
+    { id: "n106", question: "Singing karaoke together and being the most obnoxious duet", deck: "normal" },
+    { id: "n107", question: "Spending a completely exhausting but fun day at an amusement park", deck: "normal" },
+    { id: "n108", question: "Walking through a botanical garden silently holding hands", deck: "normal" },
+    { id: "n109", question: "Getting completely mesmerized by jellyfish at a dark aquarium", deck: "normal" },
+    { id: "n110", question: "Sharing a massive milkshake with two straws", deck: "normal" },
+
+    // 🎨 Creative & Messy Moments
+    { id: "n111", question: "Trying to bake a complex dessert, ruining it, and eating the mess", deck: "normal" },
+    { id: "n112", question: "Having a perfect sunset picnic by a quiet lake", deck: "normal" },
+    { id: "n113", question: "Eating way too much fried food at a local summer festival", deck: "normal" },
+    { id: "n114", question: "Taking a spontaneous, blurry polaroid picture capturing a perfect moment", deck: "normal" },
+    { id: "n115", question: "Waking up at dawn just to get fresh pastries from the bakery", deck: "normal" },
+    { id: "n116", question: "Going thrift shopping and picking out terrible outfits for each other to wear", deck: "normal" },
+    { id: "n117", question: "Taking a pottery class together and making lumpy but sentimental mugs", deck: "normal" },
+    { id: "n118", question: "Taking a scenic train ride just for the view", deck: "normal" },
+    { id: "n119", question: "A weekend in a cabin with absolutely zero cell service", deck: "normal" },
+    { id: "n120", question: "Reading the exact same book at the exact same pace to discuss it", deck: "normal" },
+
+    // 💖 Deep Connection
+    { id: "n121", question: "A comforting hug from behind that lasts just a little longer than usual", deck: "normal" },
+    { id: "n122", question: "Knowing exactly what the other person is going to order at a restaurant", deck: "normal" },
+    { id: "n123", question: "Giving a knowing look across a crowded room", deck: "normal" },
+    { id: "n124", question: "Falling asleep on their chest while watching a movie", deck: "normal" },
+    { id: "n125", question: "Getting a completely unprompted compliment that makes your whole week", deck: "normal" },
+    { id: "n126", question: "When they remember a tiny detail you mentioned months ago", deck: "normal" },
+    { id: "n127", question: "Laughing so hard together that no sound comes out", deck: "normal" },
+    { id: "n128", question: "A quiet morning drinking coffee without needing to say a word", deck: "normal" },
+    { id: "n129", question: "That moment when you realize you're completely safe with them", deck: "normal" },
+    { id: "n130", question: "When they accidentally use your catchphrase", deck: "normal" },
+
+    // 🌙 Evening & Night
+    { id: "n131", question: "Stargazing from the back of a pickup truck", deck: "normal" },
+    { id: "n132", question: "A midnight grocery store run in pajamas", deck: "normal" },
+    { id: "n133", question: "Falling asleep holding hands", deck: "normal" },
+    { id: "n134", question: "Watching the city lights blur from a high-rise balcony", deck: "normal" },
+    { id: "n135", question: "Listening to a thunderstorm roll in while safely indoors", deck: "normal" },
+    { id: "n136", question: "A long, aimless drive with the windows down in summer", deck: "normal" },
+    { id: "n137", question: "Waking up in the middle of the night just to pull them closer", deck: "normal" },
+    { id: "n138", question: "Sharing secrets you've never told anyone else in the dark", deck: "normal" },
+    { id: "n139", question: "A late-night diner visit after a concert", deck: "normal" },
+    { id: "n140", question: "Dancing slowly in the living room with the lights off", deck: "normal" },
+
+    // 🌿 Fun & Silly Vibe
+    { id: "n141", question: "Having a fiercely competitive board game night", deck: "normal" },
+    { id: "n142", question: "Building a ridiculous sandcastle together on the beach", deck: "normal" },
+    { id: "n143", question: "Arguing over who loves the other more in a joking way", deck: "normal" },
+    { id: "n144", question: "Doing a terrible synchronized dance routine in the kitchen", deck: "normal" },
+    { id: "n145", question: "Accidentally wearing matching outfits and committing to it", deck: "normal" },
+    { id: "n146", question: "Having an inside joke that nobody else understands but makes you crack up", deck: "normal" },
+    { id: "n147", question: "Trying to assemble IKEA furniture together without breaking up", deck: "normal" },
+    { id: "n148", question: "Taking terrible selfies from unflattering angles to send to each other", deck: "normal" },
+    { id: "n149", question: "Going to a dog park even if you don't own a dog", deck: "normal" },
+    { id: "n150", question: "Making a completely unrealistic bucket list for the future", deck: "normal" }
 ];
 
 const lustDeck: FantasyCard[] = [
@@ -225,12 +302,57 @@ const lustDeck: FantasyCard[] = [
     { id: "l80", question: "Finishing and immediately wanting to go again", deck: "lust" },
 ];
 
+const bucketlistDeck: FantasyCard[] = [
+    { id: "bl1", question: "Watching the sunrise from a mountain top together", deck: "bucketlist" },
+    { id: "bl2", question: "Renting a campervan and getting completely lost for a week", deck: "bucketlist" },
+    { id: "bl3", question: "Swimming with bioluminescent plankton at midnight", deck: "bucketlist" },
+    { id: "bl4", question: "Eating your way through street food markets in Tokyo", deck: "bucketlist" },
+    { id: "bl5", question: "Dancing until sunrise at a festival abroad", deck: "bucketlist" },
+    { id: "bl6", question: "Renting a boat with no plan and sailing for days", deck: "bucketlist" },
+    { id: "bl7", question: "Watching the Northern Lights together in Iceland", deck: "bucketlist" },
+    { id: "bl8", question: "Taking a cooking class in Italy and eating everything you make", deck: "bucketlist" },
+    { id: "bl9", question: "Bungee jumping for the first time side by side", deck: "bucketlist" },
+    { id: "bl10", question: "Staying in a treehouse hotel deep in a jungle", deck: "bucketlist" },
+    { id: "bl11", question: "Driving Route 66 with no fixed itinerary", deck: "bucketlist" },
+    { id: "bl12", question: "Attending a Grand Prix at Monaco or Silverstone", deck: "bucketlist" },
+    { id: "bl13", question: "Going on an African safari and seeing the Big Five", deck: "bucketlist" },
+    { id: "bl14", question: "Learning to surf on a remote beach somewhere tropical", deck: "bucketlist" },
+    { id: "bl15", question: "Hot air balloon ride over ancient ruins at sunrise", deck: "bucketlist" },
+    { id: "bl16", question: "Visiting all 7 Wonders of the World together", deck: "bucketlist" },
+    { id: "bl17", question: "Skydiving over a coastline on a clear day", deck: "bucketlist" },
+    { id: "bl18", question: "Staying overnight in a glass igloo under the stars", deck: "bucketlist" },
+    { id: "bl19", question: "Attending Carnival in Rio or Mardi Gras in New Orleans", deck: "bucketlist" },
+    { id: "bl20", question: "Backpacking through Southeast Asia with only carry-on bags", deck: "bucketlist" },
+    { id: "bl21", question: "Seeing a space shuttle launch from a viewing site", deck: "bucketlist" },
+    { id: "bl22", question: "Swimming in a natural cenote in Mexico", deck: "bucketlist" },
+    { id: "bl23", question: "Attending the Olympics in person", deck: "bucketlist" },
+    { id: "bl24", question: "Hiking to Machu Picchu and watching the fog lift", deck: "bucketlist" },
+    { id: "bl25", question: "Renting a private villa in Santorini for a week", deck: "bucketlist" },
+    { id: "bl26", question: "Visiting the Amalfi Coast by boat with no schedule", deck: "bucketlist" },
+    { id: "bl27", question: "Flying first class together just once — fully leaning into it", deck: "bucketlist" },
+    { id: "bl28", question: "Spending a full winter month in a remote snowy cabin", deck: "bucketlist" },
+    { id: "bl29", question: "Learning a new language together and using it on the trip", deck: "bucketlist" },
+    { id: "bl30", question: "Watching a meteor shower from the middle of a desert", deck: "bucketlist" },
+    { id: "bl31", question: "Living in a foreign city for one month as locals", deck: "bucketlist" },
+    { id: "bl32", question: "Spending New Year's Eve in a city neither of you has been to", deck: "bucketlist" },
+    { id: "bl33", question: "Taking a long-haul train journey across a continent", deck: "bucketlist" },
+    { id: "bl34", question: "Going scuba diving on the Great Barrier Reef", deck: "bucketlist" },
+    { id: "bl35", question: "Joining a cooking class in Morocco and eating in a riad", deck: "bucketlist" },
+    { id: "bl36", question: "White-water rafting down a major river", deck: "bucketlist" },
+    { id: "bl37", question: "Visiting every continent together — even Antarctica", deck: "bucketlist" },
+    { id: "bl38", question: "Slow travelling through a country for a full month with no hotels booked", deck: "bucketlist" },
+    { id: "bl39", question: "Seeing cherry blossoms in Japan at peak bloom", deck: "bucketlist" },
+    { id: "bl40", question: "Building or restoring something together — a house, a car, a garden", deck: "bucketlist" },
+];
+
 export function getCardsByDeck(deck: DeckType) {
     switch (deck) {
         case "normal":
             return normalDeck;
         case "lust":
             return lustDeck;
+        case "bucketlist":
+            return bucketlistDeck;
         default:
             return normalDeck;
     }

@@ -7,7 +7,7 @@ export const metadata: Metadata = {
     title: {
         absolute: "General Knowledge Quiz Game - Play Online Trivia for Free",
     },
-    description: "Challenge friends in this fast-paced General Knowledge Quiz! Answer in 10 seconds across 8 topics like History & Science. Play free online now.",
+    description: "Challenge friends in this fast-paced General Knowledge Quiz! Answer in 10 seconds across 15 topics like History & Science. Play free online now.",
     keywords: ["general knowledge quiz", "online trivia game", "multiplayer quiz", "play trivia with friends", "history quiz", "science trivia", "pop culture quiz", "free online games"],
     alternates: {
         canonical: "https://wavelength.lol/games/general-knowledge/",
