@@ -69,7 +69,7 @@ export const sendFeedbackEmail = internalAction({
 
         try {
             await resend.emails.send({
-                from: "Wavelength Feedback <feedback@onboarding.resend.dev>",
+                from: "Wavelength Feedback <onboarding@resend.dev>",
                 to: "hongzhetan7@gmail.com",
                 subject: `New Feedback: ${args.category.toUpperCase()}`,
                 html: emailContent,

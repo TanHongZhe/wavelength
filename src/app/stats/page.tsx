@@ -219,6 +219,82 @@ export default function StatsPage() {
                         <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
                     </div>
                 )}
+                
+                {/* Graph */}
+                {stats && chartData.length > 0 && (
+                    <div className="bg-card border border-border rounded-2xl p-6 mb-8">
+                        <h2 className="font-display text-xl font-bold mb-6">Analytics Trend</h2>
+                        
+                        {/* Custom Legend / Toggles */}
+                        <div className="flex flex-wrap gap-3 mb-6">
+                            {chartLines.map((line) => {
+                                const isActive = activeLines[line.key];
+                                return (
+                                    <button
+                                        key={line.key}
+                                        onClick={() => toggleLine(line.key)}
+                                        className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-200 border cursor-pointer
+                                            ${isActive 
+                                                ? "bg-secondary border-border text-foreground shadow-sm" 
+                                                : "bg-transparent border-transparent text-muted-foreground hover:bg-secondary/50"
+                                            }`}
+                                    >
+                                        <div 
+                                            className="w-3 h-3 rounded-full" 
+                                            style={{ backgroundColor: isActive ? line.color : 'transparent', border: `2px solid ${line.color}` }} 
+                                        />
+                                        {line.name}
+                                    </button>
+                                );
+                            })}
+                        </div>
+
+                        {/* Chart Area */}
+                        <div className="h-[400px] w-full">
+                            <ResponsiveContainer width="100%" height="100%">
+                                <LineChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 20 }}>
+                                    <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
+                                    <XAxis 
+                                        dataKey="stat_date" 
+                                        stroke="#94a3b8" 
+                                        fontSize={12}
+                                        tickMargin={10}
+                                        minTickGap={30}
+                                        tickFormatter={(val) => {
+                                            const parts = val.split('-');
+                                            return `${parts[1]}/${parts[2]}`; // MM/DD
+                                        }}
+                                    />
+                                    <YAxis 
+                                        stroke="#94a3b8" 
+                                        fontSize={12}
+                                        tickFormatter={(val: number) => Math.round(val).toString()}
+                                    />
+                                    <Tooltip 
+                                        contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '8px', color: '#f8fafc' }}
+                                        itemStyle={{ color: '#f8fafc' }}
+                                        labelStyle={{ color: '#94a3b8', marginBottom: '8px' }}
+                                    />
+                                    {chartLines.map((line) => (
+                                        activeLines[line.key] && (
+                                            <Line
+                                                key={line.key}
+                                                type="monotone"
+                                                dataKey={line.key}
+                                                name={line.name}
+                                                stroke={line.color}
+                                                strokeWidth={3}
+                                                dot={{ r: 4, strokeWidth: 2, fill: '#0f172a' }}
+                                                activeDot={{ r: 6, strokeWidth: 0 }}
+                                                animationDuration={1500}
+                                            />
+                                        )
+                                    ))}
+                                </LineChart>
+                            </ResponsiveContainer>
+                        </div>
+                    </div>
+                )}
 
                 {/* Table */}
                 {stats && (
