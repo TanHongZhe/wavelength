@@ -3,15 +3,34 @@
 import { useConvex } from "convex/react";
 import { api } from "convex/_generated/api";
 import { useState, useEffect } from "react";
-import { Loader2, BarChart3, TrendingUp, Gamepad2, Users, Lock, ArrowRight, RefreshCw } from "lucide-react";
+import { Loader2, BarChart3, TrendingUp, Gamepad2, Users, Lock, ArrowRight, RefreshCw, CheckCircle2, Circle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+    LineChart,
+    Line,
+    XAxis,
+    YAxis,
+    CartesianGrid,
+    Tooltip,
+    ResponsiveContainer,
+    Legend
+} from "recharts";
 
 export default function StatsPage() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [password, setPassword] = useState("");
     const [days, setDays] = useState(7);
     const convex = useConvex();
+    
+    // Graph state
+    const [activeLines, setActiveLines] = useState<Record<string, boolean>>({
+        games_played: true,
+        rooms_open: true,
+        total_rounds: false,
+        classic_rounds: false,
+        party_rounds: false,
+    });
     const [stats, setStats] = useState<any[] | undefined>(undefined);
     const [isLoading, setIsLoading] = useState(false);
 
@@ -99,6 +118,27 @@ export default function StatsPage() {
             ? Math.round((totals.games_played / totals.rooms_open) * 10000) / 100
             : 0;
 
+    // Chart Configuration
+    const chartLines = [
+        { key: "games_played", name: "Games Played", color: "#ec4899" }, // pink-500
+        { key: "rooms_open", name: "Rooms Opened", color: "#94a3b8" }, // slate-400
+        { key: "total_rounds", name: "Total Rounds", color: "#3b82f6" }, // blue-500
+        { key: "classic_rounds", name: "Classic rounds", color: "#14b8a6" }, // wedge-teal
+        { key: "party_rounds", name: "Party rounds", color: "#f97316" }, // wedge-orange
+        { key: "green_flag_rounds", name: "Green Flag", color: "#22c55e" }, // green-500
+        { key: "this_or_that_rounds", name: "Rapid Fire", color: "#c084fc" }, // purple-400
+        { key: "fantasy_slider_rounds", name: "Fantasy", color: "#60a5fa" }, // blue-400
+        { key: "whos_most_likely_rounds", name: "Most Likely", color: "#f472b6" }, // pink-400
+        { key: "general_knowledge_rounds", name: "Trivia", color: "#eab308" }, // yellow-500
+    ];
+
+    const toggleLine = (key: string) => {
+        setActiveLines(prev => ({ ...prev, [key]: !prev[key] }));
+    };
+
+    // Reverse stats for chart so it goes chronological left-to-right
+    const chartData = stats ? [...stats].reverse() : [];
+
     return (
         <div className="min-h-screen bg-background p-6 pt-24">
             <div className="max-w-6xl mx-auto">
@@ -115,8 +155,8 @@ export default function StatsPage() {
                     </div>
 
                     {/* Day Selector */}
-                    <div className="flex items-center gap-2 bg-card border border-border rounded-xl p-1">
-                        {[7, 14, 30].map((d) => (
+                    <div className="flex items-center gap-2 bg-card border border-border rounded-xl p-1 flex-wrap">
+                        {[7, 14, 30, 90].map((d) => (
                             <button
                                 key={d}
                                 onClick={() => setDays(d)}
