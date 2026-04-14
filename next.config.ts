@@ -15,36 +15,19 @@ const nextConfig: NextConfig = {
 
   async redirects() {
     return [
+      // Blog is permanently removed — 301 passes any accumulated link equity to home
       {
         source: '/blog',
         destination: '/',
-        permanent: false,
+        permanent: true,
       },
       {
         source: '/blog/:path*',
         destination: '/',
-        permanent: false,
+        permanent: true,
       },
-      {
-        source: '/valentines-games',
-        destination: '/',
-        permanent: false,
-      },
-      {
-        source: '/long-distance-games',
-        destination: '/',
-        permanent: false,
-      },
-      {
-        source: '/relationship-games',
-        destination: '/',
-        permanent: false,
-      },
-      {
-        source: '/couple-games',
-        destination: '/',
-        permanent: false,
-      },
+      // Category landing pages now have real pages — no redirect needed
+      // (routes removed: /valentines-games, /long-distance-games, /relationship-games, /couple-games)
     ];
   },
 };

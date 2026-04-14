@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     "Free online party games",
     "Zoom party games",
     "Browser games with friends",
-    "Best web games 2026",
+    "best browser party games",
   ],
   authors: [{ name: "Wavelength Game", url: "https://wavelength.lol/about/" }],
   creator: "Wavelength Game",
@@ -141,7 +141,8 @@ const videoGameSchema = {
   inLanguage: "en",
   isAccessibleForFree: true,
   datePublished: "2024-01-01",
-  dateModified: "2026-02-24",
+  // Updated dynamically to build/deploy date so Google always sees a fresh signal
+  dateModified: new Date().toISOString().split('T')[0],
 };
 
 const breadcrumbSchema = {
@@ -164,11 +165,7 @@ const webSiteSchema = {
   alternateName: "Wavelength Online",
   url: "https://wavelength.lol/",
   description: "Play the viral Wavelength game online and couple card games in your browser!",
-  potentialAction: {
-    "@type": "SearchAction",
-    target: "https://wavelength.lol/?q={search_term_string}",
-    "query-input": "required name=search_term_string",
-  },
+  // SearchAction removed: no real site-search at /?q= — including it caused invalid structured data
 };
 
 const speakableSchema = {
@@ -207,7 +204,9 @@ const gameModesSchema = {
   ],
 };
 
-const jsonLdArray = [organizationSchema, videoGameSchema, breadcrumbSchema, webSiteSchema, speakableSchema, gameModesSchema];
+// breadcrumbSchema removed from global layout — homepage now includes it in its own page.tsx
+// so it doesn't incorrectly appear on every route (FAQ, rules, etc. have their own breadcrumbs)
+const jsonLdArray = [organizationSchema, videoGameSchema, webSiteSchema, speakableSchema, gameModesSchema];
 
 export default function RootLayout({
   children,

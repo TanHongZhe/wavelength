@@ -1,6 +1,8 @@
 import { Metadata } from "next";
 import { GameLoader } from "../../components/game/GameLoader";
+import Link from "next/link";
 import { LandingOverlay } from "../../components/LandingOverlay";
+import { Footer } from "@/components/Footer";
 
 
 export const metadata: Metadata = {
@@ -40,6 +42,15 @@ export const metadata: Metadata = {
             "Play top couple games online! Features the Wavelength Game, Red Flag Green Flag & more. Free 2-player mini games perfect for date nights.",
         url: "https://wavelength.lol/couple-games/",
     },
+};
+
+const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: "https://wavelength.lol/" },
+        { "@type": "ListItem", position: 2, name: "Couple Games", item: "https://wavelength.lol/couple-games/" },
+    ],
 };
 
 // JSON-LD Schema for couple games landing page
@@ -115,16 +126,10 @@ const faqSchema = {
 
 export default function CoupleGamesPage() {
     return (
-        <main>
-            {/* Schema.org structured data */}
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(coupleGamesSchema) }}
-            />
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
-            />
+        <div>
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(coupleGamesSchema) }} />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
 
             {/* Landing Overlay */}
             <LandingOverlay
@@ -202,31 +207,29 @@ export default function CoupleGamesPage() {
                 </div>
             </section>
 
-            {/* SEO hidden content */}
-            <div className="sr-only">
-                <h2>Couple Games Online - 2 Player Mini Games</h2>
-                <h2>Best Online Games for Couples FAQ</h2>
-                <p>
-                    Looking for fun games to play with your boyfriend or girlfriend? Our collection
-                    of couple games includes the Wavelength Game, Rapid Fire This or That, and Red Flag Green Flag.
-                    All games are designed for 2 players and are perfect for date nights or LDR couples.
-                </p>
-                <p>
-                    These mini games are quick to play (5-15 minutes each) and help you discover
-                    how well you and your partner think alike. Great for virtual date nights,
-                    icebreakers, or just having fun together!
-                </p>
-                <ul>
-                    <li>Best couple games online free</li>
-                    <li>2 player games for couples</li>
-                    <li>This or that game for couples</li>
-                    <li>Red flag green flag couples game</li>
-                    <li>Date night games online</li>
-                    <li>LDR games for couples</li>
-                    <li>Fun games to play with partner</li>
-                    <li>Compatibility quiz for couples</li>
-                </ul>
-            </div>
-        </main>
+            {/* Visible internal linking */}
+            <section className="max-w-4xl mx-auto px-4 pb-12">
+                <h2 className="text-lg font-bold text-white mb-4">More Game Guides for Couples</h2>
+                <div className="grid sm:grid-cols-2 gap-3">
+                    <Link href="/long-distance-games/" className="flex items-center justify-between p-4 bg-slate-900/40 border border-white/10 rounded-xl hover:border-white/20 transition-colors">
+                        <span className="text-sm font-medium text-foreground">Long Distance Relationship Games</span>
+                        <span className="text-muted-foreground text-sm">→</span>
+                    </Link>
+                    <Link href="/relationship-games/" className="flex items-center justify-between p-4 bg-slate-900/40 border border-white/10 rounded-xl hover:border-white/20 transition-colors">
+                        <span className="text-sm font-medium text-foreground">Relationship Building Games</span>
+                        <span className="text-muted-foreground text-sm">→</span>
+                    </Link>
+                    <Link href="/valentines-games/" className="flex items-center justify-between p-4 bg-slate-900/40 border border-white/10 rounded-xl hover:border-white/20 transition-colors">
+                        <span className="text-sm font-medium text-foreground">Valentine&apos;s Day Games</span>
+                        <span className="text-muted-foreground text-sm">→</span>
+                    </Link>
+                    <Link href="/how-well-do-you-know-your-partner/" className="flex items-center justify-between p-4 bg-slate-900/40 border border-white/10 rounded-xl hover:border-white/20 transition-colors">
+                        <span className="text-sm font-medium text-foreground">How Well Do You Know Your Partner?</span>
+                        <span className="text-muted-foreground text-sm">→</span>
+                    </Link>
+                </div>
+            </section>
+            <div className="max-w-4xl mx-auto px-4 pb-12"><Footer /></div>
+        </div>
     );
 }

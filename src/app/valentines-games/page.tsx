@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import { GameLoader } from "../../components/game/GameLoader";
 import Link from "next/link";
 import { LandingOverlay } from "../../components/LandingOverlay";
+import { Footer } from "@/components/Footer";
 
 
 export const metadata: Metadata = {
@@ -37,6 +38,15 @@ export const metadata: Metadata = {
             "Play the Wavelength Game this Valentine's 2026! A romantic couple card game perfect for date nights. Free, fun, instant & no downloads required.",
         url: "https://wavelength.lol/valentines-games/",
     },
+};
+
+const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: "https://wavelength.lol/" },
+        { "@type": "ListItem", position: 2, name: "Valentine's Games", item: "https://wavelength.lol/valentines-games/" },
+    ],
 };
 
 // JSON-LD Schema for Valentine's landing page
@@ -102,49 +112,15 @@ const faqSchema = {
     ],
 };
 
-const eventSchema = {
-    "@context": "https://schema.org",
-    "@type": "Event",
-    name: "Valentine's Day 2026 Gaming",
-    description: "Play the Wavelength Game with your partner this Valentine's Day 2026",
-    startDate: "2026-02-14",
-    endDate: "2026-02-14",
-    eventStatus: "https://schema.org/EventScheduled",
-    eventAttendanceMode: "https://schema.org/OnlineEventAttendanceMode",
-    location: {
-        "@type": "VirtualLocation",
-        url: "https://wavelength.lol/valentines-games/",
-    },
-    organizer: {
-        "@type": "Organization",
-        name: "Wavelength Game",
-        url: "https://wavelength.lol/",
-    },
-    offers: {
-        "@type": "Offer",
-        price: "0",
-        priceCurrency: "USD",
-        availability: "https://schema.org/InStock",
-        url: "https://wavelength.lol/valentines-games/",
-    },
-};
+// Event schema removed: the hardcoded Valentine's Day date is now in the past
+// and Google won't surface stale event rich results. Keeping it would hurt credibility.
 
 export default function ValentinesGamesPage() {
     return (
-        <main>
-            {/* Schema.org structured data */}
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(valentinesGameSchema) }}
-            />
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
-            />
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(eventSchema) }}
-            />
+        <div>
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(valentinesGameSchema) }} />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
 
             {/* Landing Overlay */}
             <LandingOverlay
@@ -243,31 +219,29 @@ export default function ValentinesGamesPage() {
 
             </section>
 
-            {/* SEO hidden content */}
-            <div className="sr-only">
-                <h2>Valentine&apos;s Day Games for Couples 2026</h2>
-                <h2>Valentine&apos;s Day Games FAQ</h2>
-                <p>
-                    Looking for Valentine&apos;s Day games to play with your boyfriend, girlfriend, husband, or wife?
-                    The Wavelength Game is one of the best romantic games for couples in 2026. Unlike expensive date nights,
-                    this free online game brings you closer together through fun, laughter, and discovering how well
-                    you know each other.
-                </p>
-                <p>
-                    Perfect for Valentine&apos;s Day 2026, whether you&apos;re having an at-home date night, celebrating
-                    long distance, or hosting a couples game night. No downloads, no cost - just instant fun!
-                </p>
-                <ul>
-                    <li>Best Valentine&apos;s Day games 2026</li>
-                    <li>Free Valentine&apos;s games online</li>
-                    <li>Romantic games for couples</li>
-                    <li>Valentine&apos;s Day date ideas</li>
-                    <li>Games to play on Valentine&apos;s Day</li>
-                    <li>Couples activities for Valentine&apos;s</li>
-                    <li>Virtual Valentine&apos;s date games</li>
-                    <li>Galentine&apos;s Day games</li>
-                </ul>
-            </div>
-        </main>
+            {/* Visible internal linking */}
+            <section className="max-w-4xl mx-auto px-4 pb-12">
+                <h2 className="text-lg font-bold text-white mb-4">More Romantic Game Ideas</h2>
+                <div className="grid sm:grid-cols-2 gap-3">
+                    <Link href="/couple-games/" className="flex items-center justify-between p-4 bg-slate-900/40 border border-white/10 rounded-xl hover:border-white/20 transition-colors">
+                        <span className="text-sm font-medium text-foreground">Online Games for Couples</span>
+                        <span className="text-muted-foreground text-sm">→</span>
+                    </Link>
+                    <Link href="/long-distance-games/" className="flex items-center justify-between p-4 bg-slate-900/40 border border-white/10 rounded-xl hover:border-white/20 transition-colors">
+                        <span className="text-sm font-medium text-foreground">Long Distance Relationship Games</span>
+                        <span className="text-muted-foreground text-sm">→</span>
+                    </Link>
+                    <Link href="/relationship-games/" className="flex items-center justify-between p-4 bg-slate-900/40 border border-white/10 rounded-xl hover:border-white/20 transition-colors">
+                        <span className="text-sm font-medium text-foreground">Relationship Building Games</span>
+                        <span className="text-muted-foreground text-sm">→</span>
+                    </Link>
+                    <Link href="/how-well-do-you-know-your-partner/" className="flex items-center justify-between p-4 bg-slate-900/40 border border-white/10 rounded-xl hover:border-white/20 transition-colors">
+                        <span className="text-sm font-medium text-foreground">How Well Do You Know Your Partner?</span>
+                        <span className="text-muted-foreground text-sm">→</span>
+                    </Link>
+                </div>
+            </section>
+            <div className="max-w-4xl mx-auto px-4 pb-12"><Footer /></div>
+        </div>
     );
 }

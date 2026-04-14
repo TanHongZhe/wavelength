@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import { GameLoader } from "../../components/game/GameLoader";
 import Link from "next/link";
 import { LandingOverlay } from "../../components/LandingOverlay";
+import { Footer } from "@/components/Footer";
 
 
 export const metadata: Metadata = {
@@ -37,6 +38,15 @@ export const metadata: Metadata = {
             "Discover the best online relationship games for couples. The Wavelength Game sparks deep conversations & fun bonding. Free to play instant browser game.",
         url: "https://wavelength.lol/relationship-games/",
     },
+};
+
+const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: "https://wavelength.lol/" },
+        { "@type": "ListItem", position: 2, name: "Relationship Games", item: "https://wavelength.lol/relationship-games/" },
+    ],
 };
 
 // JSON-LD Schema for relationship games page
@@ -104,16 +114,10 @@ const faqSchema = {
 
 export default function RelationshipGamesPage() {
     return (
-        <main>
-            {/* Schema.org structured data */}
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(relationshipGameSchema) }}
-            />
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
-            />
+        <div>
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(relationshipGameSchema) }} />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
 
             {/* Landing Overlay */}
             <LandingOverlay
@@ -211,29 +215,29 @@ export default function RelationshipGamesPage() {
 
             </section>
 
-            {/* SEO hidden content */}
-            <div className="sr-only">
-                <h2>Relationship Games for Couples</h2>
-                <h2>Best Games for Couples FAQ</h2>
-                <p>
-                    Looking for relationship games to play with your partner? The Wavelength Game is one of the best
-                    bonding games for couples available online. This free game helps strengthen your relationship
-                    by revealing how you and your partner think differently - and similarly!
-                </p>
-                <p>
-                    Perfect for date nights, weekend fun, or anytime you want to connect with your significant other.
-                    No downloads needed, just open your browser and start playing together instantly.
-                </p>
-                <ul>
-                    <li>Best relationship games for couples</li>
-                    <li>Fun games to play with partner</li>
-                    <li>Couples bonding games online</li>
-                    <li>Date night game ideas</li>
-                    <li>Games to strengthen relationship</li>
-                    <li>Communication games for couples</li>
-                    <li>Free couples games online</li>
-                </ul>
-            </div>
-        </main>
+            {/* Visible internal linking */}
+            <section className="max-w-4xl mx-auto px-4 pb-12">
+                <h2 className="text-lg font-bold text-white mb-4">More Ways to Play Together</h2>
+                <div className="grid sm:grid-cols-2 gap-3">
+                    <Link href="/couple-games/" className="flex items-center justify-between p-4 bg-slate-900/40 border border-white/10 rounded-xl hover:border-white/20 transition-colors">
+                        <span className="text-sm font-medium text-foreground">Online Games for Couples</span>
+                        <span className="text-muted-foreground text-sm">→</span>
+                    </Link>
+                    <Link href="/long-distance-games/" className="flex items-center justify-between p-4 bg-slate-900/40 border border-white/10 rounded-xl hover:border-white/20 transition-colors">
+                        <span className="text-sm font-medium text-foreground">Long Distance Relationship Games</span>
+                        <span className="text-muted-foreground text-sm">→</span>
+                    </Link>
+                    <Link href="/how-well-do-you-know-your-partner/" className="flex items-center justify-between p-4 bg-slate-900/40 border border-white/10 rounded-xl hover:border-white/20 transition-colors">
+                        <span className="text-sm font-medium text-foreground">How Well Do You Know Your Partner?</span>
+                        <span className="text-muted-foreground text-sm">→</span>
+                    </Link>
+                    <Link href="/valentines-games/" className="flex items-center justify-between p-4 bg-slate-900/40 border border-white/10 rounded-xl hover:border-white/20 transition-colors">
+                        <span className="text-sm font-medium text-foreground">Valentine&apos;s Day Games</span>
+                        <span className="text-muted-foreground text-sm">→</span>
+                    </Link>
+                </div>
+            </section>
+            <div className="max-w-4xl mx-auto px-4 pb-12"><Footer /></div>
+        </div>
     );
 }
