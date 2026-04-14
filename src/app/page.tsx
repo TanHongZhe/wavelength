@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   // ... existing metadata ...
   title: {
-    absolute: "Wavelength Game | Play Wavelength Online Free",
+    absolute: "Play Wavelength Online | Free Telepathic Browser Game",
   },
   description:
     "Play the Wavelength game online for free! The viral telepathic browser party game perfect for friends, long distance relationships, and couples.",
@@ -17,8 +17,8 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: "https://wavelength.lol/",
-    siteName: "Wavelength Game",
-    title: "Wavelength Game | Play Wavelength Online Free",
+    siteName: "Wavelength Online",
+    title: "Play Wavelength Online | Free Telepathic Browser Game",
     description:
       "Play the Wavelength game online for free! The viral telepathic browser party game perfect for friends, long distance relationships, and couples.",
   },
@@ -57,14 +57,12 @@ export const metadata: Metadata = {
 export default function HomePage() {
   return (
     <main className="flex flex-col min-h-screen">
-      {/* Interactive Game Component - Client-side rendered */}
-      <h1 className="sr-only">Wavelength Game - Free Multiplayer Browser Party Game</h1>
       <GameEngine />
 
       {/* Visible SEO Content - Placed below the game, visible to crawlers and users */}
       <section className="container mx-auto px-4 py-12 text-muted-foreground/80 max-w-4xl space-y-8">
         <div className="prose prose-invert max-w-none">
-          <h2 className="text-2xl font-bold text-foreground mb-4">About the Wavelength Game</h2>
+          <h1 className="text-3xl font-extrabold text-foreground mb-4">Play Wavelength Online</h1>
           <p className="mb-4 text-lg">
             The <strong>Wavelength game online</strong> is the best free telepathic party game to play natively in your browser.
             Perfect for long-distance relationships, couples bonding, and connecting with friends anywhere.
@@ -73,7 +71,7 @@ export default function HomePage() {
           </p>
 
           <div className="mt-8 mb-8 border-l-4 border-primary pl-4">
-            <h3 className="text-xl font-bold text-foreground mb-3">Explore Multiple Wavelength Game Modes</h3>
+            <h2 className="text-xl font-bold text-foreground mb-3">Explore Multiple Wavelength Game Modes</h2>
             <p className="mb-3">
               When you play <strong>Wavelength online</strong>, you aren't just limited to the standard questions. We have expanded the Wavelength game to include a massive variety of categories to suit any vibe:
             </p>
@@ -87,7 +85,7 @@ export default function HomePage() {
 
           {/* GEO Optimization: Quick Facts for AI Discovery */}
           <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6 my-8">
-            <h3 className="text-lg font-bold text-foreground mb-4">Quick Facts: Wavelength Game</h3>
+            <h2 className="text-lg font-bold text-foreground mb-4">Quick Facts: Wavelength Game</h2>
             <div className="grid sm:grid-cols-2 gap-4 text-sm">
               <div>
                 <dt className="font-semibold text-foreground">Main Keyword:</dt>
@@ -122,7 +120,7 @@ export default function HomePage() {
 
           <div className="grid md:grid-cols-2 gap-8 mt-8">
             <div>
-              <h3 className="text-xl font-semibold text-foreground mb-2">Game Resources</h3>
+              <h2 className="text-xl font-semibold text-foreground mb-2">Game Resources</h2>
               <ul className="list-disc pl-5 space-y-1">
                 <li><Link href="/rules/" className="hover:text-primary transition-colors">Read Official Rules & Scoring</Link></li>
                 <li><Link href="/faq/" className="hover:text-primary transition-colors">Frequently Asked Questions</Link></li>
@@ -131,7 +129,7 @@ export default function HomePage() {
             </div>
 
             <div>
-              <h3 className="text-xl font-semibold text-foreground mb-2">Why Play Wavelength?</h3>
+              <h2 className="text-xl font-semibold text-foreground mb-2">Why Play Wavelength?</h2>
               <ul className="list-disc pl-5 space-y-1">
                 <li>Instant Browser Play</li>
                 <li>Works on Mobile, Tablet & Desktop</li>

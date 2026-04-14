@@ -16,9 +16,12 @@ const siteUrl = process.env.NEXT_PUBLIC_APP_URL || "https://wavelength.lol";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
+  alternates: {
+    canonical: siteUrl,
+  },
   title: {
-    default: "Wavelength Game | Play Wavelength Online Free",
-    template: "%s | Wavelength Game Online",
+    default: "Play Wavelength Online | Free Telepathic Browser Game",
+    template: "%s | Wavelength Online",
   },
   description:
     "Play the Wavelength game online for free! The viral telepathic browser party game for friends and long distance relationships. Play instantly now.",
@@ -48,8 +51,8 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: siteUrl,
-    siteName: "Wavelength Game",
-    title: "Wavelength Game | Play Wavelength Online Free",
+    siteName: "Wavelength Online",
+    title: "Play Wavelength Online | Free Telepathic Browser Game",
     description:
       "Play the Wavelength game online for free! The viral telepathic browser party game for friends and long distance relationships. Play instantly now.",
     images: [
@@ -63,7 +66,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Wavelength Game | Play Wavelength Online Free",
+    title: "Play Wavelength Online | Free Telepathic Browser Game",
     description:
       "Play the Wavelength game online for free! The viral telepathic browser party game for friends and long distance relationships. Play instantly now.",
     images: ["/og-image.png"],
@@ -105,12 +108,14 @@ const videoGameSchema = {
   "@context": "https://schema.org",
   "@type": "VideoGame",
   name: "Wavelength Game",
+  alternateName: "Wavelength Online",
   description:
     "A telepathic party game and couple card game where players try to read each other's minds by guessing where a hidden target falls on a spectrum.",
   url: "https://wavelength.lol/",
   image: "https://wavelength.lol/og-image.png",
   operatingSystem: "Web Browser",
   applicationCategory: "Game",
+  isBasedOn: "https://boardgamegeek.com/boardgame/262543/wavelength",
   gamePlatform: ["Web Browser", "Desktop", "Mobile"],
   genre: ["Social Guessing Game", "Party Game", "Multiplayer", "Couples Game", "Relationship Game", "Card Game"],
   numberOfPlayers: {
@@ -156,6 +161,7 @@ const webSiteSchema = {
   "@context": "https://schema.org",
   "@type": "WebSite",
   name: "Wavelength Game",
+  alternateName: "Wavelength Online",
   url: "https://wavelength.lol/",
   description: "Play the viral Wavelength game online and couple card games in your browser!",
   potentialAction: {
