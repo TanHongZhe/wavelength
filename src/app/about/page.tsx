@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, Github, Heart } from "lucide-react";
+import { ArrowRight, Github, Gamepad2, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 
@@ -153,6 +153,22 @@ export default function AboutPage() {
                             <div>
                                 <h3 className="font-bold text-white">Original Game</h3>
                                 <p className="text-sm text-slate-400">Support the creators</p>
+                            </div>
+                            <ArrowRight className="ml-auto w-5 h-5 text-slate-400 group-hover:text-primary transition-colors" aria-hidden="true" />
+                        </a>
+
+                        <a
+                            href="https://impostergame.lol"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center p-6 bg-slate-900/40 backdrop-blur-md border border-white/10 rounded-2xl transition-all hover:-translate-y-1 hover:border-white/20 group hover:shadow-[0_0_20px_rgba(255,255,255,0.05)]"
+                        >
+                            <div className="w-12 h-12 bg-secondary rounded-full flex items-center justify-center mr-4 group-hover:scale-110 transition-transform">
+                                <Gamepad2 className="w-6 h-6 text-emerald-400" aria-hidden="true" />
+                            </div>
+                            <div>
+                                <h3 className="font-bold text-white">Imposter Game</h3>
+                                <p className="text-sm text-slate-400">Another fun party game</p>
                             </div>
                             <ArrowRight className="ml-auto w-5 h-5 text-slate-400 group-hover:text-primary transition-colors" aria-hidden="true" />
                         </a>

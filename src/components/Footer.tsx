@@ -9,6 +9,7 @@ export function Footer() {
                 <Link href="/faq" className="text-sm text-muted-foreground hover:text-foreground transition-colors">FAQ</Link>
                 <Link href="/terms" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Terms of Service</Link>
                 <Link href="/refund-policy" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Refund Policy</Link>
+                <a href="https://impostergame.lol" target="_blank" rel="noopener noreferrer" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Imposter Game</a>
 
                 {/* Blog Link */}
                 {/* <Link href="/blog" className="text-sm font-semibold text-primary hover:text-primary/80 transition-colors">
