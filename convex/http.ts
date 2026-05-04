@@ -83,6 +83,7 @@ http.route({
             const session = event.data.object;
             const customerEmail = session.customer_details?.email || session.customer_email;
             const customerId = session.customer;
+            const clerkUserId = session.client_reference_id;
             const mode = session.mode; // "payment" for one-time, "subscription" for recurring
 
             if (mode === "payment") {
@@ -90,6 +91,7 @@ http.route({
                 await ctx.runMutation(internal.payments.updateSubscription, {
                     stripeCustomerId: customerId || "",
                     email: customerEmail || "",
+                    clerkUserId: clerkUserId || "",
                     subscriptionId: session.id,
                     status: "lifetime",
                     endsOn: 4102444800000, // Far future (Jan 1, 2100)
@@ -99,6 +101,7 @@ http.route({
                 await ctx.runMutation(internal.payments.updateSubscription, {
                     stripeCustomerId: customerId || "",
                     email: customerEmail || "",
+                    clerkUserId: clerkUserId || "",
                     subscriptionId: session.subscription || session.id,
                     status: "active",
                     endsOn: 0, // Will be updated by subscription events
@@ -117,6 +120,7 @@ http.route({
             await ctx.runMutation(internal.payments.updateSubscription, {
                 stripeCustomerId: customerId || "",
                 email: "", // Not available in subscription events, we match by stripeCustomerId
+                clerkUserId: "", // Not available in subscription events
                 subscriptionId: subscription.id,
                 status: status,
                 endsOn: endsOn,

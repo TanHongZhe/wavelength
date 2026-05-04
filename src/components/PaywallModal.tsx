@@ -8,7 +8,7 @@ import { useUser, SignInButton } from "@clerk/nextjs";
 // ============================================================
 // STRIPE PAYMENT LINKS (PRODUCTION)
 // STRIPE PAYMENT LINKS (PRODUCTION)
-import { STRIPE_MONTHLY_LINK, STRIPE_LIFETIME_LINK } from "@/lib/stripe";
+import { STRIPE_MONTHLY_LINK, STRIPE_LIFETIME_LINK, buildStripeUrl } from "@/lib/stripe";
 
 interface PaywallModalProps {
     isOpen: boolean;
@@ -20,19 +20,18 @@ export function PaywallModal({ isOpen, onClose, message }: PaywallModalProps) {
     const { isSignedIn, user } = useUser();
 
     const handleUpgrade = () => {
-        // Append email to prefill checkout if user is signed in
-        const email = user?.primaryEmailAddress?.emailAddress;
-        const url = email
-            ? `${STRIPE_MONTHLY_LINK}?prefilled_email=${encodeURIComponent(email)}`
-            : STRIPE_MONTHLY_LINK;
+        const url = buildStripeUrl(STRIPE_MONTHLY_LINK, {
+            email: user?.primaryEmailAddress?.emailAddress,
+            userId: user?.id,
+        });
         window.open(url, "_blank");
     };
 
     const handleLifetime = () => {
-        const email = user?.primaryEmailAddress?.emailAddress;
-        const url = email
-            ? `${STRIPE_LIFETIME_LINK}?prefilled_email=${encodeURIComponent(email)}`
-            : STRIPE_LIFETIME_LINK;
+        const url = buildStripeUrl(STRIPE_LIFETIME_LINK, {
+            email: user?.primaryEmailAddress?.emailAddress,
+            userId: user?.id,
+        });
         window.open(url, "_blank");
     };
 

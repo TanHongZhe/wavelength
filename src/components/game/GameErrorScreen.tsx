@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 // Stripe Payment Link for monthly upgrade (same as PaywallModal)
 // Stripe Payment Link for monthly upgrade (PRODUCTION)
 // Stripe Payment Link for monthly upgrade (PRODUCTION)
-import { STRIPE_MONTHLY_LINK } from "@/lib/stripe";
+import { STRIPE_MONTHLY_LINK, buildStripeUrl } from "@/lib/stripe";
 
 interface GameErrorScreenProps {
     error: string;
@@ -22,10 +22,10 @@ export function GameErrorScreen({ error, onLeave, playerId }: GameErrorScreenPro
     const isPaywallError = error.toLowerCase().includes("subscribe") || error.toLowerCase().includes("limit") || error.toLowerCase().includes("locked");
 
     const handleUpgrade = () => {
-        const email = user?.primaryEmailAddress?.emailAddress;
-        const url = email
-            ? `${STRIPE_MONTHLY_LINK}?prefilled_email=${encodeURIComponent(email)}`
-            : STRIPE_MONTHLY_LINK;
+        const url = buildStripeUrl(STRIPE_MONTHLY_LINK, {
+            email: user?.primaryEmailAddress?.emailAddress,
+            userId: user?.id,
+        });
         window.open(url, "_blank");
     };
 

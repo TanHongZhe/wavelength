@@ -5,20 +5,32 @@ export const updateSubscription = internalMutation({
     args: {
         stripeCustomerId: v.string(),
         email: v.string(),
+        clerkUserId: v.string(),
         subscriptionId: v.string(),
         endsOn: v.number(),
         status: v.string(), // "active", "canceled", "past_due", "lifetime", etc.
     },
     handler: async (ctx, args) => {
-        // 1. Try to find user by Stripe Customer ID
-        let user = args.stripeCustomerId
-            ? await ctx.db
+        // Lookup priority: client_reference_id (Clerk userId) → Stripe customer ID → email.
+        // The first is robust to Stripe Link / Apple Pay overriding the prefilled email.
+        let user = null;
+
+        if (args.clerkUserId) {
+            const issuer = process.env.CLERK_ISSUER_URL || "https://clerk.wavelength.lol";
+            const tokenIdentifier = `${issuer}|${args.clerkUserId}`;
+            user = await ctx.db
+                .query("users")
+                .withIndex("by_token", (q) => q.eq("tokenIdentifier", tokenIdentifier))
+                .unique();
+        }
+
+        if (!user && args.stripeCustomerId) {
+            user = await ctx.db
                 .query("users")
                 .withIndex("by_stripe_id", (q) => q.eq("stripeCustomerId", args.stripeCustomerId))
-                .unique()
-            : null;
+                .unique();
+        }
 
-        // 2. Fallback: find by email
         if (!user && args.email) {
             user = await ctx.db
                 .query("users")
@@ -36,7 +48,9 @@ export const updateSubscription = internalMutation({
             });
             console.log(`Updated user ${user.email}: isPro=${isPro}, status=${args.status}`);
         } else {
-            console.warn(`No user found for stripeCustomerId=${args.stripeCustomerId}, email=${args.email}`);
+            console.warn(
+                `No user found. clerkUserId=${args.clerkUserId}, stripeCustomerId=${args.stripeCustomerId}, email=${args.email}, status=${args.status}, subscriptionId=${args.subscriptionId}`
+            );
         }
     },
 });

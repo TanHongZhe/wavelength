@@ -12,7 +12,7 @@ import { ProUpgradeCard } from "./ProUpgradeCard";
 // Stripe Payment Link for monthly upgrade (same as PaywallModal)
 // Stripe Payment Link for monthly upgrade (PRODUCTION)
 // Stripe Payment Link for monthly upgrade (PRODUCTION)
-import { STRIPE_MONTHLY_LINK } from "@/lib/stripe";
+import { STRIPE_MONTHLY_LINK, buildStripeUrl } from "@/lib/stripe";
 
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
@@ -54,10 +54,10 @@ export function GameOverScreen({ room, playerId, onLeave }: GameOverScreenProps)
 
     const handleUpgrade = () => {
         if (!isSignedIn) return;
-        const email = user?.primaryEmailAddress?.emailAddress;
-        const url = email
-            ? `${STRIPE_MONTHLY_LINK}?prefilled_email=${encodeURIComponent(email)}`
-            : STRIPE_MONTHLY_LINK;
+        const url = buildStripeUrl(STRIPE_MONTHLY_LINK, {
+            email: user?.primaryEmailAddress?.emailAddress,
+            userId: user?.id,
+        });
         window.open(url, "_blank");
     };
 

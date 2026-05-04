@@ -6,7 +6,7 @@ import { api } from "../../../convex/_generated/api";
 import { Button } from "@/components/ui/button";
 import { Sparkles, Infinity as InfinityIcon, Layers, Gamepad2, LogIn } from "lucide-react";
 import { motion } from "framer-motion";
-import { STRIPE_MONTHLY_LINK, STRIPE_LIFETIME_LINK } from "@/lib/stripe";
+import { STRIPE_MONTHLY_LINK, STRIPE_LIFETIME_LINK, buildStripeUrl } from "@/lib/stripe";
 
 interface ProUpgradeCardProps {
     className?: string;
@@ -23,18 +23,18 @@ export function ProUpgradeCard({ className }: ProUpgradeCardProps) {
     if (isPro) return null;
 
     const handleUpgrade = () => {
-        const email = user?.primaryEmailAddress?.emailAddress;
-        const url = email
-            ? `${STRIPE_MONTHLY_LINK}?prefilled_email=${encodeURIComponent(email)}`
-            : STRIPE_MONTHLY_LINK;
+        const url = buildStripeUrl(STRIPE_MONTHLY_LINK, {
+            email: user?.primaryEmailAddress?.emailAddress,
+            userId: user?.id,
+        });
         window.open(url, "_blank");
     };
 
     const handleLifetime = () => {
-        const email = user?.primaryEmailAddress?.emailAddress;
-        const url = email
-            ? `${STRIPE_LIFETIME_LINK}?prefilled_email=${encodeURIComponent(email)}`
-            : STRIPE_LIFETIME_LINK;
+        const url = buildStripeUrl(STRIPE_LIFETIME_LINK, {
+            email: user?.primaryEmailAddress?.emailAddress,
+            userId: user?.id,
+        });
         window.open(url, "_blank");
     };
 

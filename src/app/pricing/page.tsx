@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { useUser, SignInButton } from "@clerk/nextjs";
 import { useQuery } from "convex/react";
 import { api } from "convex/_generated/api";
-import { STRIPE_MONTHLY_LINK, STRIPE_LIFETIME_LINK } from "@/lib/stripe";
+import { STRIPE_MONTHLY_LINK, STRIPE_LIFETIME_LINK, buildStripeUrl } from "@/lib/stripe";
 import { Footer } from "@/components/Footer";
 
 export default function PricingPage() {
@@ -20,18 +20,18 @@ export default function PricingPage() {
     const isPro = myUser?.isPro ?? false;
 
     const handleUpgrade = () => {
-        const email = user?.primaryEmailAddress?.emailAddress;
-        const url = email
-            ? `${STRIPE_MONTHLY_LINK}?prefilled_email=${encodeURIComponent(email)}`
-            : STRIPE_MONTHLY_LINK;
+        const url = buildStripeUrl(STRIPE_MONTHLY_LINK, {
+            email: user?.primaryEmailAddress?.emailAddress,
+            userId: user?.id,
+        });
         window.open(url, "_blank");
     };
 
     const handleLifetime = () => {
-        const email = user?.primaryEmailAddress?.emailAddress;
-        const url = email
-            ? `${STRIPE_LIFETIME_LINK}?prefilled_email=${encodeURIComponent(email)}`
-            : STRIPE_LIFETIME_LINK;
+        const url = buildStripeUrl(STRIPE_LIFETIME_LINK, {
+            email: user?.primaryEmailAddress?.emailAddress,
+            userId: user?.id,
+        });
         window.open(url, "_blank");
     };
 
