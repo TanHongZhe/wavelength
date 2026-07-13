@@ -3,7 +3,7 @@
 import { useConvex } from "convex/react";
 import { api } from "convex/_generated/api";
 import { useState, useEffect } from "react";
-import { Loader2, BarChart3, TrendingUp, Gamepad2, Users, Lock, ArrowRight, RefreshCw, CheckCircle2, Circle } from "lucide-react";
+import { Loader2, BarChart3, TrendingUp, Gamepad2, Users, Lock, ArrowRight, RefreshCw, CheckCircle2, Circle, CalendarDays } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -17,12 +17,16 @@ import {
     Legend
 } from "recharts";
 
+const AUTH_STORAGE_KEY = "wavelength_stats_auth_v1";
+const STATS_PASSWORD = "20060407Hz";
+
 export default function StatsPage() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [password, setPassword] = useState("");
-    const [days, setDays] = useState(7);
+    // days === 0 means all-time
+    const [days, setDays] = useState<number>(7);
     const convex = useConvex();
-    
+
     // Graph state
     const [activeLines, setActiveLines] = useState<Record<string, boolean>>({
         games_played: true,
@@ -32,12 +36,24 @@ export default function StatsPage() {
         party_rounds: false,
     });
     const [stats, setStats] = useState<any[] | undefined>(undefined);
+    const [monthlyStats, setMonthlyStats] = useState<any[] | undefined>(undefined);
     const [isLoading, setIsLoading] = useState(false);
+
+    // Restore auth from localStorage on mount
+    useEffect(() => {
+        if (typeof window !== "undefined" && localStorage.getItem(AUTH_STORAGE_KEY) === "1") {
+            setIsAuthenticated(true);
+        }
+    }, []);
 
     const fetchStats = async () => {
         setIsLoading(true);
-        const data = await convex.query(api.stats.getDailyStats, { days });
-        setStats(data);
+        const [daily, monthly] = await Promise.all([
+            convex.query(api.stats.getDailyStats, { days }),
+            convex.query(api.stats.getMonthlyStats, {}),
+        ]);
+        setStats(daily);
+        setMonthlyStats(monthly);
         setIsLoading(false);
     };
 
@@ -50,11 +66,22 @@ export default function StatsPage() {
 
     const handleLogin = (e: React.FormEvent) => {
         e.preventDefault();
-        if (password === "20060407Hz") {
+        if (password === STATS_PASSWORD) {
             setIsAuthenticated(true);
+            if (typeof window !== "undefined") {
+                localStorage.setItem(AUTH_STORAGE_KEY, "1");
+            }
         } else {
             alert("Incorrect password");
         }
+    };
+
+    const handleLogout = () => {
+        if (typeof window !== "undefined") {
+            localStorage.removeItem(AUTH_STORAGE_KEY);
+        }
+        setIsAuthenticated(false);
+        setPassword("");
     };
 
     if (!isAuthenticated) {
@@ -156,7 +183,7 @@ export default function StatsPage() {
 
                     {/* Day Selector */}
                     <div className="flex items-center gap-2 bg-card border border-border rounded-xl p-1 flex-wrap">
-                        {[7, 14, 30, 90].map((d) => (
+                        {[7, 14, 30, 90, 0].map((d) => (
                             <button
                                 key={d}
                                 onClick={() => setDays(d)}
@@ -165,7 +192,7 @@ export default function StatsPage() {
                                     : "text-muted-foreground hover:text-primary hover:bg-secondary"
                                     }`}
                             >
-                                {d}d
+                                {d === 0 ? "All" : `${d}d`}
                             </button>
                         ))}
                     </div>
@@ -489,7 +516,191 @@ export default function StatsPage() {
                     </div>
                 )}
 
-                <div className="flex justify-center mt-8">
+                {/* Monthly Comparison */}
+                {monthlyStats && monthlyStats.length > 0 && (
+                    <div className="mt-10">
+                        <div className="flex items-center gap-3 mb-4">
+                            <CalendarDays className="w-6 h-6 text-primary" />
+                            <h2 className="font-display text-2xl font-bold text-primary">
+                                Month-over-Month
+                            </h2>
+                        </div>
+                        <p className="text-muted-foreground text-sm mb-4">
+                            Calendar-month totals (not rolling)
+                        </p>
+                        <div className="bg-card border border-border rounded-2xl overflow-hidden">
+                            <div className="overflow-x-auto">
+                                <table className="w-full text-sm">
+                                    <thead>
+                                        <tr className="border-b border-border bg-secondary/50">
+                                            <th className="text-left px-4 py-3 font-display font-bold text-primary">Month</th>
+                                            <th className="text-right px-4 py-3 font-display font-bold text-primary">Played</th>
+                                            <th className="text-right px-4 py-3 font-display font-bold text-primary">Opened</th>
+                                            <th className="text-right px-4 py-3 font-display font-bold text-primary">Conv %</th>
+                                            <th className="text-right px-4 py-3 font-display font-bold text-primary">Rounds</th>
+                                            <th className="text-right px-4 py-3 font-display font-bold text-wedge-teal">
+                                                <span className="hidden sm:inline">Classic</span>
+                                                <span className="sm:hidden">🎯</span>
+                                            </th>
+                                            <th className="text-right px-4 py-3 font-display font-bold text-wedge-orange">
+                                                <span className="hidden sm:inline">Party</span>
+                                                <span className="sm:hidden">🎉</span>
+                                            </th>
+                                            <th className="text-right px-4 py-3 font-display font-bold text-green-500">
+                                                <span className="hidden sm:inline">Flag</span>
+                                                <span className="sm:hidden">🚩</span>
+                                            </th>
+                                            <th className="text-right px-4 py-3 font-display font-bold text-purple-400">
+                                                <span className="hidden sm:inline">Rapid</span>
+                                                <span className="sm:hidden">⚡</span>
+                                            </th>
+                                            <th className="text-right px-4 py-3 font-display font-bold text-blue-400">
+                                                <span className="hidden sm:inline">Fantasy</span>
+                                                <span className="sm:hidden">🧚</span>
+                                            </th>
+                                            <th className="text-right px-4 py-3 font-display font-bold text-pink-400">
+                                                <span className="hidden sm:inline">Likely</span>
+                                                <span className="sm:hidden">🤔</span>
+                                            </th>
+                                            <th className="text-right px-4 py-3 font-display font-bold text-yellow-500">
+                                                <span className="hidden sm:inline">Trivia</span>
+                                                <span className="sm:hidden">💡</span>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {monthlyStats.map((row, i) => {
+                                            const isCurrentMonth = i === 0;
+                                            const hasData = row.total_rounds > 0;
+                                            const [yr, mo] = row.month.split("-");
+                                            const label = new Date(Number(yr), Number(mo) - 1, 1)
+                                                .toLocaleString("en-US", { month: "long", year: "numeric" });
+                                            return (
+                                                <tr
+                                                    key={row.month}
+                                                    className={`border-b border-border/50 last:border-0 transition-colors ${isCurrentMonth ? "bg-primary/5" : "hover:bg-secondary/30"
+                                                        }`}
+                                                >
+                                                    <td className="px-4 py-3 font-mono text-primary whitespace-nowrap">
+                                                        {label}
+                                                        {isCurrentMonth && (
+                                                            <span className="ml-2 text-xs bg-primary/20 text-primary px-2 py-0.5 rounded-full font-display font-bold">
+                                                                Current
+                                                            </span>
+                                                        )}
+                                                    </td>
+                                                    <td className="text-right px-4 py-3 font-mono font-bold">
+                                                        {row.games_played}
+                                                    </td>
+                                                    <td className="text-right px-4 py-3 font-mono text-muted-foreground">
+                                                        {row.rooms_open}
+                                                    </td>
+                                                    <td className={`text-right px-4 py-3 font-mono font-bold ${row.conversion_rate >= 50
+                                                        ? "text-wedge-teal"
+                                                        : row.conversion_rate > 0
+                                                            ? "text-wedge-orange"
+                                                            : "text-muted-foreground"
+                                                        }`}>
+                                                        {row.conversion_rate}%
+                                                    </td>
+                                                    <td className="text-right px-4 py-3 font-mono font-bold text-primary">
+                                                        {row.total_rounds}
+                                                    </td>
+                                                    <td className="text-right px-4 py-3 font-mono text-wedge-teal">
+                                                        {hasData ? (
+                                                            <span>
+                                                                {row.classic_rounds}
+                                                                <span className="text-xs text-muted-foreground ml-1">
+                                                                    ({row.classic_pct}%)
+                                                                </span>
+                                                            </span>
+                                                        ) : (
+                                                            <span className="text-muted-foreground">—</span>
+                                                        )}
+                                                    </td>
+                                                    <td className="text-right px-4 py-3 font-mono text-wedge-orange">
+                                                        {hasData ? (
+                                                            <span>
+                                                                {row.party_rounds}
+                                                                <span className="text-xs text-muted-foreground ml-1">
+                                                                    ({row.party_pct}%)
+                                                                </span>
+                                                            </span>
+                                                        ) : (
+                                                            <span className="text-muted-foreground">—</span>
+                                                        )}
+                                                    </td>
+                                                    <td className="text-right px-4 py-3 font-mono text-green-500">
+                                                        {hasData ? (
+                                                            <span>
+                                                                {row.green_flag_rounds}
+                                                                <span className="text-xs text-muted-foreground ml-1">
+                                                                    ({row.green_flag_pct}%)
+                                                                </span>
+                                                            </span>
+                                                        ) : (
+                                                            <span className="text-muted-foreground">—</span>
+                                                        )}
+                                                    </td>
+                                                    <td className="text-right px-4 py-3 font-mono text-purple-400">
+                                                        {hasData ? (
+                                                            <span>
+                                                                {row.this_or_that_rounds}
+                                                                <span className="text-xs text-muted-foreground ml-1">
+                                                                    ({row.this_or_that_pct}%)
+                                                                </span>
+                                                            </span>
+                                                        ) : (
+                                                            <span className="text-muted-foreground">—</span>
+                                                        )}
+                                                    </td>
+                                                    <td className="text-right px-4 py-3 font-mono text-blue-400">
+                                                        {hasData ? (
+                                                            <span>
+                                                                {row.fantasy_slider_rounds}
+                                                                <span className="text-xs text-muted-foreground ml-1">
+                                                                    ({row.fantasy_slider_pct}%)
+                                                                </span>
+                                                            </span>
+                                                        ) : (
+                                                            <span className="text-muted-foreground">—</span>
+                                                        )}
+                                                    </td>
+                                                    <td className="text-right px-4 py-3 font-mono text-pink-400">
+                                                        {hasData ? (
+                                                            <span>
+                                                                {row.whos_most_likely_rounds}
+                                                                <span className="text-xs text-muted-foreground ml-1">
+                                                                    ({row.whos_most_likely_pct}%)
+                                                                </span>
+                                                            </span>
+                                                        ) : (
+                                                            <span className="text-muted-foreground">—</span>
+                                                        )}
+                                                    </td>
+                                                    <td className="text-right px-4 py-3 font-mono text-yellow-500">
+                                                        {hasData ? (
+                                                            <span>
+                                                                {row.general_knowledge_rounds}
+                                                                <span className="text-xs text-muted-foreground ml-1">
+                                                                    ({row.general_knowledge_pct}%)
+                                                                </span>
+                                                            </span>
+                                                        ) : (
+                                                            <span className="text-muted-foreground">—</span>
+                                                        )}
+                                                    </td>
+                                                </tr>
+                                            );
+                                        })}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                <div className="flex justify-center gap-3 mt-8">
                     <Button
                         variant="outline"
                         onClick={fetchStats}
@@ -502,6 +713,10 @@ export default function StatsPage() {
                             <RefreshCw className="w-4 h-4" />
                         )}
                         Refresh Stats
+                    </Button>
+                    <Button variant="ghost" onClick={handleLogout} className="gap-2">
+                        <Lock className="w-4 h-4" />
+                        Lock
                     </Button>
                 </div>
 

@@ -13,16 +13,37 @@ import { v } from "convex/values";
  */
 export const getDailyStats = query({
     args: {
-        days: v.optional(v.number()), // default: 7
+        days: v.optional(v.number()), // default: 7. Pass 0 for all-time.
+        all: v.optional(v.boolean()),
     },
     handler: async (ctx, args) => {
+        const isAll = args.all === true || args.days === 0;
         const days = args.days ?? 7;
-        const cutoff = Date.now() - days * 24 * 60 * 60 * 1000;
 
-        // Fetch all rooms created in the time window
+        // Fetch all rooms
         // Note: This fetches renamed "archived" rooms too, preserving stats!
         const allRooms = await ctx.db.query("rooms").collect();
-        const rooms = allRooms.filter((r) => r._creationTime >= cutoff);
+
+        let rooms;
+        let rangeDays;
+        if (isAll) {
+            rooms = allRooms;
+            if (rooms.length === 0) {
+                rangeDays = 1;
+            } else {
+                const earliest = Math.min(...rooms.map((r) => r._creationTime));
+                const earliestDate = new Date(earliest).toISOString().split("T")[0];
+                const todayDate = new Date().toISOString().split("T")[0];
+                const msPerDay = 24 * 60 * 60 * 1000;
+                rangeDays = Math.floor(
+                    (Date.parse(todayDate) - Date.parse(earliestDate)) / msPerDay
+                ) + 1;
+            }
+        } else {
+            const cutoff = Date.now() - days * 24 * 60 * 60 * 1000;
+            rooms = allRooms.filter((r) => r._creationTime >= cutoff);
+            rangeDays = days;
+        }
 
         // Group by date (YYYY-MM-DD)
         const byDate: Record<
@@ -135,7 +156,7 @@ export const getDailyStats = query({
 
         // Fill in missing days so every day in the range appears
         const result = [];
-        for (let i = 0; i < days; i++) {
+        for (let i = 0; i < rangeDays; i++) {
             const d = new Date(Date.now() - i * 24 * 60 * 60 * 1000);
             const dateStr = d.toISOString().split("T")[0];
             result.push(
@@ -164,5 +185,90 @@ export const getDailyStats = query({
         }
 
         return result; // Already sorted DESC (today first)
+    },
+});
+
+/**
+ * Get game statistics grouped by calendar month (YYYY-MM).
+ * Used for month-over-month comparison, not rolling windows.
+ */
+export const getMonthlyStats = query({
+    args: {},
+    handler: async (ctx) => {
+        const allRooms = await ctx.db.query("rooms").collect();
+
+        // Group by month key (YYYY-MM)
+        const byMonth: Record<string, typeof allRooms> = {};
+        for (const room of allRooms) {
+            const monthKey = new Date(room._creationTime)
+                .toISOString()
+                .slice(0, 7);
+            if (!byMonth[monthKey]) byMonth[monthKey] = [];
+            byMonth[monthKey].push(room);
+        }
+
+        const rows = Object.entries(byMonth).map(([monthKey, monthRooms]) => {
+            const roomCodes = new Set(monthRooms.map((r) => r.room_code));
+            const playedCodes = new Set(
+                monthRooms
+                    .filter((r) => (r.round_number ?? 0) > 1)
+                    .map((r) => r.room_code)
+            );
+
+            const roomsOpen = roomCodes.size;
+            const gamesPlayed = playedCodes.size;
+            const conversionRate =
+                roomsOpen > 0
+                    ? Math.round((gamesPlayed / roomsOpen) * 10000) / 100
+                    : 0;
+
+            const roundsBy = (mode: string) =>
+                monthRooms
+                    .filter((r) => r.game_mode === mode)
+                    .reduce((sum, r) => sum + (r.round_number ?? 0), 0);
+
+            const totalRounds = monthRooms.reduce(
+                (sum, r) => sum + (r.round_number ?? 0),
+                0
+            );
+            const classicRounds = roundsBy("classic");
+            const partyRounds = roundsBy("party");
+            const greenFlagRounds = roundsBy("mini_flag_game");
+            const thisOrThatRounds = roundsBy("mini_rapid_fire");
+            const fantasySliderRounds = roundsBy("mini_fantasy_slider");
+            const whosMostLikelyRounds = roundsBy("mini_whos_most_likely");
+            const generalKnowledgeRounds = roundsBy("mini_general_knowledge");
+
+            const pct = (n: number) =>
+                totalRounds > 0
+                    ? Math.round((n / totalRounds) * 10000) / 100
+                    : 0;
+
+            return {
+                month: monthKey, // e.g. "2026-07"
+                games_played: gamesPlayed,
+                rooms_open: roomsOpen,
+                conversion_rate: conversionRate,
+                total_rounds: totalRounds,
+                classic_rounds: classicRounds,
+                party_rounds: partyRounds,
+                green_flag_rounds: greenFlagRounds,
+                this_or_that_rounds: thisOrThatRounds,
+                fantasy_slider_rounds: fantasySliderRounds,
+                whos_most_likely_rounds: whosMostLikelyRounds,
+                general_knowledge_rounds: generalKnowledgeRounds,
+                classic_pct: pct(classicRounds),
+                party_pct: pct(partyRounds),
+                green_flag_pct: pct(greenFlagRounds),
+                this_or_that_pct: pct(thisOrThatRounds),
+                fantasy_slider_pct: pct(fantasySliderRounds),
+                whos_most_likely_pct: pct(whosMostLikelyRounds),
+                general_knowledge_pct: pct(generalKnowledgeRounds),
+            };
+        });
+
+        // Sort DESC (most recent month first)
+        rows.sort((a, b) => (a.month < b.month ? 1 : -1));
+        return rows;
     },
 });
